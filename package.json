@@ -1,0 +1,82 @@
+{
+  "name": "ttl-archival-service",
+  "version": "1.0.0",
+  "description": "TTL-Aware Automated Archival Service - Full Stack Application",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && python -m build",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && python -m pytest",
+    "test:frontend": "cd frontend && npm run test",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "format": "npm run format:backend && npm run format:frontend",
+    "format:backend": "cd backend && npm run format",
+    "format:frontend": "cd frontend && npm run format",
+    "clean": "npm run clean:backend && npm run clean:frontend && npm run clean:contracts",
+    "clean:backend": "cd backend && npm run clean",
+    "clean:frontend": "cd frontend && npm run clean",
+    "clean:contracts": "cd contracts && npm run clean",
+    "docker:build": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml build",
+    "docker:up": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",
+    "docker:down": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml down",
+    "deploy": "npm run build && npm run docker:build",
+    "setup": "npm run setup:backend && npm run setup:frontend && npm run setup:contracts",
+    "setup:backend": "cd backend && python -m venv venv && venv\\Scripts\\activate && pip install -e .",
+    "setup:frontend": "cd frontend && npm install",
+    "setup:contracts": "cd contracts && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run test"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{py}": [
+      "black",
+      "isort"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "python": ">=3.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stellar/ttl-archival-service.git"
+  },
+  "keywords": [
+    "archival",
+    "ttl",
+    "blockchain",
+    "react",
+    "fastapi",
+    "full-stack"
+  ],
+  "author": "Stellar Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stellar/ttl-archival-service/issues"
+  },
+  "homepage": "https://github.com/stellar/ttl-archival-service#readme"
+}
