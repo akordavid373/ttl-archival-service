@@ -1,0 +1,28 @@
+{
+  "name": "@ttl-archival/contracts",
+  "version": "1.0.0",
+  "description": "Stellar smart contracts for TTL-Aware Automated Archival Service",
+  "private": true,
+  "scripts": {
+    "build": "soroban contract build",
+    "deploy": "soroban contract deploy",
+    "test": "soroban contract test",
+    "invoke": "soroban contract invoke",
+    "network:standalone": "soroban config network standalone",
+    "network:futurenet": "soroban config network futurenet",
+    "network:mainnet": "soroban config network public",
+    "clean": "rm -rf target .soroban",
+    "setup": "soroban config"
+  },
+  "dependencies": {
+    "soroban-cli": "^1.0.0",
+    "soroban-client": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -44,11 +44,9 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toast": "^1.1.5",
-    "ethers": "^6.9.0",
-    "wagmi": "^2.0.0",
-    "@wagmi/core": "^2.0.0",
-    "@wagmi/connectors": "^4.0.0",
-    "viem": "^2.0.0"
+    "stellar-sdk": "^11.0.0",
+    "@stellar/freighter-api": "^2.0.0",
+    "@stellar/wallet-sdk": "^0.10.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

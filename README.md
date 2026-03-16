@@ -1,272 +1,253 @@
 # TTL-Aware Automated Archival Service
 
-A robust FastAPI-based service for automated data archival with Time-To-Live (TTL) based cleanup and management.
+A comprehensive full-stack TTL-aware automated archival service with Stellar blockchain integration, featuring React frontend, FastAPI backend, and Soroban smart contracts for decentralized data management.
 
-## Features
+## 🚀 Project Status: **Scaffolded & Ready for Contributions**
 
-- **TTL-Based Archival**: Automatically manage data retention with configurable TTL policies
-- **Automated Cleanup**: Scheduled cleanup of expired records
-- **File Management**: Automatic file compression and storage management
-- **Policy-Based**: Flexible archival policies with different configurations
-- **RESTful API**: Complete REST API for integration
-- **Monitoring**: Built-in health checks and statistics
-- **Integrity Verification**: Checksum validation for archived data
+This project is now **fully scaffolded** and ready for community contributions! We've set up the complete project structure with frontend, backend, smart contracts, and all necessary tooling. 
 
-## Quick Start
+**🎯 Next Step**: Create GitHub Issues to start community-driven development!
 
-### Installation
+## 🏗️ Architecture Overview
 
-1. Clone the repository:
+### 📦 Monorepo Structure
+```
+ttl-archival-service/
+├── frontend/          # React + TypeScript + Tailwind CSS
+├── backend/           # FastAPI + SQLAlchemy + Stellar SDK
+├── contracts/         # Stellar Smart Contracts (Rust/Soroban)
+├── shared/            # Shared TypeScript types and utilities
+├── scripts/           # Development and deployment scripts
+└── docs/             # Comprehensive documentation
+```
+
+### 🌟 Tech Stack
+
+**Frontend:**
+- ⚛️ React 18 + TypeScript
+- 🎨 Tailwind CSS + Radix UI
+- 🔄 React Query for state management
+- 🔗 Stellar SDK + Freighter wallet integration
+- 🧪 Vitest + React Testing Library
+
+**Backend:**
+- 🐍 FastAPI + SQLAlchemy ORM
+- 🗄️ PostgreSQL (SQLite for development)
+- ⭐ Stellar SDK for blockchain integration
+- 📋 Celery + Redis for background tasks
+- 🧪 pytest with async support
+
+**Smart Contracts:**
+- 🦀 Rust + Soroban SDK
+- ⭐ Stellar blockchain platform
+- 🔧 Soroban CLI for development
+- 🧪 Built-in testing framework
+
+## 🎯 Key Features
+
+### 🔄 TTL-Based Archival
+- Automated data retention with configurable TTL policies
+- Scheduled cleanup of expired records
+- File compression and storage management
+- Policy-based archival rules
+
+### ⭐ Blockchain Integration
+- Immutable audit trails on Stellar
+- Cryptographic proof of archival
+- Smart contract-based policy enforcement
+- Real-time blockchain verification
+
+### 🌐 Full-Stack Application
+- Modern React frontend with responsive design
+- RESTful API with comprehensive endpoints
+- Real-time updates and notifications
+- Comprehensive monitoring and analytics
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- Python 3.8+
+- Rust 1.70+
+- Docker (optional)
+
+### Setup Development Environment
+
 ```bash
-git clone <repository-url>
+# Clone the repository
+git clone https://github.com/akordavid373/ttl-archival-service.git
 cd ttl-archival-service
+
+# Run setup script (installs all dependencies)
+./scripts/setup.sh --dev
+
+# Start development servers
+npm run dev
 ```
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-3. Set up environment variables:
-```bash
-cp .env.example .env
-# Edit .env with your configuration
-```
-
-4. Run the service:
-```bash
-uvicorn app.main:app --reload
-```
-
-The service will be available at `http://localhost:8000`
-
-### API Documentation
-
-- **Swagger UI**: `http://localhost:8000/docs`
-- **ReDoc**: `http://localhost:8000/redoc`
-
-## Core Concepts
-
-### Archive Policies
-
-Policies define how data should be archived and when it expires:
-
-```python
-{
-    "name": "user_data_policy",
-    "description": "Archive user data after 90 days",
-    "ttl_days": 90,
-    "compression_enabled": true,
-    "encryption_enabled": false,
-    "auto_cleanup": true
-}
-```
-
-### Archive Records
-
-Records represent individual archived items:
-
-```python
-{
-    "policy_id": 1,
-    "original_data_id": "user_123_data",
-    "data_type": "user_data",
-    "file_path": "/path/to/original/file",
-    "metadata": "{\"user_id\": 123, \"category\": \"profile\"}"
-}
-```
-
-## API Endpoints
-
-### Policies
-- `POST /api/v1/policies` - Create new archival policy
-- `GET /api/v1/policies` - List all policies
-- `GET /api/v1/policies/{id}` - Get specific policy
-
-### Archives
-- `POST /api/v1/archives` - Create archive record
-- `GET /api/v1/archives` - List archive records
-- `GET /api/v1/archives/{id}` - Get specific archive record
-- `DELETE /api/v1/archives/{id}` - Delete archive record
-- `POST /api/v1/archives/cleanup` - Trigger manual cleanup
-
-### System
-- `GET /api/v1/health` - Health check
-- `GET /api/v1/stats` - Service statistics
-
-## Usage Examples
-
-### Create an Archive Policy
+### Individual Components
 
 ```bash
-curl -X POST "http://localhost:8000/api/v1/policies" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "logs_policy",
-    "description": "Archive logs after 30 days",
-    "ttl_days": 30,
-    "compression_enabled": true,
-    "auto_cleanup": true
-  }'
+# Frontend development
+cd frontend && npm run dev
+
+# Backend development  
+cd backend && python -m uvicorn app.main:app --reload
+
+# Smart contract development
+cd contracts && cargo build
 ```
 
-### Archive Data
+## 📋 How to Contribute
+
+We're ready for community contributions! Here's how to get started:
+
+### 1. 🎯 Pick an Issue
+- Check [GitHub Issues](https://github.com/akordavid373/ttl-archival-service/issues)
+- Look for `good first issue` labels
+- Start with simple tasks to get familiar
+
+### 2. 🔧 Set Up Environment
+```bash
+git clone https://github.com/YOUR_USERNAME/ttl-archival-service.git
+cd ttl-archival-service
+./scripts/setup.sh --dev
+```
+
+### 3. 🚀 Make Your Contribution
+- Create a feature branch
+- Make your changes
+- Add tests
+- Submit a Pull Request
+
+### 4. 📚 Read the Guidelines
+- [CONTRIBUTING.md](./CONTRIBUTING.md) - Detailed contribution guide
+- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) - Community guidelines
+- [ROADMAP.md](./ROADMAP.md) - Project development plan
+
+## 🎯 Priority Areas for Contributions
+
+### 🔥 High Priority
+1. **Backend API Implementation** - Core functionality
+2. **Frontend UI Development** - User interface components
+3. **Stellar Integration** - Blockchain features
+4. **Testing Infrastructure** - Quality assurance
+
+### 📋 Good First Issues
+- UI components (buttons, forms, layouts)
+- API endpoint implementations
+- Documentation improvements
+- Test case additions
+
+### 🏗️ Current Project Status
+
+#### ✅ Completed (Scaffolded)
+- [x] Project structure and monorepo setup
+- [x] Frontend scaffold (React + TypeScript)
+- [x] Backend scaffold (FastAPI + SQLAlchemy)
+- [x] Smart contract scaffold (Stellar/Soroban)
+- [x] Development environment and scripts
+- [x] Documentation and contribution guidelines
+- [x] CI/CD configuration
+- [x] Docker containerization
+
+#### 🚧 Ready for Development
+- [ ] Backend API implementation
+- [ ] Frontend component development
+- [ ] Smart contract logic
+- [ ] Testing infrastructure
+- [ ] Documentation enhancement
+
+## 📚 Documentation
+
+- **[API Documentation](http://localhost:8000/docs)** - Interactive API docs
+- **[Smart Contract Docs](./contracts/README.md)** - Stellar contract details
+- **[Development Guide](./CONTRIBUTING.md)** - Contribution guidelines
+- **[Project Roadmap](./ROADMAP.md)** - Development phases
+
+## 🧪 Testing
 
 ```bash
-curl -X POST "http://localhost:8000/api/v1/archives" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "policy_id": 1,
-    "original_data_id": "log_file_20240101",
-    "data_type": "logs",
-    "file_path": "/var/log/app.log",
-    "metadata": "{\"source\": \"web_server\", \"date\": \"2024-01-01\"}"
-  }'
+# Run all tests
+npm run test
+
+# Frontend tests
+npm run test:frontend
+
+# Backend tests
+npm run test:backend
+
+# Contract tests
+npm run test:contracts
 ```
 
-### Trigger Cleanup
+## 🐳 Docker Deployment
 
 ```bash
-curl -X POST "http://localhost:8000/api/v1/archives/cleanup"
+# Build and run with Docker
+npm run docker:build
+npm run docker:up
+
+# View logs
+npm run docker:logs
+
+# Stop services
+npm run docker:down
 ```
 
-## Configuration
+## 🌐 Network Configuration
+
+### Stellar Networks
+- **Standalone** - Local development
+- **Futurenet** - Stellar testnet
+- **Public** - Stellar mainnet
 
 ### Environment Variables
-
-- `DATABASE_URL`: Database connection string
-- `ARCHIVE_STORAGE_PATH`: Path for archived files (default: `./archives`)
-- `REDIS_URL`: Redis connection for caching (optional)
-- `SECRET_KEY`: JWT secret key
-- `LOG_LEVEL`: Logging level (default: `INFO`)
-- `ENABLE_SCHEDULER`: Enable automated scheduler (default: `true`)
-
-### Database Setup
-
-#### SQLite (Default)
 ```bash
-DATABASE_URL=sqlite:///./ttl_archival.db
+# Copy and configure
+cp .env.example .env
+
+# Key variables
+DATABASE_URL=postgresql://...
+STELLAR_NETWORK=testnet
+CONTRACT_ID=your_contract_id
 ```
 
-#### PostgreSQL
-```bash
-DATABASE_URL=postgresql://user:password@localhost/ttl_archival
-```
+## 📊 Project Metrics
 
-#### MySQL
-```bash
-DATABASE_URL=mysql://user:password@localhost/ttl_archival
-```
+- **Languages**: TypeScript, Python, Rust
+- **Frameworks**: React, FastAPI, Soroban
+- **Blockchain**: Stellar
+- **Testing**: Vitest, pytest, Soroban test framework
+- **Deployment**: Docker, Kubernetes
 
-## Architecture
+## 🤝 Community
 
-### Components
+- **GitHub Issues**: For bug reports and feature requests
+- **GitHub Discussions**: For general questions
+- **Contributors**: Welcome from all skill levels
+- **Maintainers**: @akordavid373
 
-1. **FastAPI Application**: Main web service
-2. **Database Layer**: SQLAlchemy ORM with support for multiple databases
-3. **Archive Service**: Core archival logic and file management
-4. **Policy Service**: Policy management and enforcement
-5. **Scheduler**: Automated cleanup and maintenance tasks
+## 🎯 Next Steps
 
-### Data Flow
+1. **Create Issues** - Define specific tasks for contributors
+2. **Set Up Labels** - Organize issues by difficulty and type
+3. **Welcome Contributors** - Provide guidance and support
+4. **Review PRs** - Ensure quality and consistency
+5. **Release MVP** - Deploy first working version
 
-1. Client creates archive record via API
-2. Service applies policy and calculates expiry
-3. Files are compressed and stored according to policy
-4. Record is stored in database with metadata
-5. Scheduler periodically cleans up expired records
-6. Monitoring and statistics are maintained
+## 📄 License
 
-## Development
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Running Tests
+---
 
-```bash
-pytest tests/
-```
+## 🎉 Ready to Build?
 
-### Code Structure
+The project is fully scaffolded and waiting for contributors like you! 
 
-```
-app/
-├── main.py              # FastAPI application
-├── database.py          # Database configuration
-├── models.py            # SQLAlchemy models
-├── schemas.py           # Pydantic schemas
-├── services.py          # Business logic
-├── scheduler.py         # Task scheduling
-└── __init__.py          # Package initialization
+**🚀 [Check out open issues](https://github.com/akordavid373/ttl-archival-service/issues) and start contributing today!**
 
-tests/
-├── test_services.py     # Service tests
-└── test_api.py          # API tests
-```
+Whether you're interested in frontend development, backend APIs, smart contracts, or documentation - there's a place for you in this project.
 
-## Production Deployment
-
-### Docker
-
-```dockerfile
-FROM python:3.11-slim
-
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY . .
-EXPOSE 8000
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-### Environment Considerations
-
-- Use PostgreSQL or MySQL for production
-- Configure proper backup strategies
-- Set up monitoring and alerting
-- Implement proper access controls
-- Configure log rotation
-
-## Monitoring
-
-### Health Checks
-
-The service provides health check endpoints:
-- `/api/v1/health` - Basic health status
-- Database connectivity
-- Scheduler status
-
-### Metrics
-
-- Total archive records
-- Active/expired/deleted counts
-- Storage usage
-- Policy statistics
-- Cleanup performance
-
-## Security
-
-- Input validation and sanitization
-- File path traversal protection
-- Checksum verification
-- Optional encryption support
-- Access control via JWT tokens
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Submit a pull request
-
-## Support
-
-For issues and questions:
-- Create an issue in the repository
-- Check the API documentation
-- Review the test cases for usage examples
+**Let's build something amazing together!** ⭐
