@@ -27,6 +27,8 @@ import {
 } from 'lucide-react'
 import { useSettings } from '../context/SettingsContext'
 import { useTheme } from '../context/ThemeContext'
+import { useNotifications } from '../context/NotificationContext'
+import { NotificationPreferences } from '../components/notifications'
 import { cn } from '../lib/utils'
 
 // Zod validation schemas
@@ -51,6 +53,7 @@ type SettingsFormData = z.infer<typeof settingsSchema>
 export function Settings() {
   const { settings, loading, updateSettings } = useSettings()
   const { theme: currentTheme, setTheme } = useTheme()
+  const { preferences, updatePreferences } = useNotifications()
   const [activeTab, setActiveTab] = useState<'general' | 'notifications' | 'api' | 'appearance' | 'account'>('general')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -188,41 +191,11 @@ export function Settings() {
                 <div className="space-y-8 animate-in slide-in-from-right-4 duration-300">
                   <SectionTitle title="Notification Settings" icon={Bell} description="Control how and when you receive archival updates." />
                   
-                  <div className="space-y-4 pt-4">
-                    <SwitchField 
-                      label="Email Notifications" 
-                      description="Receive detailed archival reports via email." 
-                      icon={Mail}
-                      checked={watch('email_notifications') || false}
-                      onChange={(val) => setValue('email_notifications', val, { shouldDirty: true })}
+                  <div className="pt-4">
+                    <NotificationPreferences 
+                      preferences={preferences}
+                      onChange={updatePreferences}
                     />
-                    <SwitchField 
-                      label="Push Notifications" 
-                      description="Real-time alerts for critical events on your devices." 
-                      icon={Smartphone}
-                      checked={watch('push_notifications') || false}
-                      onChange={(val) => setValue('push_notifications', val, { shouldDirty: true })}
-                    />
-                    <SwitchField 
-                      label="In-App Notifications" 
-                      description="Dashboard alerts and system status messages." 
-                      icon={Activity}
-                      checked={watch('in_app_notifications') || false}
-                      onChange={(val) => setValue('in_app_notifications', val, { shouldDirty: true })}
-                    />
-                  </div>
-
-                  <div className="pt-6 border-t border-border/40">
-                    <FormField label="Notification Frequency">
-                      <select 
-                        {...register('notification_frequency')}
-                        className="w-full bg-accent/40 border border-border/40 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                      >
-                        <option value="immediate">Immediate</option>
-                        <option value="daily">Daily Summary</option>
-                        <option value="weekly">Weekly Digest</option>
-                      </select>
-                    </FormField>
                   </div>
                 </div>
               )}

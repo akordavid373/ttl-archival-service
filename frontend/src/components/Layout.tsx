@@ -7,7 +7,6 @@ import {
   Database, 
   Settings, 
   LogOut,
-  Bell,
   Search,
   User,
   ChevronRight,
@@ -20,6 +19,7 @@ import {
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { cn } from '../lib/utils'
 import { Breadcrumbs } from './Breadcrumbs'
+import { NotificationBell } from './notifications'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -147,10 +147,7 @@ export function Layout({ children }: LayoutProps) {
           </div>
 
           <div className="flex items-center gap-2 lg:gap-6 ml-4">
-            <button className="relative p-2.5 text-muted-foreground hover:text-primary transition-all group bg-accent/20 rounded-xl hover:bg-accent/40 ring-1 ring-border/30">
-              <Bell className="h-5 w-5 group-hover:scale-110" />
-              <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-card animate-pulse group-hover:scale-125 transition-transform" />
-            </button>
+            <NotificationBell />
             
             <div className="h-10 w-px bg-border/40 mx-1 hidden sm:block" />
 
