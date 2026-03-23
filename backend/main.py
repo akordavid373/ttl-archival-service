@@ -1,14 +1,18 @@
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List, Optional
 import logging
 
 from .database import get_db, engine
-from .models import Base, ArchiveRecord, ArchivePolicy
-from .schemas import ArchiveRecordCreate, ArchiveRecordResponse, ArchivePolicyCreate, ArchivePolicyResponse
-from .services import ArchiveService, PolicyService
+from .models import Base, UserSettings
+from .schemas import (
+    ArchiveRecordCreate, ArchiveRecordResponse, 
+    ArchivePolicyCreate, ArchivePolicyResponse,
+    UserSettingsUpdate, UserSettingsResponse
+)
+from .services import ArchiveService, PolicyService, SettingsService
 from .scheduler import ArchiveScheduler
 
 # Configure logging
@@ -36,6 +40,7 @@ app.add_middleware(
 # Initialize services
 archive_service = ArchiveService()
 policy_service = PolicyService()
+settings_service = SettingsService()
 scheduler = ArchiveScheduler()
 
 @app.on_event("startup")
@@ -149,6 +154,23 @@ async def health_check():
 async def get_stats(db: Session = Depends(get_db)):
     """Get archival service statistics"""
     return await archive_service.get_stats(db)
+
+@app.get("/api/v1/settings", response_model=UserSettingsResponse)
+async def get_settings(db: Session = Depends(get_db)):
+    """Get archival service settings"""
+    return await settings_service.get_settings(db)
+
+@app.patch("/api/v1/settings", response_model=UserSettingsResponse)
+async def update_settings(
+    settings_update: UserSettingsUpdate,
+    db: Session = Depends(get_db)
+):
+    """Update archival service settings"""
+    try:
+        return await settings_service.update_settings(db, settings_update.dict(exclude_unset=True))
+    except Exception as e:
+        logger.error(f"Error updating settings: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn

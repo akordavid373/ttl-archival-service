@@ -88,3 +88,40 @@ class CleanupResult(BaseModel):
     deleted_count: int
     errors: List[str] = []
     duration_seconds: float
+
+class UserSettingsBase(BaseModel):
+    language: Optional[str] = "en"
+    timezone: Optional[str] = "UTC"
+    email_notifications: Optional[bool] = True
+    push_notifications: Optional[bool] = False
+    in_app_notifications: Optional[bool] = True
+    notification_frequency: Optional[str] = "immediate"
+    api_enabled: Optional[bool] = True
+    api_key: Optional[str] = None
+    webhook_url: Optional[str] = None
+    theme: Optional[str] = "system"
+    accent_color: Optional[str] = "blue"
+    full_name: Optional[str] = None
+    email: Optional[str] = None
+
+class UserSettingsUpdate(BaseModel):
+    language: Optional[str] = None
+    timezone: Optional[str] = None
+    email_notifications: Optional[bool] = None
+    push_notifications: Optional[bool] = None
+    in_app_notifications: Optional[bool] = None
+    notification_frequency: Optional[str] = None
+    api_enabled: Optional[bool] = None
+    api_key: Optional[str] = None
+    webhook_url: Optional[str] = None
+    theme: Optional[str] = None
+    accent_color: Optional[str] = None
+    full_name: Optional[str] = None
+    email: Optional[str] = None
+
+class UserSettingsResponse(UserSettingsBase):
+    id: int
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True

@@ -65,3 +65,36 @@ class ArchiveRecord(Base):
             return 0
         delta = self.expires_at - datetime.utcnow()
         return max(0, delta.days)
+
+class UserSettings(Base):
+    __tablename__ = "user_settings"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    
+    # Application Preferences
+    language = Column(String(10), default="en")
+    timezone = Column(String(50), default="UTC")
+    
+    # Notification Settings
+    email_notifications = Column(Boolean, default=True)
+    push_notifications = Column(Boolean, default=False)
+    in_app_notifications = Column(Boolean, default=True)
+    notification_frequency = Column(String(20), default="immediate") # immediate, daily, weekly
+    
+    # API Configuration
+    api_enabled = Column(Boolean, default=True)
+    api_key = Column(String(100), nullable=True)
+    webhook_url = Column(String(500), nullable=True)
+    
+    # Theme Selection
+    theme = Column(String(20), default="system") # light, dark, system
+    accent_color = Column(String(20), default="blue")
+    
+    # Account Information
+    full_name = Column(String(255), nullable=True)
+    email = Column(String(255), nullable=True)
+    
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now(), server_default=func.now())
+    
+    def __repr__(self):
+        return f"<UserSettings(id={self.id}, theme='{self.theme}')>"

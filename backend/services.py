@@ -10,8 +10,8 @@ import gzip
 import logging
 from pathlib import Path
 
-from .models import ArchiveRecord, ArchivePolicy
-from .schemas import ArchiveRecordCreate, ArchivePolicyCreate, ArchiveStatus, CleanupStats
+from .models import ArchiveRecord, ArchivePolicy, UserSettings
+from .schemas import ArchiveRecordCreate, ArchivePolicyCreate, ArchiveStatus, CleanupStats, UserSettingsUpdate
 
 logger = logging.getLogger(__name__)
 
@@ -253,3 +253,31 @@ class PolicyService:
         
         logger.info(f"Deleted archive policy {policy_id}")
         return True
+
+class SettingsService:
+    """Service for managing application and user settings"""
+    
+    async def get_settings(self, db: Session) -> UserSettings:
+        """Get the current user settings, creating defaults if not found"""
+        settings = db.query(UserSettings).first()
+        if not settings:
+            settings = UserSettings()
+            db.add(settings)
+            db.commit()
+            db.refresh(settings)
+            logger.info("Created default user settings")
+        return settings
+    
+    async def update_settings(self, db: Session, settings_update: Dict[str, Any]) -> UserSettings:
+        """Update current settings"""
+        settings = await self.get_settings(db)
+        
+        for field, value in settings_update.items():
+            if value is not None:
+                setattr(settings, field, value)
+        
+        db.commit()
+        db.refresh(settings)
+        
+        logger.info("Updated user settings")
+        return settings
