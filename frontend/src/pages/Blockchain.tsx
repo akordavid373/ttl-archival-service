@@ -1,5 +1,18 @@
 import React from 'react'
-import { Database, Link2, Share2, ShieldCheck, Activity, Globe, Zap, Cpu, History, RefreshCcw, Box } from 'lucide-react'
+import { 
+  Database, 
+  Link2, 
+  Share2, 
+  ShieldCheck, 
+  Activity, 
+  Globe, 
+  Zap, 
+  Cpu, 
+  History, 
+  RefreshCcw, 
+  Box 
+} from 'lucide-react'
+import { BlockchainVolumeChart } from '../components/charts/BlockchainVolumeChart'
 
 export function Blockchain() {
   const transactions = [
@@ -40,9 +53,25 @@ export function Blockchain() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-        <div className="lg:col-span-3 space-y-6">
+        <div className="lg:col-span-3 space-y-8">
+          {/* Blockchain Volume Chart */}
+          <div className="p-8 rounded-3xl bg-card border border-border/50 shadow-sm relative group overflow-hidden">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="font-bold text-xl flex items-center gap-3">
+                <Activity className="h-6 w-6 text-amber-500" />
+                Transaction Volume (24h)
+              </h3>
+              <div className="flex items-center gap-2 px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full border border-amber-500/20 animate-pulse">
+                <Zap className="h-3 w-3 fill-amber-500" />
+                <span className="text-[10px] font-bold uppercase tracking-wider">Live Network</span>
+              </div>
+            </div>
+            <BlockchainVolumeChart />
+          </div>
+
+          {/* Ledger Activity List */}
           <div className="p-8 rounded-3xl bg-card border border-border/50 shadow-sm overflow-hidden relative group">
-             <div className="flex items-center justify-between mb-8 overflow-hidden">
+             <div className="flex items-center justify-between mb-8">
                 <h3 className="font-bold text-lg flex items-center gap-3">
                   <History className="h-5 w-5 text-primary" />
                   Live Ledger Activity
@@ -54,18 +83,18 @@ export function Blockchain() {
              </div>
              <div className="space-y-4">
                {transactions.map((t, i) => (
-                 <div key={i} className="p-4 rounded-2xl bg-accent/20 hover:bg-accent/40 transition-colors border border-transparent hover:border-border/40 group cursor-pointer flex items-center justify-between overflow-hidden">
-                   <div className="flex items-center gap-4 overflow-hidden">
-                     <div className="w-10 h-10 rounded-xl bg-card flex items-center justify-center border border-border/50 shadow-sm overflow-hidden">
+                 <div key={i} className="p-4 rounded-2xl bg-accent/20 hover:bg-accent/40 transition-colors border border-transparent hover:border-border/40 group cursor-pointer flex items-center justify-between">
+                   <div className="flex items-center gap-4">
+                     <div className="w-10 h-10 rounded-xl bg-card flex items-center justify-center border border-border/50 shadow-sm">
                        <Box className={`h-5 w-5 ${t.status === 'Confirmed' ? 'text-primary' : 'text-amber-500 animate-pulse'}`} />
                      </div>
-                     <div className="overflow-hidden">
+                     <div>
                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-tighter mb-1">{t.type}</p>
                        <p className="text-sm font-semibold truncate max-w-[120px] lg:max-w-[200px]">{t.hash}</p>
                      </div>
                    </div>
-                   <div className="flex items-center gap-6 overflow-hidden">
-                      <div className="hidden sm:block overflow-hidden">
+                   <div className="flex items-center gap-6">
+                      <div className="hidden sm:block">
                         <p className="text-[10px] text-muted-foreground font-bold text-right">{t.network}</p>
                         <p className="text-[10px] text-muted-foreground font-medium text-right">{t.time}</p>
                       </div>
@@ -82,25 +111,25 @@ export function Blockchain() {
           </div>
         </div>
 
-        <div className="lg:col-span-2 space-y-6 overflow-hidden">
+        <div className="lg:col-span-2 space-y-6">
           <div className="p-8 rounded-3xl bg-primary text-primary-foreground shadow-2xl shadow-primary/30 relative overflow-hidden group h-full">
             <div className="absolute -top-12 -right-12 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700"></div>
             <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-black/10 rounded-full blur-3xl"></div>
-            <div className="relative z-10 flex flex-col h-full overflow-hidden">
-              <div className="w-12 h-12 bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl flex items-center justify-center mb-6 overflow-hidden">
+            <div className="relative z-10 flex flex-col h-full">
+              <div className="w-12 h-12 bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl flex items-center justify-center mb-6">
                 <Link2 className="h-6 w-6" />
               </div>
               <h3 className="text-2xl font-bold mb-4 tracking-tight leading-tight">Trustless Proofs & Integrity Verification</h3>
               <p className="text-sm text-primary-foreground/80 leading-relaxed mb-8">
                 Every policy action and archive record is cryptographically signed and anchored to the Stellar blockchain, ensuring immutable proof of existence.
               </p>
-              <div className="mt-auto space-y-4 overflow-hidden">
-                <div className="p-4 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md overflow-hidden">
-                  <div className="flex items-center justify-between mb-2 overflow-hidden">
+              <div className="mt-auto space-y-4">
+                <div className="p-4 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md">
+                  <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-primary-foreground/60">Node Integrity</span>
                     <span className="text-[10px] font-bold bg-white text-primary px-2 py-0.5 rounded-full">Secure</span>
                   </div>
-                  <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                  <div className="w-full bg-white/10 h-1.5 rounded-full">
                     <div className="w-[98%] bg-white h-full rounded-full"></div>
                   </div>
                 </div>
