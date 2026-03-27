@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_, func
+from sqlalchemy import and_, or_, func, desc, asc
 from datetime import datetime, timedelta
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Tuple
 import json
 import hashlib
 import os
@@ -85,6 +85,79 @@ class ArchiveService:
             query = query.filter(ArchiveRecord.status == status)
         
         return query.offset(skip).limit(limit).all()
+    
+    async def list_records_advanced(
+        self,
+        db: Session,
+        page: int = 1,
+        limit: int = 10,
+        policy_id: Optional[int] = None,
+        status: Optional[List[str]] = None,
+        date_from: Optional[str] = None,
+        date_to: Optional[str] = None,
+        search: Optional[str] = None,
+        min_size: Optional[int] = None,
+        max_size: Optional[int] = None,
+        sort_field: str = 'created_at',
+        sort_order: str = 'desc'
+    ) -> Tuple[List[Any], int]:
+        """List archives with advanced filtering, sorting, and pagination"""
+        query = db.query(ArchiveRecord).join(ArchivePolicy)
+        
+        # Apply filters
+        if policy_id:
+            query = query.filter(ArchiveRecord.policy_id == policy_id)
+        
+        if status:
+            query = query.filter(ArchiveRecord.status.in_(status))
+        
+        if date_from:
+            try:
+                from_date = datetime.fromisoformat(date_from)
+                query = query.filter(ArchiveRecord.archived_at >= from_date)
+            except ValueError:
+                pass
+        
+        if date_to:
+            try:
+                to_date = datetime.fromisoformat(date_to)
+                query = query.filter(ArchiveRecord.archived_at <= to_date)
+            except ValueError:
+                pass
+        
+        if search:
+            # Search in original_data_id, data_type, and policy name
+            search_filter = or_(
+                ArchiveRecord.original_data_id.ilike(f"%{search}%"),
+                ArchiveRecord.data_type.ilike(f"%{search}%"),
+                ArchivePolicy.name.ilike(f"%{search}%")
+            )
+            query = query.filter(search_filter)
+        
+        if min_size is not None:
+            query = query.filter(ArchiveRecord.file_size_bytes >= min_size)
+        
+        if max_size is not None:
+            query = query.filter(ArchiveRecord.file_size_bytes <= max_size)
+        
+        # Get total count before pagination
+        total = query.count()
+        
+        # Apply sorting
+        sort_column = getattr(ArchiveRecord, sort_field, None)
+        if sort_column is None:
+            sort_column = getattr(ArchivePolicy, sort_field, ArchiveRecord.archived_at)
+        
+        if sort_order == 'desc':
+            query = query.order_by(desc(sort_column))
+        else:
+            query = query.order_by(asc(sort_column))
+        
+        # Apply pagination
+        offset = (page - 1) * limit
+        records = query.offset(offset).limit(limit).all()
+        
+        return records, total
     
     async def delete_record(self, db: Session, record_id: int) -> bool:
         """Delete an archive record and its associated file"""
@@ -200,6 +273,50 @@ class ArchiveService:
                 sha256_hash.update(chunk)
         
         return sha256_hash.hexdigest()
+    
+    def _format_size(self, size_bytes: int) -> str:
+        """Format file size in human-readable format"""
+        if size_bytes is None:
+            return "0 B"
+        for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
+            if size_bytes < 1024.0:
+                return f"{size_bytes:.1f} {unit}"
+            size_bytes /= 1024.0
+        return f"{size_bytes:.1f} PB"
+    
+    def _to_detailed_record(self, record: ArchiveRecord) -> Dict[str, Any]:
+        """Convert archive record to detailed format for browser"""
+        # Map status to frontend-friendly format
+        status_map = {
+            'archived': 'Archived',
+            'expired': 'Expiring',
+            'deleted': 'Deleted'
+        }
+        
+        # Determine verification date (use archived_at for now)
+        verification_date = record.archived_at.strftime('%Y-%m-%d') if record.archived_at else None
+        expiry_date = record.expires_at.strftime('%Y-%m-%d') if record.expires_at else None
+        
+        return {
+            'id': record.id,
+            'policy_id': record.policy_id,
+            'policy_name': record.policy.name if record.policy else 'Unknown',
+            'original_data_id': record.original_data_id,
+            'data_type': record.data_type,
+            'file_path': record.file_path,
+            'filename': os.path.basename(record.file_path) if record.file_path else f'archive_{record.id}.dat',
+            'size': record.file_size_bytes or 0,
+            'size_formatted': self._format_size(record.file_size_bytes),
+            'checksum': record.checksum,
+            'blockchain_tx_id': f'0x{record.id:064x}',  # Mock blockchain TX ID
+            'storage_location': record.policy.storage_location if record.policy else 'Default Storage',
+            'status': status_map.get(record.status, 'Archived'),
+            'created_at': record.archived_at.strftime('%Y-%m-%d %H:%M:%S') if record.archived_at else None,
+            'blockchain_network': 'Stellar',
+            'metadata': json.loads(record.metadata) if record.metadata else {},
+            'verification_date': verification_date,
+            'expiry_date': expiry_date
+        }
 
 class PolicyService:
     """Service for managing archive policies"""
