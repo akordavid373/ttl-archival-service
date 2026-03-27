@@ -10,7 +10,8 @@ from .models import Base, UserSettings
 from .schemas import (
     ArchiveRecordCreate, ArchiveRecordResponse, 
     ArchivePolicyCreate, ArchivePolicyResponse,
-    UserSettingsUpdate, UserSettingsResponse
+    UserSettingsUpdate, UserSettingsResponse,
+    ArchiveListParams, ArchiveListResponse
 )
 from .services import ArchiveService, PolicyService, SettingsService
 from .scheduler import ArchiveScheduler
@@ -99,16 +100,50 @@ async def create_archive_record(
         logger.error(f"Error creating archive record: {e}")
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/api/v1/archives", response_model=List[ArchiveRecordResponse])
+@app.get("/api/v1/archives", response_model=ArchiveListResponse)
 async def list_archives(
-    skip: int = 0,
-    limit: int = 100,
-    policy_id: Optional[int] = None,
-    status: Optional[str] = None,
+    params: ArchiveListParams = None,
     db: Session = Depends(get_db)
 ):
-    """List archive records with optional filtering"""
-    return await archive_service.list_records(db, skip, limit, policy_id, status)
+    """List archive records with advanced filtering, sorting, and pagination"""
+    # Handle query params manually if not using Pydantic params
+    page = int(params.page) if params and hasattr(params, 'page') else 1
+    limit = int(params.limit) if params and hasattr(params, 'limit') else 10
+    policy_id = int(params.policy_id) if params and hasattr(params, 'policy_id') and params.policy_id else None
+    status = params.status if params and hasattr(params, 'status') else None
+    date_from = params.date_from if params and hasattr(params, 'date_from') else None
+    date_to = params.date_to if params and hasattr(params, 'date_to') else None
+    search = params.search if params and hasattr(params, 'search') else None
+    min_size = int(params.min_size) if params and hasattr(params, 'min_size') and params.min_size else None
+    max_size = int(params.max_size) if params and hasattr(params, 'max_size') and params.max_size else None
+    sort_field = params.sort_field if params and hasattr(params, 'sort_field') else 'created_at'
+    sort_order = params.sort_order if params and hasattr(params, 'sort_order') else 'desc'
+    
+    records, total = await archive_service.list_records_advanced(
+        db=db,
+        page=page,
+        limit=limit,
+        policy_id=policy_id,
+        status=status,
+        date_from=date_from,
+        date_to=date_to,
+        search=search,
+        min_size=min_size,
+        max_size=max_size,
+        sort_field=sort_field,
+        sort_order=sort_order
+    )
+    
+    # Convert to detailed format
+    items = [archive_service._to_detailed_record(record) for record in records]
+    
+    return {
+        'items': items,
+        'total': total,
+        'page': page,
+        'size': limit,
+        'total_pages': (total + limit - 1) // limit
+    }
 
 @app.get("/api/v1/archives/{record_id}", response_model=ArchiveRecordResponse)
 async def get_archive_record(
