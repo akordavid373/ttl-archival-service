@@ -19,10 +19,6 @@ from .services import ArchiveService, PolicyService, SettingsService
 from .services.audit_service import AuditService
 from .services.search_service import search_service
 from .scheduler import ArchiveScheduler
-from .api.audit import audit_router
-from .api.search import router as search_router
-from .api.config import router as config_router
-from .api.data import router as data_router
 from .utils.audit_logger import (
     log_user_login, log_user_logout, log_policy_change, 
     log_archive_operation, audit_logger_instance, AuditEvent,
@@ -33,6 +29,8 @@ from .services.config_service import config_service
 from .middleware.profiling_middleware import ProfilingMiddleware
 from .services.monitoring_service import monitoring_service
 from .utils.metrics_collector import metrics_collector
+from .middleware.version_middleware import VersioningMiddleware, VersionNegotiationMiddleware
+from .utils.version_manager import version_manager
 
 # Configure logging
 settings = get_settings()
@@ -44,8 +42,8 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="TTL-Aware Automated Archival Service",
-    description="A service for automated data archival with TTL-based cleanup",
-    version="1.0.0"
+    description="A service for automated data archival with TTL-based cleanup with API versioning support",
+    version="2.0.0"
 )
 
 # CORS middleware
@@ -57,6 +55,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Add versioning middleware
+app.add_middleware(VersioningMiddleware, version_manager=version_manager)
+app.add_middleware(VersionNegotiationMiddleware, version_manager=version_manager)
+
 # Add profiling middleware
 app.add_middleware(ProfilingMiddleware)
 
@@ -67,11 +69,20 @@ settings_service = SettingsService()
 audit_service = AuditService()
 scheduler = ArchiveScheduler()
 
-# Include routers
-app.include_router(audit_router)
-app.include_router(search_router)
-app.include_router(config_router)
-app.include_router(data_router)
+# Include v1 routers (legacy)
+from .api.v1.audit import audit_router as v1_audit_router
+from .api.v1.search import router as v1_search_router
+from .api.v1.config import router as v1_config_router
+from .api.v1.data import router as v1_data_router
+
+# Include v2 routers (current)
+from .api.v2 import v2_router
+
+app.include_router(v1_audit_router)
+app.include_router(v1_search_router)
+app.include_router(v1_config_router)
+app.include_router(v1_data_router)
+app.include_router(v2_router)
 
 # Audit middleware for logging all API requests
 @app.middleware("http")
@@ -524,6 +535,46 @@ async def toggle_monitoring(enabled: bool):
         metrics_collector.stop_collection()
     
     return {"monitoring_enabled": enabled}
+
+# Version information endpoints
+@app.get("/version")
+async def get_version_info():
+    """Get API version information"""
+    return {
+        "current_version": version_manager.get_latest_version(),
+        "supported_versions": list(version_manager.get_supported_versions().keys()),
+        "deprecated_versions": list(version_manager.get_deprecated_versions().keys()),
+        "recommended_version": version_manager.get_recommended_version(),
+        "version_info": {
+            version: {
+                "status": info.status.value,
+                "release_date": info.release_date.isoformat(),
+                "deprecation_date": info.deprecation_date.isoformat() if info.deprecation_date else None,
+                "backward_compatible": info.backward_compatible,
+                "features": info.features,
+                "breaking_changes": info.breaking_changes
+            }
+            for version, info in version_manager.versions.items()
+        }
+    }
+
+@app.get("/api/version")
+async def get_api_version():
+    """Get API version for current request"""
+    return {
+        "version": version_manager.get_latest_version(),
+        "status": "active"
+    }
+
+@app.get("/health")
+async def health_check():
+    """Enhanced health check with version info"""
+    return {
+        "status": "healthy", 
+        "timestamp": datetime.utcnow(),
+        "version": version_manager.get_latest_version(),
+        "supported_versions": list(version_manager.get_supported_versions().keys())
+    }
 
 if __name__ == "__main__":
     import uvicorn
