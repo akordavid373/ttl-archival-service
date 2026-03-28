@@ -94,6 +94,7 @@ from .api.v2 import v2_router
 # Include metrics and compliance routers
 from .api.metrics import router as metrics_router
 from .api.compliance import router as compliance_router
+from .api.tenant import router as tenant_router
 
 app.include_router(v1_audit_router)
 app.include_router(v1_search_router)
@@ -102,6 +103,7 @@ app.include_router(v1_data_router)
 app.include_router(v2_router)
 app.include_router(metrics_router)
 app.include_router(compliance_router)
+app.include_router(tenant_router)
 
 
 # Audit middleware for logging all API requests
