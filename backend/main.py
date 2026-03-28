@@ -31,6 +31,7 @@ from .services.monitoring_service import monitoring_service
 from .utils.metrics_collector import metrics_collector
 from .middleware.version_middleware import VersioningMiddleware, VersionNegotiationMiddleware
 from .utils.version_manager import version_manager
+from .middleware import add_cors_middleware, SecurityHeadersMiddleware, CSRFMiddleware
 
 # Configure logging
 settings = get_settings()
@@ -47,13 +48,13 @@ app = FastAPI(
 )
 
 # CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+add_cors_middleware(app)
+
+# Security Headers middleware
+app.add_middleware(SecurityHeadersMiddleware)
+
+# CSRF protection middleware
+app.add_middleware(CSRFMiddleware)
 
 # Add versioning middleware
 app.add_middleware(VersioningMiddleware, version_manager=version_manager)
