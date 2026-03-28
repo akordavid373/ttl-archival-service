@@ -1,12 +1,14 @@
-from fastapi import FastAPI, HTTPException, Depends, status
+from fastapi import FastAPI, HTTPException, Depends, status, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from datetime import datetime
 from typing import List, Optional
 import logging
+import time
 
 from .database import get_db, engine
 from .models import Base, UserSettings
+from .models.audit_log import AuditLog, AuditRetentionPolicy
 from .schemas import (
     ArchiveRecordCreate, ArchiveRecordResponse, 
     ArchivePolicyCreate, ArchivePolicyResponse,
@@ -14,10 +16,23 @@ from .schemas import (
     ArchiveListParams, ArchiveListResponse
 )
 from .services import ArchiveService, PolicyService, SettingsService
+from .services.audit_service import AuditService
+from .services.search_service import search_service
 from .scheduler import ArchiveScheduler
+from .api.audit import audit_router
+from .api.search import router as search_router
+from .api.config import router as config_router
+from .utils.audit_logger import (
+    log_user_login, log_user_logout, log_policy_change, 
+    log_archive_operation, audit_logger_instance, AuditEvent,
+    AuditAction, AuditSeverity
+)
+from .config.settings import get_settings
+from .services.config_service import config_service
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+settings = get_settings()
+logging.basicConfig(level=getattr(logging, settings.logging.level.value))
 logger = logging.getLogger(__name__)
 
 # Create database tables
@@ -42,13 +57,82 @@ app.add_middleware(
 archive_service = ArchiveService()
 policy_service = PolicyService()
 settings_service = SettingsService()
+audit_service = AuditService()
 scheduler = ArchiveScheduler()
+
+# Include routers
+app.include_router(audit_router)
+app.include_router(search_router)
+app.include_router(config_router)
+
+# Audit middleware for logging all API requests
+@app.middleware("http")
+async def audit_middleware(request: Request, call_next):
+    start_time = time.time()
+    
+    # Get request information
+    method = request.method
+    url = str(request.url)
+    client_ip = request.client.host if request.client else "unknown"
+    user_agent = request.headers.get("user-agent", "unknown")
+    session_id = request.headers.get("x-session-id")
+    
+    # Process request
+    response = await call_next(request)
+    
+    # Calculate duration
+    duration_ms = int((time.time() - start_time) * 1000)
+    
+    # Get user ID from headers if available
+    user_id = request.headers.get("x-user-id")
+    
+    # Skip audit logging for health check and audit endpoints to avoid infinite loops
+    if not (url.endswith("/health") or url.startswith("/api/v1/audit")):
+        try:
+            # Create audit event for API access
+            event = AuditEvent(
+                action=AuditAction.API_ACCESS,
+                description=f"{method} {url}",
+                user_id=user_id,
+                ip_address=client_ip,
+                user_agent=user_agent,
+                session_id=session_id,
+                endpoint=url,
+                method=method,
+                status_code=response.status_code,
+                success=response.status_code < 400,
+                duration_ms=duration_ms,
+                severity=AuditSeverity.LOW
+            )
+            
+            # Log asynchronously (don't wait for it)
+            db = next(get_db())
+            try:
+                audit_logger_instance.log_event(db, event)
+            finally:
+                db.close()
+                
+        except Exception as e:
+            logger.error(f"Failed to log audit middleware: {e}")
+    
+    return response
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialize the archive scheduler on startup"""
+    """Initialize the archive scheduler and search service on startup"""
     await scheduler.start()
     logger.info("Archive scheduler started")
+    
+    # Initialize search service
+    db = next(get_db())
+    try:
+        search_initialized = await search_service.initialize_search(db)
+        if search_initialized:
+            logger.info("Search service initialized successfully")
+        else:
+            logger.error("Failed to initialize search service")
+    finally:
+        db.close()
 
 @app.on_event("shutdown")
 async def shutdown_event():
@@ -59,13 +143,43 @@ async def shutdown_event():
 @app.post("/api/v1/policies", response_model=ArchivePolicyResponse)
 async def create_policy(
     policy: ArchivePolicyCreate,
+    request: Request,
     db: Session = Depends(get_db)
 ):
     """Create a new archival policy"""
+    start_time = time.time()
+    user_id = request.headers.get("x-user-id")
+    
     try:
-        return await policy_service.create_policy(db, policy)
+        result = await policy_service.create_policy(db, policy)
+        
+        # Log policy creation
+        await log_policy_change(
+            db=db,
+            user_id=user_id or "anonymous",
+            policy_id=str(result.id),
+            policy_name=policy.name,
+            new_values=policy.dict()
+        )
+        
+        return result
+        
     except Exception as e:
         logger.error(f"Error creating policy: {e}")
+        
+        # Log failed policy creation
+        await audit_logger_instance.log_user_action(
+            db=db,
+            user_id=user_id or "anonymous",
+            action=AuditAction.POLICY_CREATE,
+            description=f"Failed to create policy: {policy.name}",
+            resource_type="policy",
+            resource_name=policy.name,
+            success=False,
+            error_message=str(e),
+            ip_address=request.client.host if request.client else "unknown"
+        )
+        
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/v1/policies", response_model=List[ArchivePolicyResponse])
@@ -91,13 +205,46 @@ async def get_policy(
 @app.post("/api/v1/archives", response_model=ArchiveRecordResponse)
 async def create_archive_record(
     record: ArchiveRecordCreate,
+    request: Request,
     db: Session = Depends(get_db)
 ):
     """Create a new archive record"""
+    user_id = request.headers.get("x-user-id")
+    
     try:
-        return await archive_service.create_record(db, record)
+        result = await archive_service.create_record(db, record)
+        
+        # Log archive creation
+        await log_archive_operation(
+            db=db,
+            user_id=user_id or "anonymous",
+            action=AuditAction.ARCHIVE_CREATE,
+            archive_id=str(result.id),
+            archive_name=record.original_data_id,
+            resource_type="archive",
+            resource_id=str(result.id),
+            resource_name=record.original_data_id,
+            new_values=record.dict()
+        )
+        
+        return result
+        
     except Exception as e:
         logger.error(f"Error creating archive record: {e}")
+        
+        # Log failed archive creation
+        await audit_logger_instance.log_user_action(
+            db=db,
+            user_id=user_id or "anonymous",
+            action=AuditAction.ARCHIVE_CREATE,
+            description=f"Failed to create archive record: {record.original_data_id}",
+            resource_type="archive",
+            resource_name=record.original_data_id,
+            success=False,
+            error_message=str(e),
+            ip_address=request.client.host if request.client else "unknown"
+        )
+        
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/api/v1/archives", response_model=ArchiveListResponse)
@@ -159,25 +306,96 @@ async def get_archive_record(
 @app.delete("/api/v1/archives/{record_id}")
 async def delete_archive_record(
     record_id: int,
+    request: Request,
     db: Session = Depends(get_db)
 ):
     """Manually delete an archive record"""
-    success = await archive_service.delete_record(db, record_id)
-    if not success:
+    user_id = request.headers.get("x-user-id")
+    
+    # Get the record before deletion for audit logging
+    record = await archive_service.get_record(db, record_id)
+    if not record:
         raise HTTPException(status_code=404, detail="Archive record not found")
-    return {"message": "Archive record deleted successfully"}
+    
+    try:
+        success = await archive_service.delete_record(db, record_id)
+        
+        if success:
+            # Log successful archive deletion
+            await log_archive_operation(
+                db=db,
+                user_id=user_id or "anonymous",
+                action=AuditAction.ARCHIVE_DELETE,
+                archive_id=str(record_id),
+                archive_name=record.original_data_id,
+                resource_type="archive",
+                resource_id=str(record_id),
+                resource_name=record.original_data_id,
+                old_values={"original_data_id": record.original_data_id, "status": record.status}
+            )
+        
+        return {"message": "Archive record deleted successfully"}
+        
+    except Exception as e:
+        logger.error(f"Error deleting archive record: {e}")
+        
+        # Log failed archive deletion
+        await audit_logger_instance.log_user_action(
+            db=db,
+            user_id=user_id or "anonymous",
+            action=AuditAction.ARCHIVE_DELETE,
+            description=f"Failed to delete archive record: {record_id}",
+            resource_type="archive",
+            resource_id=str(record_id),
+            resource_name=record.original_data_id,
+            success=False,
+            error_message=str(e),
+            ip_address=request.client.host if request.client else "unknown"
+        )
+        
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/v1/archives/cleanup")
 async def trigger_cleanup(
     policy_id: Optional[int] = None,
+    request: Request = None,
     db: Session = Depends(get_db)
 ):
     """Manually trigger cleanup for expired records"""
+    user_id = request.headers.get("x-user-id") if request else "system"
+    
     try:
         deleted_count = await archive_service.cleanup_expired_records(db, policy_id)
+        
+        # Log cleanup operation
+        await audit_logger_instance.log_user_action(
+            db=db,
+            user_id=user_id,
+            action=AuditAction.CLEANUP_TRIGGER,
+            description=f"Manual cleanup triggered - deleted {deleted_count} expired records",
+            resource_type="system",
+            resource_id=str(policy_id) if policy_id else "all",
+            new_values={"deleted_count": deleted_count, "policy_id": policy_id},
+            compliance_category="SYSTEM"
+        )
+        
         return {"message": f"Cleaned up {deleted_count} expired records"}
+        
     except Exception as e:
         logger.error(f"Error during cleanup: {e}")
+        
+        # Log failed cleanup
+        await audit_logger_instance.log_user_action(
+            db=db,
+            user_id=user_id,
+            action=AuditAction.CLEANUP_TRIGGER,
+            description=f"Failed manual cleanup",
+            resource_type="system",
+            success=False,
+            error_message=str(e),
+            compliance_category="SYSTEM"
+        )
+        
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/v1/health")
@@ -198,13 +416,45 @@ async def get_settings(db: Session = Depends(get_db)):
 @app.patch("/api/v1/settings", response_model=UserSettingsResponse)
 async def update_settings(
     settings_update: UserSettingsUpdate,
+    request: Request,
     db: Session = Depends(get_db)
 ):
     """Update archival service settings"""
+    user_id = request.headers.get("x-user-id")
+    
     try:
-        return await settings_service.update_settings(db, settings_update.dict(exclude_unset=True))
+        result = await settings_service.update_settings(db, settings_update.dict(exclude_unset=True))
+        
+        # Log settings update
+        await audit_logger_instance.log_user_action(
+            db=db,
+            user_id=user_id or "anonymous",
+            action=AuditAction.SETTINGS_UPDATE,
+            description="Application settings updated",
+            resource_type="settings",
+            resource_id="app_settings",
+            new_values=settings_update.dict(exclude_unset=True),
+            compliance_category="ADMINISTRATION"
+        )
+        
+        return result
+        
     except Exception as e:
         logger.error(f"Error updating settings: {e}")
+        
+        # Log failed settings update
+        await audit_logger_instance.log_user_action(
+            db=db,
+            user_id=user_id or "anonymous",
+            action=AuditAction.SETTINGS_UPDATE,
+            description="Failed to update application settings",
+            resource_type="settings",
+            resource_id="app_settings",
+            success=False,
+            error_message=str(e),
+            compliance_category="ADMINISTRATION"
+        )
+        
         raise HTTPException(status_code=400, detail=str(e))
 
 if __name__ == "__main__":
