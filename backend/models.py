@@ -4,6 +4,9 @@ from sqlalchemy.sql import func
 from datetime import datetime, timedelta
 from .database import Base
 
+# Import audit models
+from .audit_log import AuditLog, AuditAction, AuditSeverity, AuditRetentionPolicy
+
 class ArchivePolicy(Base):
     __tablename__ = "archive_policies"
     
