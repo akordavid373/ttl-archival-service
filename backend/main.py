@@ -22,6 +22,7 @@ from .scheduler import ArchiveScheduler
 from .api.audit import audit_router
 from .api.search import router as search_router
 from .api.config import router as config_router
+from .api.data import router as data_router
 from .utils.audit_logger import (
     log_user_login, log_user_logout, log_policy_change, 
     log_archive_operation, audit_logger_instance, AuditEvent,
@@ -29,6 +30,9 @@ from .utils.audit_logger import (
 )
 from .config.settings import get_settings
 from .services.config_service import config_service
+from .middleware.profiling_middleware import ProfilingMiddleware
+from .services.monitoring_service import monitoring_service
+from .utils.metrics_collector import metrics_collector
 
 # Configure logging
 settings = get_settings()
@@ -53,6 +57,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Add profiling middleware
+app.add_middleware(ProfilingMiddleware)
+
 # Initialize services
 archive_service = ArchiveService()
 policy_service = PolicyService()
@@ -64,6 +71,7 @@ scheduler = ArchiveScheduler()
 app.include_router(audit_router)
 app.include_router(search_router)
 app.include_router(config_router)
+app.include_router(data_router)
 
 # Audit middleware for logging all API requests
 @app.middleware("http")
@@ -133,12 +141,22 @@ async def startup_event():
             logger.error("Failed to initialize search service")
     finally:
         db.close()
+    
+    # Start monitoring services
+    metrics_collector.start_collection()
+    monitoring_service.enable_monitoring()
+    logger.info("Performance monitoring started")
 
 @app.on_event("shutdown")
 async def shutdown_event():
     """Clean up resources on shutdown"""
     await scheduler.stop()
     logger.info("Archive scheduler stopped")
+    
+    # Stop monitoring services
+    metrics_collector.stop_collection()
+    monitoring_service.disable_monitoring()
+    logger.info("Performance monitoring stopped")
 
 @app.post("/api/v1/policies", response_model=ArchivePolicyResponse)
 async def create_policy(
@@ -456,6 +474,56 @@ async def update_settings(
         )
         
         raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/api/v1/monitoring/metrics")
+async def get_performance_metrics():
+    """Get current performance metrics"""
+    return await monitoring_service.collect_metrics()
+
+@app.get("/api/v1/monitoring/summary")
+async def get_performance_summary():
+    """Get performance summary"""
+    return monitoring_service.get_performance_summary()
+
+@app.get("/api/v1/monitoring/alerts")
+async def get_alerts(active_only: bool = True):
+    """Get performance alerts"""
+    if active_only:
+        return monitoring_service.get_active_alerts()
+    return monitoring_service.get_all_alerts()
+
+@app.get("/api/v1/monitoring/slow-operations")
+async def get_slow_operations(limit: int = 10):
+    """Get slow operations report"""
+    return monitoring_service.get_slow_operations_report(limit)
+
+@app.get("/api/v1/monitoring/database-performance")
+async def get_database_performance():
+    """Get database performance report"""
+    return monitoring_service.get_database_performance_report()
+
+@app.get("/api/v1/monitoring/system-usage")
+async def get_system_usage():
+    """Get system resource usage"""
+    return metrics_collector.get_resource_usage_summary()
+
+@app.delete("/api/v1/monitoring/alerts")
+async def clear_alerts():
+    """Clear all alerts"""
+    monitoring_service.clear_alerts()
+    return {"message": "Alerts cleared successfully"}
+
+@app.post("/api/v1/monitoring/toggle")
+async def toggle_monitoring(enabled: bool):
+    """Toggle monitoring on/off"""
+    if enabled:
+        monitoring_service.enable_monitoring()
+        metrics_collector.start_collection()
+    else:
+        monitoring_service.disable_monitoring()
+        metrics_collector.stop_collection()
+    
+    return {"monitoring_enabled": enabled}
 
 if __name__ == "__main__":
     import uvicorn
