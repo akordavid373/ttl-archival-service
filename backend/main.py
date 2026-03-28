@@ -17,8 +17,10 @@ from .schemas import (
 )
 from .services import ArchiveService, PolicyService, SettingsService
 from .services.audit_service import AuditService
+from .services.search_service import search_service
 from .scheduler import ArchiveScheduler
 from .api.audit import audit_router
+from .api.search import router as search_router
 from .utils.audit_logger import (
     log_user_login, log_user_logout, log_policy_change, 
     log_archive_operation, audit_logger_instance, AuditEvent,
@@ -54,8 +56,9 @@ settings_service = SettingsService()
 audit_service = AuditService()
 scheduler = ArchiveScheduler()
 
-# Include audit router
+# Include routers
 app.include_router(audit_router)
+app.include_router(search_router)
 
 # Audit middleware for logging all API requests
 @app.middleware("http")
@@ -111,9 +114,20 @@ async def audit_middleware(request: Request, call_next):
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialize the archive scheduler on startup"""
+    """Initialize the archive scheduler and search service on startup"""
     await scheduler.start()
     logger.info("Archive scheduler started")
+    
+    # Initialize search service
+    db = next(get_db())
+    try:
+        search_initialized = await search_service.initialize_search(db)
+        if search_initialized:
+            logger.info("Search service initialized successfully")
+        else:
+            logger.error("Failed to initialize search service")
+    finally:
+        db.close()
 
 @app.on_event("shutdown")
 async def shutdown_event():
