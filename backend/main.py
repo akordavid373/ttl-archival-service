@@ -21,14 +21,18 @@ from .services.search_service import search_service
 from .scheduler import ArchiveScheduler
 from .api.audit import audit_router
 from .api.search import router as search_router
+from .api.config import router as config_router
 from .utils.audit_logger import (
     log_user_login, log_user_logout, log_policy_change, 
     log_archive_operation, audit_logger_instance, AuditEvent,
     AuditAction, AuditSeverity
 )
+from .config.settings import get_settings
+from .services.config_service import config_service
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+settings = get_settings()
+logging.basicConfig(level=getattr(logging, settings.logging.level.value))
 logger = logging.getLogger(__name__)
 
 # Create database tables
@@ -59,6 +63,7 @@ scheduler = ArchiveScheduler()
 # Include routers
 app.include_router(audit_router)
 app.include_router(search_router)
+app.include_router(config_router)
 
 # Audit middleware for logging all API requests
 @app.middleware("http")
