@@ -15,9 +15,10 @@ import {
   CreditCard,
   Settings2,
   HelpCircle,
+  Activity,
 } from 'lucide-react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { cn } from '../lib/utils'
+import { cn } from '../utils/cn'
 import { Breadcrumbs } from './Breadcrumbs'
 import { NotificationBell } from './notifications'
 
@@ -34,6 +35,7 @@ export function Layout({ children }: LayoutProps) {
     { name: 'Policies', icon: ShieldCheck, path: '/policies' },
     { name: 'Archives', icon: Archive, path: '/archives' },
     { name: 'Blockchain', icon: Database, path: '/blockchain' },
+    { name: 'Performance', icon: Activity, path: '/performance' },
     { name: 'Settings', icon: Settings, path: '/settings' },
   ]
 

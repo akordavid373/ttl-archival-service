@@ -25,10 +25,11 @@ import {
 import { useSettings } from '../context/SettingsContext'
 import { useTheme } from '../context/ThemeContext'
 import { useNotifications } from '../context/NotificationContext'
-import { cn } from '../lib/utils'
+import { cn } from '../utils/cn'
 import { Preferences } from '../components/settings/Preferences'
 import { Notifications } from '../components/settings/Notifications'
 import { Account } from '../components/settings/Account'
+import { NotificationPreferences } from '../components/NotificationPreferences'
 import { SectionTitle, FormField, SwitchField, ThemeCard } from '../components/settings/common'
 
 // Zod validation schemas
