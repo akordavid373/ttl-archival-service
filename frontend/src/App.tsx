@@ -32,6 +32,7 @@ function AppContent() {
           <Route path="/performance" element={<Performance />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/demo" element={<FeaturesDemo />} />
+
           <Route path="/test" element={<FeatureTest />} />
         </Routes>
       </Layout>
