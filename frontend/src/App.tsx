@@ -5,10 +5,7 @@ import { Policies } from './pages/Policies'
 import { Archives } from './pages/Archives'
 import { Blockchain } from './pages/Blockchain'
 import { Settings } from './pages/Settings'
-import { FeaturesDemo } from './pages/FeaturesDemo'
-import { RichTextEditorDemo } from './pages/RichTextEditorDemo'
-import { VirtualScrollDemo } from './pages/VirtualScrollDemo'
-import { FeatureTest } from './components/FeatureTest'
+
 import { NotificationProvider } from './context/NotificationContext'
 import { ToastContainer, NotificationCenter } from './components/notifications'
 import { useNotifications } from './context/NotificationContext'
@@ -32,6 +29,7 @@ function AppContent() {
           <Route path="/policies" element={<Policies />} />
           <Route path="/archives" element={<Archives />} />
           <Route path="/blockchain" element={<Blockchain />} />
+          <Route path="/performance" element={<Performance />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/demo" element={<FeaturesDemo />} />
           <Route path="/rich-text-editor" element={<RichTextEditorDemo />} />
