@@ -12,7 +12,7 @@ import {
   Loader2,
   Trash2
 } from 'lucide-react'
-import { cn } from '../lib/utils'
+import { cn } from '../utils/cn'
 
 interface UploadingFile {
   id: string

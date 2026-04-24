@@ -16,6 +16,7 @@ import {
   Settings2,
   HelpCircle,
   Activity,
+  Play,
 } from 'lucide-react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { cn } from '../utils/cn'
@@ -36,6 +37,7 @@ export function Layout({ children }: LayoutProps) {
     { name: 'Archives', icon: Archive, path: '/archives' },
     { name: 'Blockchain', icon: Database, path: '/blockchain' },
     { name: 'Performance', icon: Activity, path: '/performance' },
+    { name: 'Media', icon: Play, path: '/media' },
     { name: 'Settings', icon: Settings, path: '/settings' },
   ]
 

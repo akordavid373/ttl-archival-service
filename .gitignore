@@ -207,3 +207,4 @@ Thumbs.db
 *.bak
 *.backup
 *.old
+node_modules
