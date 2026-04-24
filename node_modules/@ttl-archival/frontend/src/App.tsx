@@ -6,6 +6,8 @@ import { Archives } from './pages/Archives'
 import { Blockchain } from './pages/Blockchain'
 import { Settings } from './pages/Settings'
 import { FeaturesDemo } from './pages/FeaturesDemo'
+import { RichTextEditorDemo } from './pages/RichTextEditorDemo'
+import { VirtualScrollDemo } from './pages/VirtualScrollDemo'
 import { FeatureTest } from './components/FeatureTest'
 import { NotificationProvider } from './context/NotificationContext'
 import { ToastContainer, NotificationCenter } from './components/notifications'
@@ -32,6 +34,8 @@ function AppContent() {
           <Route path="/blockchain" element={<Blockchain />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/demo" element={<FeaturesDemo />} />
+          <Route path="/rich-text-editor" element={<RichTextEditorDemo />} />
+          <Route path="/virtual-scroll" element={<VirtualScrollDemo />} />
           <Route path="/test" element={<FeatureTest />} />
         </Routes>
       </Layout>
