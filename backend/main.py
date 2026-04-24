@@ -23,6 +23,9 @@ from .api.audit import audit_router
 from .api.search import router as search_router
 from .api.config import router as config_router
 from .api.data import router as data_router
+from .api.performance import router as performance_router
+from .api.notifications import router as notifications_router
+from .api.analytics import router as analytics_router
 from .utils.audit_logger import (
     log_user_login, log_user_logout, log_policy_change, 
     log_archive_operation, audit_logger_instance, AuditEvent,
@@ -72,6 +75,9 @@ app.include_router(audit_router)
 app.include_router(search_router)
 app.include_router(config_router)
 app.include_router(data_router)
+app.include_router(performance_router)
+app.include_router(notifications_router)
+app.include_router(analytics_router)
 
 # Audit middleware for logging all API requests
 @app.middleware("http")
