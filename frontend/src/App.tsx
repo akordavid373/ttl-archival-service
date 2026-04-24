@@ -5,6 +5,7 @@ import { Policies } from './pages/Policies'
 import { Archives } from './pages/Archives'
 import { Blockchain } from './pages/Blockchain'
 import { Settings } from './pages/Settings'
+import { Performance } from './pages/Performance'
 import { NotificationProvider } from './context/NotificationContext'
 import { ToastContainer, NotificationCenter } from './components/notifications'
 import { useNotifications } from './context/NotificationContext'
@@ -28,6 +29,7 @@ function AppContent() {
           <Route path="/policies" element={<Policies />} />
           <Route path="/archives" element={<Archives />} />
           <Route path="/blockchain" element={<Blockchain />} />
+          <Route path="/performance" element={<Performance />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </Layout>
