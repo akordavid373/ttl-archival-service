@@ -3,10 +3,13 @@ import { Layout } from './components/Layout'
 import { Dashboard } from './pages/Dashboard'
 import { Policies, Archives, Blockchain, Performance } from './pages/index'
 import { Settings } from './pages/Settings'
+import { ABTestingProvider } from './context/ABTestingContext'
+import { analytics } from './services/analytics'
+import { Demo } from './pages/Demo'
 
-import { NotificationProvider } from './context/NotificationContext'
-import { ToastContainer, NotificationCenter } from './components/notifications'
-import { useNotifications } from './context/NotificationContext'
+// Initialize Analytics
+analytics.init('G-XXXXXXXXXX');
+
 
 function AppContent() {
   const { 
@@ -29,7 +32,7 @@ function AppContent() {
           <Route path="/blockchain" element={<Blockchain />} />
           <Route path="/performance" element={<Performance />} />
           <Route path="/settings" element={<Settings />} />
-
+          <Route path="/demo" element={<Demo />} />
         </Routes>
       </Layout>
       
@@ -55,9 +58,11 @@ function AppContent() {
 
 function App() {
   return (
-    <NotificationProvider>
-      <AppContent />
-    </NotificationProvider>
+    <ABTestingProvider>
+      <NotificationProvider>
+        <AppContent />
+      </NotificationProvider>
+    </ABTestingProvider>
   )
 }
 

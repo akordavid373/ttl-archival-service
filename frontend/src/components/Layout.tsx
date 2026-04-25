@@ -39,6 +39,7 @@ export function Layout({ children }: LayoutProps) {
     { name: 'Archives', icon: Archive, path: '/archives' },
     { name: 'Blockchain', icon: Database, path: '/blockchain' },
     { name: 'Settings', icon: Settings, path: '/settings' },
+    { name: 'Demo', icon: Settings2, path: '/demo' },
   ]
 
   const SidebarContent = () => (
