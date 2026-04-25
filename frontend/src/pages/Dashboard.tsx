@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react';
+import { SEO } from '../components/common/SEO';
+import { motion } from 'framer-motion';
 import { 
-  Activity, 
-  ShieldCheck, 
-  Archive, 
-  Database, 
-  TrendingUp, 
+  BarChart3, 
   Clock, 
   AlertTriangle, 
   Trash2, 
@@ -20,106 +18,66 @@ import { cn } from '../lib/utils'
 export function Dashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false)
 
+export const Dashboard: React.FC = () => {
   const stats = [
-    { label: 'Total Archives', value: '1,284', change: '+12%', icon: Archive, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-    { label: 'Active Policies', value: '24', change: '+2', icon: ShieldCheck, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-    { label: 'Blockchain Sync', value: '99.9%', change: 'Stable', icon: Database, color: 'text-purple-500', bg: 'bg-purple-500/10' },
-    { label: 'Pending Deletions', value: '42', change: '-5', icon: Trash2, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-  ]
-
-  const handleRefresh = () => {
-    setIsRefreshing(true)
-    setTimeout(() => setIsRefreshing(false), 2000)
-  }
-
-  const handleExport = () => {
-    const csvContent = "data:text/csv;charset=utf-8," 
-      + "Metric,Value,Change\n"
-      + "Total Archives,1284,+12%\n"
-      + "Active Policies,24,+2\n"
-      + "Blockchain Sync,99.9%,Stable\n"
-      + "Pending Deletions,42,-5";
-    
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `ttl_audit_report_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
+    { label: 'Active Archives', value: '1,284', icon: Archive, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+    { label: 'Protection Rate', value: '99.9%', icon: Shield, color: 'text-green-500', bg: 'bg-green-500/10' },
+    { label: 'Storage Saved', value: '42.5 GB', icon: Database, color: 'text-purple-500', bg: 'bg-purple-500/10' },
+    { label: 'Avg TTL Remaining', value: '14 Days', icon: Clock, color: 'text-orange-500', bg: 'bg-orange-500/10' },
+  ];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <header className="flex items-center justify-between">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Dashboard Overview</h2>
-          <p className="text-muted-foreground flex items-center gap-2">
-            <Activity className={cn("h-4 w-4 text-emerald-500", isRefreshing && "animate-pulse")} />
-            {isRefreshing ? "Refreshing system metrics..." : "System is performing within optimal parameters."}
-          </p>
+    <div className="space-y-8">
+      <SEO title="Dashboard" description="Overview of your archival status and statistics." />
+      
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-3xl font-bold">Welcome back, John</h2>
+          <p className="text-gray-500">Here's what's happening with your archives today.</p>
         </div>
-        <div className="flex gap-4">
-          <button 
-            onClick={handleRefresh}
-            className="p-3 bg-secondary text-secondary-foreground rounded-2xl border border-border shadow-sm hover:bg-accent transition-colors group"
-          >
-            <RefreshCw className={cn("h-5 w-5", isRefreshing && "animate-spin")} />
+        <div className="flex items-center gap-3">
+          <button className="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-800 font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            Download Report
           </button>
-          <button 
-            onClick={handleExport}
-            className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-bold text-sm rounded-2xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all group"
-          >
-            <Download className="h-5 w-5 group-hover:scale-110 transition-transform" />
-            Export Audit Data
+          <button className="px-4 py-2 rounded-xl bg-primary text-white font-medium hover:opacity-90 transition-opacity">
+            Quick Archive
           </button>
         </div>
-      </header>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, i) => (
-          <div key={i} className="group p-6 rounded-3xl bg-card border border-border/50 hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300">
-            <div className="flex items-center justify-between mb-4">
-              <div className={`p-3 rounded-2xl ${stat.bg} ${stat.color} group-hover:scale-110 transition-transform shadow-inner`}>
-                {React.createElement(stat.icon, { className: "h-6 w-6" })}
-              </div>
-              <span className={`text-[10px] font-bold px-3 py-1 rounded-full ${stat.change.startsWith('+') ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-muted text-muted-foreground border border-border/40'}`}>
-                {stat.change}
-              </span>
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: i * 0.1 }}
+            className="p-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow"
+          >
+            <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-xl flex items-center justify-center mb-4`}>
+              <stat.icon className="w-6 h-6" />
             </div>
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest leading-relaxed">{stat.label}</p>
-            <p className="text-2xl font-bold tracking-tight mt-1">{stat.value}</p>
-          </div>
+            <p className="text-sm font-medium text-gray-500 mb-1">{stat.label}</p>
+            <div className="flex items-end justify-between">
+              <h3 className="text-2xl font-bold">{stat.value}</h3>
+              <div className="flex items-center text-xs font-medium text-green-500 bg-green-500/10 px-2 py-1 rounded-full">
+                <ArrowUpRight className="w-3 h-3 mr-1" />
+                12%
+              </div>
+            </div>
+          </motion.div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="p-8 rounded-3xl bg-card border border-border/50 shadow-sm relative group overflow-hidden">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="font-bold text-xl flex items-center gap-3">
-              <Database className="h-6 w-6 text-primary" />
-              Storage Usage
-            </h3>
-            <div className="flex gap-2">
-              <button className="px-4 py-1.5 text-xs font-bold rounded-xl bg-primary text-primary-foreground">Monthly</button>
-              <button className="px-4 py-1.5 text-xs font-bold rounded-xl hover:bg-accent transition-colors">Daily</button>
-            </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-bold">Archival Activity</h3>
+            <BarChart3 className="w-5 h-5 text-gray-400" />
           </div>
-          <StorageUsageChart />
-        </div>
-
-        <div className="p-8 rounded-3xl bg-card border border-border/50 shadow-sm relative group overflow-hidden">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="font-bold text-xl flex items-center gap-3">
-              <TrendingUp className="h-6 w-6 text-blue-500" />
-              Archiving Trends
-            </h3>
-            <button className="text-xs font-bold text-primary flex items-center gap-1 hover:underline">
-              View Detailed Analytics
-              <ArrowUpRight className="h-3 w-3" />
-            </button>
+          <div className="h-64 flex items-center justify-center border-2 border-dashed border-gray-100 dark:border-gray-800 rounded-xl">
+            <p className="text-gray-400">Activity Chart Visualization</p>
           </div>
-          <ArchiveTrendsChart />
         </div>
       </div>
 
@@ -152,13 +110,10 @@ export function Dashboard() {
                   2 hours ago · 14.2 MB
                 </p>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-        <button className="w-full mt-8 py-2.5 text-xs font-bold text-primary hover:text-primary/80 transition-colors relative z-10 hover:underline">
-          Manage All Expired Records
-        </button>
       </div>
     </div>
-  )
-}
+  );
+};

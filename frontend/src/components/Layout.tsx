@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { 
   LayoutDashboard, 
   ShieldCheck, 
   Archive, 
   Database, 
   Settings, 
-  LogOut,
   Search,
   User,
   ChevronRight,
@@ -87,130 +87,61 @@ export function Layout({ children }: LayoutProps) {
             <LogOut className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
             <span>Sign Out</span>
           </div>
-          <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30" />
-        </button>
-      </div>
-    </div>
-  )
 
-  return (
-    <div className="flex h-screen bg-background overflow-hidden relative selection:bg-primary/20">
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex w-72 flex-col shrink-0">
-        <SidebarContent />
-      </aside>
+          <nav className="space-y-1">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) => `
+                  flex items-center gap-3 px-4 py-3 rounded-xl transition-all group
+                  ${isActive 
+                    ? 'bg-primary/10 text-primary font-semibold' 
+                    : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'}
+                `}
+              >
+                <item.icon className="w-5 h-5" />
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
 
-      {/* Mobile Sidebar Overlay */}
-      {isMobileMenuOpen && (
-        <div 
-          className="lg:hidden fixed inset-0 z-50 bg-background/60 backdrop-blur-md animate-in fade-in duration-300"
-          onClick={() => setIsMobileMenuOpen(false)}
-        >
-          <div 
-            className="w-72 h-full animate-in slide-in-from-left duration-500 ease-out"
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="flex justify-end p-4 absolute right-0 top-0 lg:hidden">
-               <button 
-                 onClick={() => setIsMobileMenuOpen(false)}
-                 className="p-2 bg-accent rounded-full text-muted-foreground hover:text-foreground transition-colors"
-               >
-                 <X className="h-5 w-5" />
-               </button>
+        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-100 dark:border-gray-800">
+          <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer group">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white font-medium">
+              JD
             </div>
-            <SidebarContent />
+            <div className="flex-1 overflow-hidden">
+              <p className="text-sm font-semibold truncate">John Doe</p>
+              <p className="text-xs text-gray-500 truncate">Premium Plan</p>
+            </div>
           </div>
         </div>
-      )}
+      </aside>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden min-w-0">
+      {/* Main Content */}
+      <main className="lg:pl-64 min-h-screen">
         {/* Header */}
-        <header className="h-20 border-b border-border/40 bg-card/40 backdrop-blur-xl flex items-center justify-between px-4 lg:px-10 sticky top-0 z-40">
-          <div className="flex items-center gap-4 flex-1">
-            {/* Hamburger Menu Toggle */}
-            <button 
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden p-2.5 bg-accent/50 rounded-xl text-muted-foreground hover:text-foreground hover:bg-accent transition-all ring-1 ring-border/50"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
-
-            <div className="hidden sm:flex items-center gap-4 w-full max-w-md relative group ml-2 lg:ml-0">
-              <Search className="absolute left-3.5 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors pointer-events-none" />
-              <input 
-                placeholder="Global search catalog..."
-                className="bg-accent/30 border border-transparent focus:border-primary/30 focus:bg-accent/60 transition-all rounded-2xl pl-11 pr-4 py-2.5 text-xs w-full outline-none font-medium placeholder:text-muted-foreground/60 tracking-tight"
-              />
-              <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded border border-border bg-card text-[10px] text-muted-foreground font-mono hidden md:block">
-                ⌘K
-              </kbd>
-            </div>
+        <header className="h-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 sticky top-0 z-30 flex items-center justify-between px-8">
+          <div className="relative max-w-md w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input 
+              type="text" 
+              placeholder="Search archives, policies... (Ctrl+K)"
+              className="w-full bg-gray-100 dark:bg-gray-800 border-none rounded-xl py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary transition-all"
+            />
           </div>
 
-          <div className="flex items-center gap-2 lg:gap-6 ml-4">
-            <NotificationBell />
-            
-            <div className="h-10 w-px bg-border/40 mx-1 hidden sm:block" />
-
-            {/* Profile Dropdown */}
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger asChild>
-                <div className="flex items-center gap-3 pl-2 group cursor-pointer hover:bg-accent/40 px-3 py-2 rounded-2xl transition-all border border-transparent hover:border-border/40 ring-offset-background focus-visible:outline-none">
-                  <div className="text-right hidden sm:block">
-                    <p className="text-sm font-bold leading-none mb-1">David Akoro</p>
-                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider opacity-60">Admin</p>
-                  </div>
-                  <div className="relative">
-                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary/20 to-indigo-500/20 flex items-center justify-center border border-primary/20 shadow-inner group-hover:scale-105 transition-transform overflow-hidden ring-2 ring-transparent group-hover:ring-primary/20">
-                      <User className="h-5 w-5 text-primary" />
-                    </div>
-                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-card ring-1 ring-emerald-500/20" />
-                  </div>
-                </div>
-              </DropdownMenu.Trigger>
-
-              <DropdownMenu.Portal>
-                <DropdownMenu.Content 
-                  className="min-w-[240px] bg-card/95 backdrop-blur-xl rounded-2xl p-2 shadow-2xl border border-border/40 animate-in fade-in zoom-in-95 data-[side=top]:slide-in-from-bottom-2 data-[side=bottom]:slide-in-from-top-2 duration-200 z-[100]"
-                  sideOffset={8}
-                  align="end"
-                >
-                  <div className="px-3 py-4 mb-2 border-b border-border/30">
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Signed in as</p>
-                    <p className="font-bold text-sm truncate">david@example.com</p>
-                  </div>
-                  
-                  <DropdownMenu.Item className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl cursor-pointer outline-none hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground transition-colors group">
-                    <User className="h-4 w-4 opacity-70 group-hover:opacity-100" />
-                    Profile
-                    <DropdownMenu.Shortcut className="ml-auto text-xs opacity-50">⌘P</DropdownMenu.Shortcut>
-                  </DropdownMenu.Item>
-
-                  <DropdownMenu.Item className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl cursor-pointer outline-none hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground transition-colors group">
-                    <CreditCard className="h-4 w-4 opacity-70 group-hover:opacity-100" />
-                    Subscription
-                  </DropdownMenu.Item>
-
-                  <DropdownMenu.Item className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl cursor-pointer outline-none hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground transition-colors group">
-                    <Settings2 className="h-4 w-4 opacity-70 group-hover:opacity-100" />
-                    Workspace Settings
-                  </DropdownMenu.Item>
-
-                  <DropdownMenu.Separator className="h-px bg-border/40 my-2 mx-1" />
-                  
-                  <DropdownMenu.Item className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl cursor-pointer outline-none hover:bg-accent transition-colors group">
-                    <HelpCircle className="h-4 w-4 opacity-70" />
-                    Support Docs
-                  </DropdownMenu.Item>
-                  
-                  <DropdownMenu.Item className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl cursor-pointer outline-none hover:bg-destructive/10 hover:text-destructive transition-colors group mt-1">
-                    <LogOut className="h-4 w-4 opacity-70" />
-                    Sign Out
-                  </DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu.Portal>
-            </DropdownMenu.Root>
+          <div className="flex items-center gap-4">
+            <button className="p-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-primary transition-all relative">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-800"></span>
+            </button>
+            <button className="hidden sm:flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-medium hover:opacity-90 transition-opacity shadow-lg shadow-primary/20">
+              <Archive className="w-4 h-4" />
+              New Archive
+            </button>
           </div>
         </header>
 
@@ -234,5 +165,5 @@ export function Layout({ children }: LayoutProps) {
       <OfflineStatus />
       <InstallPWA />
     </div>
-  )
-}
+  );
+};

@@ -70,6 +70,52 @@ class ArchiveRecordResponse(ArchiveRecordBase):
     class Config:
         from_attributes = True
 
+class DetailedArchiveRecord(BaseModel):
+    """Detailed archive record with all metadata for the browser"""
+    id: int
+    policy_id: int
+    policy_name: str
+    original_data_id: str
+    data_type: DataType
+    file_path: Optional[str] = None
+    filename: str
+    size: int
+    size_formatted: str
+    checksum: Optional[str] = None
+    blockchain_tx_id: Optional[str] = None
+    storage_location: str
+    status: str  # 'Archived', 'Expiring', 'Verified', etc.
+    created_at: str
+    blockchain_network: str = 'Stellar'
+    metadata: dict = {}
+    verification_date: Optional[str] = None
+    expiry_date: Optional[str] = None
+    
+    class Config:
+        from_attributes = True
+
+class ArchiveListParams(BaseModel):
+    """Parameters for listing archives with filtering and sorting"""
+    page: int = Field(1, ge=1)
+    limit: int = Field(10, ge=1, le=100)
+    policy_id: Optional[int] = None
+    status: Optional[List[str]] = None
+    date_from: Optional[str] = None
+    date_to: Optional[str] = None
+    search: Optional[str] = None
+    min_size: Optional[int] = None
+    max_size: Optional[int] = None
+    sort_field: str = 'created_at'
+    sort_order: str = 'desc'
+
+class ArchiveListResponse(BaseModel):
+    """Paginated response for archive list"""
+    items: List[DetailedArchiveRecord]
+    total: int
+    page: int
+    size: int
+    total_pages: int
+
 class CleanupStats(BaseModel):
     total_records: int
     active_records: int

@@ -1,473 +1,70 @@
-import React, { useState, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+import React from 'react';
+import { SEO } from '../components/common/SEO';
+import { ThemePicker } from '../components/theme/ThemePicker';
 import { 
-  Settings as SettingsIcon, 
-  Bell, 
-  Shield, 
-  Monitor, 
   User, 
-  Mail, 
-  Globe, 
   Lock, 
-  Save, 
-  Loader2, 
-  CheckCircle2, 
-  AlertCircle,
-  Smartphone,
-  Info,
-  Key,
-  Webhook,
-  Activity,
-  Palette,
-  Sun,
-  Moon,
-  Laptop
-} from 'lucide-react'
-import { useSettings } from '../context/SettingsContext'
-import { useTheme } from '../context/ThemeContext'
-import { useNotifications } from '../context/NotificationContext'
-import { NotificationPreferences } from '../components/notifications'
-import { cn } from '../lib/utils'
+  Bell, 
+  Globe, 
+  CreditCard,
+  Monitor
+} from 'lucide-react';
 
-// Zod validation schemas
-const settingsSchema = z.object({
-  full_name: z.string().min(2, "Name must be at least 2 characters").optional().nullable(),
-  email: z.string().email("Invalid email address").optional().nullable(),
-  language: z.string().optional(),
-  timezone: z.string().optional(),
-  email_notifications: z.boolean().optional(),
-  push_notifications: z.boolean().optional(),
-  in_app_notifications: z.boolean().optional(),
-  notification_frequency: z.string().optional(),
-  api_enabled: z.boolean().optional(),
-  api_key: z.string().optional().nullable(),
-  webhook_url: z.string().url("Invalid URL").or(z.literal("")).optional().nullable(),
-  theme: z.string().optional(),
-  accent_color: z.string().optional(),
-})
-
-type SettingsFormData = z.infer<typeof settingsSchema>
-
-export function Settings() {
-  const { settings, loading, updateSettings } = useSettings()
-  const { theme: currentTheme, setTheme } = useTheme()
-  const { preferences, updatePreferences } = useNotifications()
-  const [activeTab, setActiveTab] = useState<'general' | 'notifications' | 'api' | 'appearance' | 'account'>('general')
-  const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    watch,
-    setValue,
-    formState: { errors, isDirty }
-  } = useForm<SettingsFormData>({
-    resolver: zodResolver(settingsSchema),
-    defaultValues: settings || {}
-  })
-
-  // Watch for changes in theme in the form to sync with ThemeContext
-  const formTheme = watch('theme')
-  
-  useEffect(() => {
-    if (settings) {
-      reset(settings)
-    }
-  }, [settings, reset])
-
-  const onSubmit = async (data: SettingsFormData) => {
-    try {
-      setSaving(true)
-      setError(null)
-      await updateSettings(data)
-      setSaved(true)
-      setTimeout(() => setSaved(false), 3000)
-    } catch (err) {
-      setError("Failed to save settings. Please try again.")
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-        <Loader2 className="h-10 w-10 text-primary animate-spin" />
-        <p className="text-muted-foreground font-medium animate-pulse">Loading settings...</p>
-      </div>
-    )
-  }
-
-  const tabs = [
-    { id: 'general', label: 'General', icon: SettingsIcon },
-    { id: 'notifications', label: 'Notifications', icon: Bell },
-    { id: 'api', label: 'API & Connections', icon: Shield },
-    { id: 'appearance', label: 'Appearance', icon: Monitor },
-    { id: 'account', label: 'Account', icon: User },
-  ] as const
+export const Settings: React.FC = () => {
+  const categories = [
+    { label: 'Appearance', icon: Monitor, active: true },
+    { label: 'Profile', icon: User },
+    { label: 'Security', icon: Lock },
+    { label: 'Notifications', icon: Bell },
+    { label: 'Network', icon: Globe },
+    { label: 'Billing', icon: CreditCard },
+  ];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
-      <header className="flex flex-col gap-2">
-        <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Settings & Configuration</h2>
-        <p className="text-muted-foreground">Manage your workspace preferences, security settings, and notification alerts.</p>
-      </header>
+    <div className="max-w-4xl mx-auto space-y-8">
+      <SEO title="Settings" description="Customize your account and application appearance." />
+      
+      <div>
+        <h2 className="text-3xl font-bold">Settings</h2>
+        <p className="text-gray-500">Manage your account preferences and customize your experience.</p>
+      </div>
 
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Navigation Tabs */}
-        <aside className="w-full md:w-64 space-y-1">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium text-sm group",
-                activeTab === tab.id
-                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
-                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-              )}
-            >
-              <tab.icon className={cn("h-4 w-4", activeTab === tab.id ? "" : "group-hover:scale-110 transition-transform")} />
-              {tab.label}
-              {activeTab === tab.id && <div className="ml-auto w-1 h-4 bg-white/40 rounded-full" />}
-            </button>
-          ))}
+        {/* Sidebar */}
+        <aside className="w-full md:w-64 shrink-0">
+          <nav className="space-y-1">
+            {categories.map((cat) => (
+              <button
+                key={cat.label}
+                className={`
+                  w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all
+                  ${cat.active 
+                    ? 'bg-white dark:bg-gray-900 shadow-sm text-primary font-semibold' 
+                    : 'text-gray-500 hover:bg-white/50 dark:hover:bg-gray-900/50'}
+                `}
+              >
+                <cat.icon className="w-5 h-5" />
+                {cat.label}
+              </button>
+            ))}
+          </nav>
         </aside>
 
-        {/* Form Area */}
-        <form onSubmit={handleSubmit(onSubmit)} className="flex-1 space-y-6">
-          <div className="p-8 rounded-3xl bg-card border border-border/50 shadow-sm relative overflow-hidden min-h-[500px]">
-            {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-
-            <div className="relative z-10 space-y-8">
-              {/* General Tab */}
-              {activeTab === 'general' && (
-                <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
-                  <SectionTitle title="Application Preferences" icon={Globe} description="System-level settings and regional defaults." />
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                    <FormField label="Language" error={errors.language?.message}>
-                      <select 
-                        {...register('language')}
-                        className="w-full bg-accent/40 border border-border/40 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                      >
-                        <option value="en">English (US)</option>
-                        <option value="es">Español</option>
-                        <option value="fr">Français</option>
-                        <option value="de">Deutsch</option>
-                      </select>
-                    </FormField>
-
-                    <FormField label="Timezone" error={errors.timezone?.message}>
-                      <select 
-                        {...register('timezone')}
-                        className="w-full bg-accent/40 border border-border/40 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                      >
-                        <option value="UTC">UTC (GMT+0)</option>
-                        <option value="EST">Eastern Time (ET)</option>
-                        <option value="PST">Pacific Time (PT)</option>
-                        <option value="CET">Central European Time (CET)</option>
-                      </select>
-                    </FormField>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex gap-4 mt-8">
-                    <Info className="h-5 w-5 text-primary shrink-0" />
-                    <p className="text-xs text-primary/80 leading-relaxed font-medium">
-                      Changing language and timezone will affect timestamp generation and verification reports across the application.
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* Notifications Tab */}
-              {activeTab === 'notifications' && (
-                <div className="space-y-8 animate-in slide-in-from-right-4 duration-300">
-                  <SectionTitle title="Notification Settings" icon={Bell} description="Control how and when you receive archival updates." />
-                  
-                  <div className="pt-4">
-                    <NotificationPreferences 
-                      preferences={preferences}
-                      onChange={updatePreferences}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* API Tab */}
-              {activeTab === 'api' && (
-                <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
-                  <SectionTitle title="API Configuration" icon={Shield} description="Manage external integrations and webhook triggers." />
-                  
-                  <div className="space-y-6 pt-4">
-                    <SwitchField 
-                      label="Enable API Access" 
-                      description="Allow external services to interact with your archives." 
-                      icon={Key}
-                      checked={watch('api_enabled') || false}
-                      onChange={(val) => setValue('api_enabled', val, { shouldDirty: true })}
-                    />
-                    
-                    <FormField label="API Key" error={errors.api_key?.message}>
-                      <div className="relative group">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <input 
-                          type="password"
-                          {...register('api_key')}
-                          placeholder="••••••••••••••••••••••••••••••••"
-                          className="w-full bg-accent/40 border border-border/40 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                        />
-                         <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-primary hover:underline">Regenerate</button>
-                      </div>
-                    </FormField>
-
-                    <FormField label="Webhook URL" error={errors.webhook_url?.message} description="Webhooks are sent as POST requests with JSON payload.">
-                       <div className="relative">
-                        <Webhook className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <input 
-                          type="url"
-                          {...register('webhook_url')}
-                          placeholder="https://your-domain.com/webhook"
-                          className="w-full bg-accent/40 border border-border/40 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                        />
-                      </div>
-                    </FormField>
-                  </div>
-                </div>
-              )}
-
-              {/* Appearance Tab */}
-              {activeTab === 'appearance' && (
-                <div className="space-y-8 animate-in slide-in-from-right-4 duration-300">
-                  <SectionTitle title="Visual Preferences" icon={Palette} description="Customize how the application looks and feels." />
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
-                    <ThemeCard 
-                      id="light" 
-                      label="Light" 
-                      icon={Sun} 
-                      active={watch('theme') === 'light'} 
-                      onClick={() => setValue('theme', 'light', { shouldDirty: true })} 
-                    />
-                    <ThemeCard 
-                      id="dark" 
-                      label="Dark" 
-                      icon={Moon} 
-                      active={watch('theme') === 'dark'} 
-                      onClick={() => setValue('theme', 'dark', { shouldDirty: true })} 
-                    />
-                    <ThemeCard 
-                      id="system" 
-                      label="System" 
-                      icon={Laptop} 
-                      active={watch('theme') === 'system'} 
-                      onClick={() => setValue('theme', 'system', { shouldDirty: true })} 
-                    />
-                  </div>
-
-                  <div className="space-y-4 pt-8 border-t border-border/40">
-                     <p className="text-sm font-semibold">Accent Color</p>
-                     <div className="flex gap-4">
-                        {['blue', 'indigo', 'emerald', 'rose', 'amber'].map((color) => (
-                           <button
-                             key={color}
-                             type="button"
-                             onClick={() => setValue('accent_color', color, { shouldDirty: true })}
-                             className={cn(
-                               "w-10 h-10 rounded-full border-2 transition-all p-0.5",
-                               watch('accent_color') === color ? "border-primary scale-110 shadow-lg shadow-primary/20" : "border-transparent"
-                             )}
-                           >
-                             <div className={cn("w-full h-full rounded-full", `bg-${color}-500`)} style={{ 
-                               backgroundColor: 
-                                  color === 'blue' ? '#3b82f6' : 
-                                  color === 'indigo' ? '#6366f1' : 
-                                  color === 'emerald' ? '#10b981' : 
-                                  color === 'rose' ? '#f43f5e' : 
-                                  '#f59e0b'
-                             }}></div>
-                           </button>
-                        ))}
-                     </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Account Tab */}
-              {activeTab === 'account' && (
-                <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
-                  <SectionTitle title="Account Management" icon={User} description="Manage your profile information and account security." />
-                  
-                  <div className="flex items-center gap-6 mb-8 pt-4">
-                     <div className="w-20 h-20 rounded-3xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-inner">
-                        <User className="h-10 w-10" />
-                     </div>
-                     <div className="space-y-1">
-                        <p className="font-bold text-lg">David Akoro</p>
-                        <p className="text-xs text-muted-foreground font-medium">System Administrator • Since Jan 2024</p>
-                        <button type="button" className="text-[10px] font-bold text-primary hover:underline">Change Avatar</button>
-                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <FormField label="Full Name" error={errors.full_name?.message}>
-                      <input 
-                        {...register('full_name')}
-                        className="w-full bg-accent/40 border border-border/40 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                      />
-                    </FormField>
-
-                    <FormField label="Email Address" error={errors.email?.message}>
-                      <input 
-                        {...register('email')}
-                        className="w-full bg-accent/40 border border-border/40 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                      />
-                    </FormField>
-                  </div>
-
-                  <div className="pt-8 mt-8 border-t border-border/40 flex flex-col gap-4">
-                    <button type="button" className="text-sm font-semibold flex items-center gap-2 text-primary hover:underline w-fit">
-                       <Lock className="h-4 w-4" />
-                       Change Account Password
-                    </button>
-                    <button type="button" className="text-sm font-semibold flex items-center gap-2 text-rose-500 hover:underline w-fit">
-                       <Shield className="h-4 w-4" />
-                       Two-Factor Authentication (Disabled)
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+        {/* Content */}
+        <div className="flex-1">
+          <ThemePicker />
+          
+          <div className="mt-8 p-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm">
+            <h3 className="text-xl font-bold mb-4">Export All Data</h3>
+            <p className="text-sm text-gray-500 mb-6">
+              Download all your settings, archives, and policies in a single JSON file for backup or migration.
+            </p>
+            <button className="px-6 py-3 bg-gray-100 dark:bg-gray-800 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+              Prepare Export
+            </button>
           </div>
-
-          {/* Action Bar */}
-          <div className="flex items-center justify-between p-6 rounded-2xl bg-card border border-border/50 sticky bottom-4 z-50 shadow-2xl backdrop-blur-md bg-card/90">
-             <div className="flex items-center gap-3">
-                {saved && (
-                   <div className="flex items-center gap-2 text-emerald-500 animate-in fade-in slide-in-from-left-2 duration-300">
-                      <CheckCircle2 className="h-5 w-5" />
-                      <span className="text-sm font-bold">Preferences Saved Successfully</span>
-                   </div>
-                )}
-                {error && (
-                   <div className="flex items-center gap-2 text-rose-500 animate-in fade-in slide-in-from-left-2 duration-300">
-                      <AlertCircle className="h-5 w-5" />
-                      <span className="text-sm font-bold">{error}</span>
-                   </div>
-                )}
-                {!saved && !error && (
-                   <p className="text-xs text-muted-foreground font-medium">
-                     {isDirty ? "Account has unsaved changes" : "System settings are up to date"}
-                   </p>
-                )}
-             </div>
-             <div className="flex gap-4">
-                <button 
-                   type="button" 
-                   onClick={() => reset(settings || {})}
-                   disabled={!isDirty || saving}
-                   className="px-6 py-2.5 text-sm font-bold text-muted-foreground hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                >
-                   Reset Changes
-                </button>
-                <button 
-                   type="submit" 
-                   disabled={!isDirty || saving}
-                   className={cn(
-                      "px-8 py-2.5 bg-primary text-primary-foreground font-bold text-sm rounded-xl shadow-lg shadow-primary/20 transition-all duration-300 flex items-center gap-2 disabled:bg-muted disabled:shadow-none disabled:text-muted-foreground group",
-                      saving ? "opacity-80" : "hover:scale-[1.05]"
-                   )}
-                >
-                   {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4 group-hover:scale-110 transition-transform" />}
-                   {saving ? "Processing..." : "Save Preferences"}
-                </button>
-             </div>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
-  )
-}
-
-/** Helper Components **/
-
-function SectionTitle({ title, icon: Icon, description }: { title: string, icon: any, description: string }) {
-  return (
-    <div className="space-y-1">
-      <div className="flex items-center gap-3 text-primary">
-         <Icon className="h-5 w-5" />
-         <h3 className="font-bold text-xl tracking-tight text-foreground">{title}</h3>
-      </div>
-      <p className="text-xs text-muted-foreground font-medium">{description}</p>
-    </div>
-  )
-}
-
-function FormField({ label, children, error, description }: { label: string, children: React.ReactNode, error?: string, description?: string }) {
-  return (
-    <div className="space-y-2">
-      <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{label}</label>
-      {children}
-      {error && <p className="text-[10px] font-bold text-rose-500 flex items-center gap-1"><AlertCircle className="h-3 w-3" /> {error}</p>}
-      {description && !error && <p className="text-[10px] text-muted-foreground/60 font-medium">{description}</p>}
-    </div>
-  )
-}
-
-function SwitchField({ label, description, icon: Icon, checked, onChange }: { label: string, description: string, icon: any, checked: boolean, onChange: (val: boolean) => void }) {
-  return (
-    <div className="flex items-center justify-between p-5 rounded-2xl bg-accent/20 border border-transparent hover:border-border/40 transition-all group">
-       <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-card border border-border/50 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
-             <Icon className="h-5 w-5" />
-          </div>
-          <div className="space-y-0.5">
-             <p className="text-sm font-bold">{label}</p>
-             <p className="text-[10px] text-muted-foreground font-medium">{description}</p>
-          </div>
-       </div>
-       <button 
-         type="button" 
-         onClick={() => onChange(!checked)}
-         className={cn(
-           "w-12 h-6 rounded-full transition-all relative",
-           checked ? "bg-primary" : "bg-muted"
-         )}
-       >
-          <div className={cn(
-             "absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-all shadow-sm",
-             checked ? "translate-x-6" : "translate-x-0"
-          )} />
-       </button>
-    </div>
-  )
-}
-
-function ThemeCard({ label, icon: Icon, active, onClick }: { id: string, label: string, icon: any, active: boolean, onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "p-6 rounded-2xl border-2 flex flex-col items-center gap-4 transition-all duration-300",
-        active 
-          ? "border-primary bg-primary/5 shadow-2xl shadow-primary/10 scale-105" 
-          : "border-border/40 hover:border-border hover:bg-accent/30"
-      )}
-    >
-      <div className={cn(
-        "w-12 h-12 rounded-xl flex items-center justify-center transition-colors",
-        active ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30" : "bg-accent text-muted-foreground"
-      )}>
-        <Icon className="h-6 w-6" />
-      </div>
-      <p className={cn("text-xs font-bold uppercase tracking-widest", active ? "text-primary" : "text-muted-foreground")}>{label}</p>
-    </button>
-  )
-}
+  );
+};
