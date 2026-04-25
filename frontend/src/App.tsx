@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { Dashboard } from './pages/Dashboard'
-import { Policies, Archives, Blockchain } from './pages/index'
+import { Policies, Archives, Blockchain, Performance } from './pages/index'
 import { Settings } from './pages/Settings'
 
 import { NotificationProvider } from './context/NotificationContext'

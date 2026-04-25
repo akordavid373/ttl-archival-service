@@ -5,10 +5,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider } from 'wagmi'
 import { HelmetProvider } from 'react-helmet-async'
 import * as Sentry from "@sentry/react"
-import { config } from './lib/wagmi'
+import { config } from './utils/wagmi'
 import App from './App.tsx'
 import { ThemeProvider } from './context/ThemeContext'
 import { ShortcutProvider } from './context/ShortcutContext'
+import { LanguageProvider } from './context/LanguageContext'
+import './utils/i18n'
 import './index.css'
 
 // Initialize Sentry
@@ -41,11 +43,13 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <WagmiProvider config={config}>
           <QueryClientProvider client={queryClient}>
             <BrowserRouter>
-              <ThemeProvider>
-                <ShortcutProvider>
-                  <App />
-                </ShortcutProvider>
-              </ThemeProvider>
+              <LanguageProvider>
+                <ThemeProvider>
+                  <ShortcutProvider>
+                    <App />
+                  </ShortcutProvider>
+                </ThemeProvider>
+              </LanguageProvider>
             </BrowserRouter>
           </QueryClientProvider>
         </WagmiProvider>

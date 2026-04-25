@@ -1,0 +1,129 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "refresh": "Refresh",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "language": "Language",
+    "settings": "Settings"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "policies": "Policies",
+    "archives": "Archives",
+    "blockchain": "Blockchain",
+    "performance": "Performance",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to TTL Archival Service",
+    "overview": "Overview",
+    "recentActivity": "Recent Activity",
+    "statistics": "Statistics",
+    "totalArchives": "Total Archives",
+    "activePolicies": "Active Policies",
+    "storageUsed": "Storage Used",
+    "lastSync": "Last Sync"
+  },
+  "policies": {
+    "title": "Archival Policies",
+    "createPolicy": "Create Policy",
+    "policyName": "Policy Name",
+    "ttlDuration": "TTL Duration",
+    "retentionPeriod": "Retention Period",
+    "storageLocation": "Storage Location",
+    "autoArchive": "Auto Archive",
+    "enabled": "Enabled",
+    "disabled": "Disabled"
+  },
+  "archives": {
+    "title": "Archives",
+    "searchArchives": "Search Archives",
+    "archiveName": "Archive Name",
+    "createdDate": "Created Date",
+    "expiryDate": "Expiry Date",
+    "status": "Status",
+    "size": "Size",
+    "download": "Download",
+    "restore": "Restore",
+    "active": "Active",
+    "expired": "Expired",
+    "archived": "Archived"
+  },
+  "blockchain": {
+    "title": "Blockchain",
+    "transactions": "Transactions",
+    "hash": "Hash",
+    "timestamp": "Timestamp",
+    "blockNumber": "Block Number",
+    "confirmations": "Confirmations",
+    "verify": "Verify",
+    "walletConnected": "Wallet Connected",
+    "walletDisconnected": "Wallet Disconnected",
+    "connectWallet": "Connect Wallet"
+  },
+  "performance": {
+    "title": "Performance",
+    "metrics": "Metrics",
+    "responseTime": "Response Time",
+    "throughput": "Throughput",
+    "errorRate": "Error Rate",
+    "uptime": "Uptime",
+    "cpuUsage": "CPU Usage",
+    "memoryUsage": "Memory Usage"
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "appearance": "Appearance",
+    "language": "Language",
+    "theme": "Theme",
+    "notifications": "Notifications",
+    "privacy": "Privacy",
+    "security": "Security",
+    "about": "About",
+    "version": "Version"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAsRead": "Mark as Read",
+    "markAllAsRead": "Mark All as Read",
+    "clearAll": "Clear All",
+    "noNotifications": "No notifications",
+    "newNotification": "New Notification"
+  },
+  "errors": {
+    "networkError": "Network error occurred",
+    "fileNotFound": "File not found",
+    "unauthorized": "Unauthorized access",
+    "validationError": "Validation error",
+    "serverError": "Server error",
+    "unknownError": "Unknown error occurred"
+  },
+  "dates": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "thisYear": "This Year",
+    "lastWeek": "Last Week",
+    "lastMonth": "Last Month",
+    "lastYear": "Last Year"
+  }
+}
