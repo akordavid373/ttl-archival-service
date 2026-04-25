@@ -15,6 +15,8 @@ from .schemas import (
 from .services import ArchiveService, PolicyService, SettingsService
 from .scheduler import ArchiveScheduler
 
+from .security import SecurityHeadersMiddleware
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -27,6 +29,9 @@ app = FastAPI(
     description="A service for automated data archival with TTL-based cleanup",
     version="1.0.0"
 )
+
+# Security middleware
+app.add_middleware(SecurityHeadersMiddleware)
 
 # CORS middleware
 app.add_middleware(
