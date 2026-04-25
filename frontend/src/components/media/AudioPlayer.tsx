@@ -127,13 +127,13 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
   if (!playlist || playlist.length === 0) return null;
 
   return (
-    <div className="w-full max-w-md mx-auto bg-gray-900 text-white rounded-xl shadow-2xl overflow-hidden border border-gray-800">
+    <div className="w-full max-w-md mx-auto bg-gray-900 text-white rounded-xl shadow-2xl overflow-hidden border border-gray-800 sm:max-w-lg lg:max-w-xl">
       <audio ref={audioRef} src={currentTrack.src} />
       
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         {/* Album Art & Info */}
-        <div className="flex items-center space-x-4 mb-6">
-          <div className="w-20 h-20 bg-gray-800 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center border border-gray-700 shadow-inner">
+        <div className="flex items-center space-x-3 sm:space-x-4 mb-4 sm:mb-6">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-800 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center border border-gray-700 shadow-inner">
             {currentTrack.cover ? (
               <img src={currentTrack.cover} alt="Cover" className="w-full h-full object-cover" />
             ) : (
@@ -141,13 +141,13 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
             )}
           </div>
           <div className="overflow-hidden">
-            <h3 className="text-lg font-bold truncate text-gray-100">{currentTrack.title}</h3>
-            <p className="text-sm text-gray-400 truncate">{currentTrack.artist || 'Unknown Artist'}</p>
+            <h3 className="text-base sm:text-lg font-bold truncate text-gray-100">{currentTrack.title}</h3>
+            <p className="text-xs sm:text-sm text-gray-400 truncate">{currentTrack.artist || 'Unknown Artist'}</p>
           </div>
         </div>
 
         {/* Progress Bar */}
-        <div className="mb-4">
+        <div className="mb-3 sm:mb-4">
           <input
             type="range"
             min="0"
@@ -163,10 +163,10 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
         </div>
 
         {/* Controls */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center space-x-2">
             <button onClick={toggleMute} className="text-gray-400 hover:text-indigo-400 transition">
-              {isMuted || volume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}
+              {isMuted || volume === 0 ? <VolumeX size={16} sm:size={18} /> : <Volume2 size={16} sm:size={18} />}
             </button>
             <input
               type="range"
@@ -175,32 +175,32 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
               step="0.05"
               value={isMuted ? 0 : volume}
               onChange={handleVolumeChange}
-              className="w-16 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-indigo-500 hidden sm:block"
+              className="w-12 sm:w-16 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-indigo-500 hidden sm:block"
             />
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             <button onClick={handlePrevTrack} className="text-gray-400 hover:text-indigo-400 transition">
-              <SkipBack size={24} />
+              <SkipBack size={20} sm:size={24} />
             </button>
             <button
               onClick={togglePlay}
-              className="w-12 h-12 flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white rounded-full transition shadow-lg shadow-indigo-500/30"
+              className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white rounded-full transition shadow-lg shadow-indigo-500/30"
             >
-              {isPlaying ? <Pause size={24} /> : <Play size={24} className="ml-1" />}
+              {isPlaying ? <Pause size={20} sm:size={24} /> : <Play size={20} sm:size={24} className="ml-1" />}
             </button>
             <button onClick={handleNextTrack} className="text-gray-400 hover:text-indigo-400 transition">
-              <SkipForward size={24} />
+              <SkipForward size={20} sm:size={24} />
             </button>
           </div>
 
-          <div className="flex items-center space-x-3 relative">
+          <div className="flex items-center space-x-2 sm:space-x-3 relative">
             <div className="relative">
               <button
                 onClick={() => setShowSettings(!showSettings)}
                 className={`transition ${showSettings ? 'text-indigo-400' : 'text-gray-400 hover:text-indigo-400'}`}
               >
-                <Settings size={18} />
+                <Settings size={16} sm:size={18} />
               </button>
 
               {showSettings && (
@@ -225,7 +225,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ playlist }) => {
               onClick={() => setShowPlaylist(!showPlaylist)}
               className={`transition ${showPlaylist ? 'text-indigo-400' : 'text-gray-400 hover:text-indigo-400'}`}
             >
-              <ListMusic size={18} />
+              <ListMusic size={16} sm:size={18} />
             </button>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { Blockchain } from './pages/Blockchain'
 import { Settings } from './pages/Settings'
 import { Performance } from './pages/Performance'
 import { MediaPlayground } from './pages/MediaPlayground'
+import MediaDemo from './pages/MediaDemo'
 import { NotificationProvider } from './context/NotificationContext'
 import { ToastContainer, NotificationCenter } from './components/notifications'
 import { useNotifications } from './context/NotificationContext'
@@ -33,6 +34,7 @@ function AppContent() {
           <Route path="/performance" element={<Performance />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/media" element={<MediaPlayground />} />
+          <Route path="/media-demo" element={<MediaDemo />} />
         </Routes>
       </Layout>
       

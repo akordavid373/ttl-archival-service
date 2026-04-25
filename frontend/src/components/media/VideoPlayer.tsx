@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Settings, Captions } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Settings, Subtitles } from 'lucide-react';
 import { formatDuration } from './utils';
 
 interface VideoPlayerProps {
@@ -119,7 +119,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, subtitles
   return (
     <div
       ref={containerRef}
-      className="relative w-full max-w-4xl mx-auto bg-black rounded-lg overflow-hidden group shadow-lg"
+      className="relative w-full max-w-4xl mx-auto bg-black rounded-lg overflow-hidden group shadow-lg sm:max-w-5xl lg:max-w-6xl"
     >
       <video
         ref={videoRef}
@@ -142,7 +142,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, subtitles
       </video>
 
       {/* Controls Overlay */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         {/* Progress Bar */}
         <input
           type="range"
@@ -186,7 +186,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, subtitles
                 className={`hover:text-blue-400 transition ${subtitlesEnabled ? 'text-blue-500' : ''}`}
                 title="Toggle Subtitles"
               >
-                <Captions size={20} />
+                <Subtitles size={20} />
               </button>
             )}
 
