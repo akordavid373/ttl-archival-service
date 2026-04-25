@@ -1,186 +1,122 @@
-import React from 'react'
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { SEO } from '../components/common/SEO';
+import { motion } from 'framer-motion';
 import { 
-  Activity, 
-  ShieldCheck, 
-  Archive, 
-  Database, 
-  TrendingUp, 
+  BarChart3, 
   Clock, 
+  AlertTriangle, 
+  Trash2, 
   Download, 
   RefreshCw,
-  ArrowUpRight,
-  AlertCircle
+  ArrowUpRight
 } from 'lucide-react'
 import { StorageUsageChart } from '../components/charts/StorageUsageChart'
 import { ArchiveTrendsChart } from '../components/charts/ArchiveTrendsChart'
-import { cn } from '../utils/cn'
-import { useDashboardStats } from '../hooks/useDashboardStats'
-import { MetricCard } from '../components/Dashboard/MetricCard'
-import { RecentActivity } from '../components/Dashboard/RecentActivity'
+import RetentionSankey from '../components/charts/RetentionSankey'
+import { cn } from '../lib/utils'
 
 export function Dashboard() {
-  const { 
-    stats, 
-    recentArchives, 
-    isLoading, 
-    isRefreshing, 
-    error, 
-    refresh 
-  } = useDashboardStats()
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
-  const handleExport = () => {
-    if (!stats) return
-    const csvContent = "data:text/csv;charset=utf-8," 
-      + "Metric,Value\n"
-      + `Total Archives,${stats.total_records}\n`
-      + `Active Policies,${stats.active_policies}\n`
-      + `Storage Usage,${stats.storage_usage_formatted}\n`
-      + `Blockchain Status,${stats.blockchain_status}\n`
-      + `Verification Rate,${stats.verification_rate}%`;
-    
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `ttl_audit_report_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
+export const Dashboard: React.FC = () => {
+  const { t } = useTranslation()
 
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-8 bg-destructive/5 rounded-3xl border border-destructive/20 animate-in zoom-in-95">
-        <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-        <h3 className="text-xl font-bold mb-2">Failed to load dashboard data</h3>
-        <p className="text-muted-foreground mb-6 max-w-md">{error}</p>
-        <button 
-          onClick={() => refresh()}
-          className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-bold rounded-2xl shadow-lg hover:scale-105 transition-all"
-        >
-          <RefreshCw className="h-5 w-5" />
-          Retry Connection
-        </button>
-      </div>
-    )
-  }
+  const stats = [
+    { label: t('dashboard.activePolicies'), value: '1,284', icon: Archive, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+    { label: t('dashboard.statistics'), value: '99.9%', icon: Shield, color: 'text-green-500', bg: 'bg-green-500/10' },
+    { label: t('dashboard.storageUsed'), value: '42.5 GB', icon: Database, color: 'text-purple-500', bg: 'bg-purple-500/10' },
+    { label: t('dashboard.lastSync'), value: '14 Days', icon: Clock, color: 'text-orange-500', bg: 'bg-orange-500/10' },
+  ];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <header className="flex items-center justify-between">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">Dashboard Overview</h2>
-          <p className="text-muted-foreground flex items-center gap-2">
-            <Activity className={cn("h-4 w-4 text-emerald-500", (isLoading || isRefreshing) && "animate-pulse")} />
-            {isLoading || isRefreshing ? "Refreshing system metrics..." : "System is performing within optimal parameters."}
-          </p>
+    <div className="space-y-8">
+      <SEO title="Dashboard" description="Overview of your archival status and statistics." />
+      
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-3xl font-bold">{t('dashboard.welcome')}</h2>
+          <p className="text-gray-500">{t('dashboard.overview')}</p>
         </div>
-        <div className="flex gap-4">
-          <button 
-            disabled={isLoading || isRefreshing}
-            onClick={() => refresh()}
-            className="p-3 bg-secondary text-secondary-foreground rounded-2xl border border-border shadow-sm hover:bg-accent transition-colors group disabled:opacity-50"
-          >
-            <RefreshCw className={cn("h-5 w-5", (isLoading || isRefreshing) && "animate-spin")} />
+        <div className="flex items-center gap-3">
+          <button className="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-800 font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            {t('common.refresh')} {t('dashboard.title')}
           </button>
-          <button 
-            disabled={!stats}
-            onClick={handleExport}
-            className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-bold text-sm rounded-2xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all group disabled:opacity-50"
-          >
-            <Download className="h-5 w-5 group-hover:scale-110 transition-transform" />
-            Export Audit Data
+          <button className="px-4 py-2 rounded-xl bg-primary text-white font-medium hover:opacity-90 transition-opacity">
+            {t('common.add')} {t('archives.title')}
           </button>
         </div>
-      </header>
+      </div>
 
-      {/* Metric Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {isLoading && !stats ? (
-          Array(4).fill(0).map((_, i) => (
-            <div key={i} className="h-[148px] rounded-3xl bg-accent/20 animate-pulse border border-border/50" />
-          ))
-        ) : (
-          <>
-            <MetricCard 
-              label="Total Archives" 
-              value={stats?.total_records || '0'} 
-              change="+12%" // Typically this would also come from API stats if possible
-              icon={Archive} 
-              color="text-blue-500" 
-              bg="bg-blue-500/10" 
-            />
-            <MetricCard 
-              label="Active Policies" 
-              value={stats?.active_policies || '0'} 
-              change="+2" 
-              icon={ShieldCheck} 
-              color="text-emerald-500" 
-              bg="bg-emerald-500/10" 
-            />
-            <MetricCard 
-              label="Storage Usage" 
-              value={stats?.storage_usage_formatted || '0 MB'} 
-              change="+520 MB" 
-              icon={Database} 
-              color="text-purple-500" 
-              bg="bg-purple-500/10" 
-            />
-            <MetricCard 
-              label="Blockchain Status" 
-              value={stats?.blockchain_status || 'Checking...'} 
-              change={stats?.verification_rate ? `${stats.verification_rate}%` : 'Stable'} 
-              icon={Database} 
-              color="text-amber-500" 
-              bg="bg-amber-500/10" 
-            />
-          </>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="p-8 rounded-3xl bg-card border border-border/50 shadow-sm relative group overflow-hidden">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="font-bold text-xl flex items-center gap-3">
-              <Database className="h-6 w-6 text-primary" />
-              Storage Usage
-            </h3>
-            <div className="flex gap-2">
-              <button className="px-4 py-1.5 text-xs font-bold rounded-xl bg-primary text-primary-foreground">Monthly</button>
-              <button className="px-4 py-1.5 text-xs font-bold rounded-xl hover:bg-accent transition-colors">Daily</button>
+        {stats.map((stat, i) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: i * 0.1 }}
+            className="p-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow"
+          >
+            <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-xl flex items-center justify-center mb-4`}>
+              <stat.icon className="w-6 h-6" />
             </div>
-          </div>
-          <StorageUsageChart />
-        </div>
+            <p className="text-sm font-medium text-gray-500 mb-1">{stat.label}</p>
+            <div className="flex items-end justify-between">
+              <h3 className="text-2xl font-bold">{stat.value}</h3>
+              <div className="flex items-center text-xs font-medium text-green-500 bg-green-500/10 px-2 py-1 rounded-full">
+                <ArrowUpRight className="w-3 h-3 mr-1" />
+                12%
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
 
-        <div className="p-8 rounded-3xl bg-card border border-border/50 shadow-sm relative group overflow-hidden">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="font-bold text-xl flex items-center gap-3">
-              <TrendingUp className="h-6 w-6 text-blue-500" />
-              Archiving Trends
-            </h3>
-            <button className="text-xs font-bold text-primary flex items-center gap-1 hover:underline">
-              View Detailed Analytics
-              <ArrowUpRight className="h-3 w-3" />
-            </button>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-bold">{t('dashboard.recentActivity')}</h3>
+            <BarChart3 className="w-5 h-5 text-gray-400" />
           </div>
-          <ArchiveTrendsChart />
+          <div className="h-64 flex items-center justify-center border-2 border-dashed border-gray-100 dark:border-gray-800 rounded-xl">
+            <p className="text-gray-400">{t('dashboard.statistics')}</p>
+          </div>
         </div>
       </div>
 
-      {/* Recent Activity Section */}
-      <div className="p-8 rounded-3xl bg-card border border-border/50 shadow-sm relative overflow-hidden group mb-8">
+      <div className="p-8 rounded-3xl bg-card border border-border/50 shadow-sm relative overflow-hidden group">
+        <div className="flex items-center justify-between mb-8">
+          <h3 className="font-bold text-xl flex items-center gap-3">
+            <Activity className="h-6 w-6 text-indigo-500" />
+            Data Retention Lifecycle
+          </h3>
+          <p className="text-xs text-muted-foreground">Visualizing data flow through archival tiers</p>
+        </div>
+        <RetentionSankey />
+      </div>
+
+      <div className="p-8 rounded-3xl bg-card border border-border/50 shadow-sm relative overflow-hidden group">
         <h3 className="font-bold text-lg mb-6 flex items-center gap-3 relative z-10">
           <Clock className="h-5 w-5 text-amber-500" />
           Recently Expired
         </h3>
-        <RecentActivity 
-          activities={recentArchives} 
-          loading={isLoading && recentArchives.length === 0} 
-        />
-        <button className="w-full mt-8 py-2.5 text-xs font-bold text-primary hover:text-primary/80 transition-colors relative z-10 hover:underline">
-          Manage All Expired Records
-        </button>
+        <div className="space-y-4 relative z-10">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex items-center gap-4 p-3 rounded-xl hover:bg-accent/50 transition-colors cursor-pointer border border-transparent hover:border-border/40">
+              <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center text-amber-500 shrink-0">
+                <AlertTriangle className="h-5 w-5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold truncate group-hover:text-primary transition-colors">user_logs_2024_03_2{i}.sql</p>
+                <p className="text-[10px] text-muted-foreground flex items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  2 hours ago · 14.2 MB
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
