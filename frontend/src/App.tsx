@@ -5,9 +5,13 @@ import { Policies } from './pages/Policies'
 import { Archives } from './pages/Archives'
 import { Blockchain } from './pages/Blockchain'
 import { Settings } from './pages/Settings'
-import { NotificationProvider } from './context/NotificationContext'
-import { ToastContainer, NotificationCenter } from './components/notifications'
-import { useNotifications } from './context/NotificationContext'
+import { ABTestingProvider } from './context/ABTestingContext'
+import { analytics } from './services/analytics'
+import { Demo } from './pages/Demo'
+
+// Initialize Analytics
+analytics.init('G-XXXXXXXXXX');
+
 
 function AppContent() {
   const { 
@@ -29,6 +33,7 @@ function AppContent() {
           <Route path="/archives" element={<Archives />} />
           <Route path="/blockchain" element={<Blockchain />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/demo" element={<Demo />} />
         </Routes>
       </Layout>
       
@@ -54,9 +59,11 @@ function AppContent() {
 
 function App() {
   return (
-    <NotificationProvider>
-      <AppContent />
-    </NotificationProvider>
+    <ABTestingProvider>
+      <NotificationProvider>
+        <AppContent />
+      </NotificationProvider>
+    </ABTestingProvider>
   )
 }
 
