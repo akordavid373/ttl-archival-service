@@ -1,0 +1,129 @@
+{
+  "common": {
+    "loading": "טוען...",
+    "error": "שגיאה",
+    "success": "הצלחה",
+    "cancel": "ביטול",
+    "save": "שמירה",
+    "delete": "מחיקה",
+    "edit": "עריכה",
+    "add": "הוספה",
+    "search": "חיפוש",
+    "filter": "סינון",
+    "refresh": "רענון",
+    "close": "סגירה",
+    "confirm": "אישור",
+    "yes": "כן",
+    "no": "לא",
+    "submit": "שליחה",
+    "back": "חזרה",
+    "next": "הבא",
+    "previous": "הקודם",
+    "language": "שפה",
+    "settings": "הגדרות"
+  },
+  "navigation": {
+    "dashboard": "לוח בקרה",
+    "policies": "מדיניות",
+    "archives": "ארכיון",
+    "blockchain": "בלוקצ'יין",
+    "performance": "ביצועים",
+    "settings": "הגדרות"
+  },
+  "dashboard": {
+    "title": "לוח בקרה",
+    "welcome": "ברוכים הבאים לשירות הארכיון TTL",
+    "overview": "סקירה כללית",
+    "recentActivity": "פעילות אחרונה",
+    "statistics": "סטטיסטיקה",
+    "totalArchives": "סך הכל ארכיונים",
+    "activePolicies": "מדיניות פעילה",
+    "storageUsed": "שטח אחסון בשימוש",
+    "lastSync": "סנכרון אחרון"
+  },
+  "policies": {
+    "title": "מדיניות ארכיון",
+    "createPolicy": "יצירת מדיניות",
+    "policyName": "שם מדיניות",
+    "ttlDuration": "משך TTL",
+    "retentionPeriod": "תקופת שמירה",
+    "storageLocation": "מיקום אחסון",
+    "autoArchive": "ארכיון אוטומטי",
+    "enabled": "מופעל",
+    "disabled": "מושבת"
+  },
+  "archives": {
+    "title": "ארכיונים",
+    "searchArchives": "חיפוש בארכיונים",
+    "archiveName": "שם ארכיון",
+    "createdDate": "תאריך יצירה",
+    "expiryDate": "תאריך תפוגה",
+    "status": "סטטוס",
+    "size": "גודל",
+    "download": "הורדה",
+    "restore": "שחזור",
+    "active": "פעיל",
+    "expired": "פג תוקף",
+    "archived": "מאורכב"
+  },
+  "blockchain": {
+    "title": "בלוקצ'יין",
+    "transactions": "טרנזקציות",
+    "hash": "האש",
+    "timestamp": "חותמת זמן",
+    "blockNumber": "מספר בלוק",
+    "confirmations": "אישורים",
+    "verify": "אימות",
+    "walletConnected": "ארנק מחובר",
+    "walletDisconnected": "ארנק מנותק",
+    "connectWallet": "חיבור ארנק"
+  },
+  "performance": {
+    "title": "ביצועים",
+    "metrics": "מדדים",
+    "responseTime": "זמן תגובה",
+    "throughput": "תפוקה",
+    "errorRate": "שיעור שגיאה",
+    "uptime": "זמן פעילות",
+    "cpuUsage": "שימוש במעבד",
+    "memoryUsage": "שימוש בזיכרון"
+  },
+  "settings": {
+    "title": "הגדרות",
+    "general": "כללי",
+    "appearance": "מראה",
+    "language": "שפה",
+    "theme": "ערכת נושא",
+    "notifications": "התראות",
+    "privacy": "פרטיות",
+    "security": "אבטחה",
+    "about": "אודות",
+    "version": "גרסה"
+  },
+  "notifications": {
+    "title": "התראות",
+    "markAsRead": "סימון כנקרא",
+    "markAllAsRead": "סימון הכל כנקרא",
+    "clearAll": "ניקוי הכל",
+    "noNotifications": "אין התראות",
+    "newNotification": "התראה חדשה"
+  },
+  "errors": {
+    "networkError": "אירעה שגיאת רשת",
+    "fileNotFound": "קובץ לא נמצא",
+    "unauthorized": "גישה לא מורשית",
+    "validationError": "שגיאת אימות",
+    "serverError": "שגיאת שרת",
+    "unknownError": "אירעה שגיאה לא ידועה"
+  },
+  "dates": {
+    "today": "היום",
+    "yesterday": "אתמול",
+    "thisWeek": "השבוע",
+    "thisMonth": "החודש",
+    "thisYear": "השנה",
+    "lastWeek": "שבוע שעבר",
+    "lastMonth": "חודש שעבר",
+    "lastYear": "שנה שעברה"
+  }
+}

@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider } from 'wagmi'
 import { HelmetProvider } from 'react-helmet-async'
 import * as Sentry from "@sentry/react"
-import { config } from './lib/wagmi'
+import { config } from './utils/wagmi'
 import App from './App.tsx'
 import { ThemeProvider } from './context/ThemeContext'
 import { SettingsProvider } from './context/SettingsContext'

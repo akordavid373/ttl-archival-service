@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { SEO } from '../components/common/SEO';
 import { motion } from 'framer-motion';
 import { 
@@ -19,11 +20,13 @@ export function Dashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false)
 
 export const Dashboard: React.FC = () => {
+  const { t } = useTranslation()
+
   const stats = [
-    { label: 'Active Archives', value: '1,284', icon: Archive, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-    { label: 'Protection Rate', value: '99.9%', icon: Shield, color: 'text-green-500', bg: 'bg-green-500/10' },
-    { label: 'Storage Saved', value: '42.5 GB', icon: Database, color: 'text-purple-500', bg: 'bg-purple-500/10' },
-    { label: 'Avg TTL Remaining', value: '14 Days', icon: Clock, color: 'text-orange-500', bg: 'bg-orange-500/10' },
+    { label: t('dashboard.activePolicies'), value: '1,284', icon: Archive, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+    { label: t('dashboard.statistics'), value: '99.9%', icon: Shield, color: 'text-green-500', bg: 'bg-green-500/10' },
+    { label: t('dashboard.storageUsed'), value: '42.5 GB', icon: Database, color: 'text-purple-500', bg: 'bg-purple-500/10' },
+    { label: t('dashboard.lastSync'), value: '14 Days', icon: Clock, color: 'text-orange-500', bg: 'bg-orange-500/10' },
   ];
 
   return (
@@ -32,15 +35,15 @@ export const Dashboard: React.FC = () => {
       
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold">Welcome back, John</h2>
-          <p className="text-gray-500">Here's what's happening with your archives today.</p>
+          <h2 className="text-3xl font-bold">{t('dashboard.welcome')}</h2>
+          <p className="text-gray-500">{t('dashboard.overview')}</p>
         </div>
         <div className="flex items-center gap-3">
           <button className="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-800 font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-            Download Report
+            {t('common.refresh')} {t('dashboard.title')}
           </button>
           <button className="px-4 py-2 rounded-xl bg-primary text-white font-medium hover:opacity-90 transition-opacity">
-            Quick Archive
+            {t('common.add')} {t('archives.title')}
           </button>
         </div>
       </div>
@@ -72,11 +75,11 @@ export const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-bold">Archival Activity</h3>
+            <h3 className="text-lg font-bold">{t('dashboard.recentActivity')}</h3>
             <BarChart3 className="w-5 h-5 text-gray-400" />
           </div>
           <div className="h-64 flex items-center justify-center border-2 border-dashed border-gray-100 dark:border-gray-800 rounded-xl">
-            <p className="text-gray-400">Activity Chart Visualization</p>
+            <p className="text-gray-400">{t('dashboard.statistics')}</p>
           </div>
         </div>
       </div>
