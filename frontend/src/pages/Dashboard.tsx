@@ -5,11 +5,19 @@ import { motion } from 'framer-motion';
 import { 
   BarChart3, 
   Clock, 
-  Shield, 
-  Database,
-  ArrowUpRight,
-  Archive
-} from 'lucide-react';
+  AlertTriangle, 
+  Trash2, 
+  Download, 
+  RefreshCw,
+  ArrowUpRight
+} from 'lucide-react'
+import { StorageUsageChart } from '../components/charts/StorageUsageChart'
+import { ArchiveTrendsChart } from '../components/charts/ArchiveTrendsChart'
+import RetentionSankey from '../components/charts/RetentionSankey'
+import { cn } from '../lib/utils'
+
+export function Dashboard() {
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
 export const Dashboard: React.FC = () => {
   const { t } = useTranslation()
@@ -74,17 +82,36 @@ export const Dashboard: React.FC = () => {
             <p className="text-gray-400">{t('dashboard.statistics')}</p>
           </div>
         </div>
-        
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
-          <h3 className="text-lg font-bold mb-6">{t('dashboard.recentActivity')}</h3>
-          <div className="space-y-6">
-            {[1, 2, 3, 4].map((_, i) => (
-              <div key={i} className="flex gap-4">
-                <div className="w-2 h-2 mt-2 rounded-full bg-primary shrink-0" />
-                <div>
-                  <p className="text-sm font-semibold">{t('archives.archived')} #8294 {t('common.success')}</p>
-                  <p className="text-xs text-gray-500">2 {t('dates.today')} • Mainnet</p>
-                </div>
+      </div>
+
+      <div className="p-8 rounded-3xl bg-card border border-border/50 shadow-sm relative overflow-hidden group">
+        <div className="flex items-center justify-between mb-8">
+          <h3 className="font-bold text-xl flex items-center gap-3">
+            <Activity className="h-6 w-6 text-indigo-500" />
+            Data Retention Lifecycle
+          </h3>
+          <p className="text-xs text-muted-foreground">Visualizing data flow through archival tiers</p>
+        </div>
+        <RetentionSankey />
+      </div>
+
+      <div className="p-8 rounded-3xl bg-card border border-border/50 shadow-sm relative overflow-hidden group">
+        <h3 className="font-bold text-lg mb-6 flex items-center gap-3 relative z-10">
+          <Clock className="h-5 w-5 text-amber-500" />
+          Recently Expired
+        </h3>
+        <div className="space-y-4 relative z-10">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex items-center gap-4 p-3 rounded-xl hover:bg-accent/50 transition-colors cursor-pointer border border-transparent hover:border-border/40">
+              <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center text-amber-500 shrink-0">
+                <AlertTriangle className="h-5 w-5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold truncate group-hover:text-primary transition-colors">user_logs_2024_03_2{i}.sql</p>
+                <p className="text-[10px] text-muted-foreground flex items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  2 hours ago · 14.2 MB
+                </p>
               </div>
             ))}
           </div>

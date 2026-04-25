@@ -45,6 +45,8 @@ from .middleware.version_middleware import (
 from .utils.version_manager import version_manager
 from .middleware import add_cors_middleware, SecurityHeadersMiddleware, CSRFMiddleware
 
+from .security import SecurityHeadersMiddleware
+
 # Configure logging
 settings = get_settings()
 logging.basicConfig(level=getattr(logging, settings.logging.level.value))
@@ -58,6 +60,9 @@ app = FastAPI(
     description="A service for automated data archival with TTL-based cleanup with API versioning support",
     version="2.0.0",
 )
+
+# Security middleware
+app.add_middleware(SecurityHeadersMiddleware)
 
 # CORS middleware
 add_cors_middleware(app)

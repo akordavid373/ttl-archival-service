@@ -10,46 +10,84 @@ import {
   Database, 
   Settings, 
   Search,
-  Bell,
-  User
-} from 'lucide-react';
-import { SEO } from './common/SEO';
-import { ShortcutModal } from './shortcuts/ShortcutModal';
-import { LanguageSwitcher } from './LanguageSwitcher';
+  User,
+  ChevronRight,
+  Menu,
+  X,
+  CreditCard,
+  Settings2,
+  HelpCircle,
+} from 'lucide-react'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { cn } from '../lib/utils'
+import { Breadcrumbs } from './Breadcrumbs'
+import { NotificationBell } from './notifications'
+import OfflineStatus from './OfflineStatus'
+import InstallPWA from './InstallPWA'
 
-const navItems = [
-  { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { path: '/policies', icon: ShieldCheck, label: 'Policies' },
-  { path: '/archives', icon: Archive, label: 'Archives' },
-  { path: '/blockchain', icon: Database, label: 'Blockchain' },
-  { path: '/settings', icon: Settings, label: 'Settings' },
-];
+interface LayoutProps {
+  children: React.ReactNode
+}
 
-export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { t } = useTranslation()
-  const { isRTL } = useLanguage()
+export function Layout({ children }: LayoutProps) {
+  const location = useLocation()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const navItems = [
-    { path: '/', icon: LayoutDashboard, label: t('navigation.dashboard') },
-    { path: '/policies', icon: ShieldCheck, label: t('navigation.policies') },
-    { path: '/archives', icon: Archive, label: t('navigation.archives') },
-    { path: '/blockchain', icon: Database, label: t('navigation.blockchain') },
-    { path: '/settings', icon: Settings, label: t('navigation.settings') },
-  ];
+    { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
+    { name: 'Policies', icon: ShieldCheck, path: '/policies' },
+    { name: 'Archives', icon: Archive, path: '/archives' },
+    { name: 'Blockchain', icon: Database, path: '/blockchain' },
+    { name: 'Settings', icon: Settings, path: '/settings' },
+  ]
 
-  return (
-    <div className={`min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300 ${isRTL ? 'rtl' : 'ltr'}`}>
-      <SEO />
-      <ShortcutModal />
-      
-      {/* Sidebar */}
-      <aside className={`fixed ${isRTL ? 'right-0' : 'left-0'} top-0 bottom-0 w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 z-40 hidden lg:block`}>
-        <div className="p-6">
-          <div className="flex items-center gap-3 mb-10">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/20">
-              T
-            </div>
-            <h1 className="text-xl font-bold tracking-tight">TTL Archival</h1>
+  const SidebarContent = () => (
+    <div className="flex flex-col h-full bg-card/80 backdrop-blur-xl border-r border-border/40">
+      <div className="p-6 flex items-center gap-3">
+        <div className="w-10 h-10 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20 shadow-inner group">
+          <Archive className="text-primary h-6 w-6 group-hover:scale-110 transition-transform" />
+        </div>
+        <div>
+          <h1 className="font-bold text-lg tracking-tight bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">TTL-Archival</h1>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold opacity-60">Service</p>
+        </div>
+      </div>
+
+      <nav className="flex-1 px-4 py-8 space-y-1.5 mt-2">
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path
+          return (
+            <Link
+              key={item.name}
+              to={item.path}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={cn(
+                "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden",
+                isActive 
+                  ? "bg-primary text-primary-foreground shadow-2xl shadow-primary/20 transform scale-[1.02]" 
+                  : "text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"
+              )}
+            >
+              <item.icon className={cn("h-5 w-5 transition-transform duration-300", isActive ? "scale-110" : "group-hover:scale-110")} />
+              <span className="font-semibold text-sm">{item.name}</span>
+              {isActive ? (
+                <div className="ml-auto flex items-center">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary-foreground animate-pulse mr-2" />
+                  <ChevronRight className="h-4 w-4 opacity-50" />
+                </div>
+              ) : (
+                <ChevronRight className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-40 -translate-x-2 group-hover:translate-x-0 transition-all" />
+              )}
+            </Link>
+          )
+        })}
+      </nav>
+
+      <div className="p-6 border-t border-border/30 mt-auto bg-accent/5">
+        <button className="flex items-center justify-between w-full px-4 py-3 text-sm font-bold text-muted-foreground hover:text-destructive hover:bg-destructive/5 rounded-xl transition-all group">
+          <div className="flex items-center gap-3">
+            <LogOut className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+            <span>Sign Out</span>
           </div>
 
           <nav className="space-y-1">
@@ -112,15 +150,25 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           </div>
         </header>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="p-8"
-        >
-          {children}
-        </motion.div>
-      </main>
+        {/* Page Content & Breadcrumbs */}
+        <main className="flex-1 overflow-y-auto bg-dot-pattern scroll-smooth">
+          <div className="p-6 lg:p-12 max-w-7xl mx-auto">
+            {/* Breadcrumbs Integration */}
+            <Breadcrumbs />
+            
+            <div className="animate-in fade-in slide-in-from-bottom-6 duration-700">
+              {children}
+            </div>
+          </div>
+        </main>
+      </div>
+
+      {/* Decorative Blur Overlays for premium feel */}
+      <div className="fixed top-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -z-10 pointer-events-none opacity-50 translate-x-1/2 -translate-y-1/2" />
+      <div className="fixed bottom-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[150px] -z-10 pointer-events-none opacity-30 -translate-x-1/4 translate-y-1/4" />
+      
+      <OfflineStatus />
+      <InstallPWA />
     </div>
   );
 };
