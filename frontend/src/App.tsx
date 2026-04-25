@@ -1,9 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { Dashboard } from './pages/Dashboard'
-import { Policies } from './pages/Policies'
-import { Archives } from './pages/Archives'
-import { Blockchain } from './pages/Blockchain'
+import { Policies, Archives, Blockchain } from './pages/index'
 import { Settings } from './pages/Settings'
 
 function App() {
