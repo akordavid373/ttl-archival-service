@@ -6,15 +6,23 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Database configuration
-DATABASE_URL = os.getenv(
-    "DATABASE_URL", 
-    "sqlite:///./ttl_archival.db"
-)
+# Import new configuration system
+from .config.settings import get_settings
+
+# Get configuration
+settings = get_settings()
+
+# Database configuration from settings
+DATABASE_URL = settings.database.url
 
 # Create engine
 engine = create_engine(
     DATABASE_URL,
+    pool_size=settings.database.pool_size,
+    max_overflow=settings.database.max_overflow,
+    pool_timeout=settings.database.pool_timeout,
+    pool_recycle=settings.database.pool_recycle,
+    echo=settings.database.echo,
     connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
 )
 
