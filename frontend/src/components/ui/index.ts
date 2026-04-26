@@ -28,6 +28,9 @@ export {
 
 export { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectLabel, SelectItem, SelectSeparator, SelectScrollUpButton, SelectScrollDownButton } from './select'
 
+export { SearchAutocomplete } from './search-autocomplete'
+export type { SearchAutocompleteProps, SearchSuggestion } from './search-autocomplete'
+
 // Re-export design tokens
 export { default as tokens } from '../../utils/tokens'
 
