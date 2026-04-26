@@ -1,0 +1,129 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجح",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "add": "إضافة",
+    "search": "بحث",
+    "filter": "تصفية",
+    "refresh": "تحديث",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "yes": "نعم",
+    "no": "لا",
+    "submit": "إرسال",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "language": "اللغة",
+    "settings": "الإعدادات"
+  },
+  "navigation": {
+    "dashboard": "لوحة التحكم",
+    "policies": "السياسات",
+    "archives": "الأرشيف",
+    "blockchain": "بلوك تشين",
+    "performance": "الأداء",
+    "settings": "الإعدادات"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "welcome": "مرحباً بك في خدمة الأرشفة TTL",
+    "overview": "نظرة عامة",
+    "recentActivity": "النشاط الأخير",
+    "statistics": "الإحصائيات",
+    "totalArchives": "إجمالي الأرشيف",
+    "activePolicies": "السياسات النشطة",
+    "storageUsed": "مساحة التخزين المستخدمة",
+    "lastSync": "آخر مزامنة"
+  },
+  "policies": {
+    "title": "سياسات الأرشفة",
+    "createPolicy": "إنشاء سياسة",
+    "policyName": "اسم السياسة",
+    "ttlDuration": "مدة TTL",
+    "retentionPeriod": "فترة الاحتفاظ",
+    "storageLocation": "موقع التخزين",
+    "autoArchive": "أرشفة تلقائية",
+    "enabled": "مفعل",
+    "disabled": "معطل"
+  },
+  "archives": {
+    "title": "الأرشيف",
+    "searchArchives": "بحث في الأرشيف",
+    "archiveName": "اسم الأرشيف",
+    "createdDate": "تاريخ الإنشاء",
+    "expiryDate": "تاريخ الانتهاء",
+    "status": "الحالة",
+    "size": "الحجم",
+    "download": "تحميل",
+    "restore": "استعادة",
+    "active": "نشط",
+    "expired": "منتهي",
+    "archived": "مؤرشف"
+  },
+  "blockchain": {
+    "title": "بلوك تشين",
+    "transactions": "المعاملات",
+    "hash": "الهاش",
+    "timestamp": "الطابع الزمني",
+    "blockNumber": "رقم الكتلة",
+    "confirmations": "التأكيدات",
+    "verify": "تحقق",
+    "walletConnected": "المحفظة متصلة",
+    "walletDisconnected": "المحفظة غير متصلة",
+    "connectWallet": "اتصل بالمحفظة"
+  },
+  "performance": {
+    "title": "الأداء",
+    "metrics": "المقاييس",
+    "responseTime": "وقت الاستجابة",
+    "throughput": "الإنتاجية",
+    "errorRate": "معدل الخطأ",
+    "uptime": "وقت التشغيل",
+    "cpuUsage": "استخدام المعالج",
+    "memoryUsage": "استخدام الذاكرة"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "general": "عام",
+    "appearance": "المظهر",
+    "language": "اللغة",
+    "theme": "السمة",
+    "notifications": "الإشعارات",
+    "privacy": "الخصوصية",
+    "security": "الأمان",
+    "about": "حول",
+    "version": "الإصدار"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "markAsRead": "وضع علامة مقروء",
+    "markAllAsRead": "وضع الكل مقروء",
+    "clearAll": "مسح الكل",
+    "noNotifications": "لا توجد إشعارات",
+    "newNotification": "إشعار جديد"
+  },
+  "errors": {
+    "networkError": "حدث خطأ في الشبكة",
+    "fileNotFound": "الملف غير موجود",
+    "unauthorized": "وصول غير مصرح",
+    "validationError": "خطأ في التحقق",
+    "serverError": "خطأ في الخادم",
+    "unknownError": "حدث خطأ غير معروف"
+  },
+  "dates": {
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "thisWeek": "هذا الأسبوع",
+    "thisMonth": "هذا الشهر",
+    "thisYear": "هذا العام",
+    "lastWeek": "الأسبوع الماضي",
+    "lastMonth": "الشهر الماضي",
+    "lastYear": "العام الماضي"
+  }
+}

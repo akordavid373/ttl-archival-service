@@ -1,0 +1,129 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "refresh": "Actualiser",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "yes": "Oui",
+    "no": "Non",
+    "submit": "Soumettre",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "language": "Langue",
+    "settings": "Paramètres"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "policies": "Politiques",
+    "archives": "Archives",
+    "blockchain": "Blockchain",
+    "performance": "Performance",
+    "settings": "Paramètres"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bienvenue dans le Service d'Archivage TTL",
+    "overview": "Aperçu",
+    "recentActivity": "Activité Récente",
+    "statistics": "Statistiques",
+    "totalArchives": "Total des Archives",
+    "activePolicies": "Politiques Actives",
+    "storageUsed": "Stockage Utilisé",
+    "lastSync": "Dernière Synchronisation"
+  },
+  "policies": {
+    "title": "Politiques d'Archivage",
+    "createPolicy": "Créer une Politique",
+    "policyName": "Nom de la Politique",
+    "ttlDuration": "Durée TTL",
+    "retentionPeriod": "Période de Rétention",
+    "storageLocation": "Emplacement de Stockage",
+    "autoArchive": "Archivage Automatique",
+    "enabled": "Activé",
+    "disabled": "Désactivé"
+  },
+  "archives": {
+    "title": "Archives",
+    "searchArchives": "Rechercher des Archives",
+    "archiveName": "Nom de l'Archive",
+    "createdDate": "Date de Création",
+    "expiryDate": "Date d'Expiration",
+    "status": "Statut",
+    "size": "Taille",
+    "download": "Télécharger",
+    "restore": "Restaurer",
+    "active": "Actif",
+    "expired": "Expiré",
+    "archived": "Archivé"
+  },
+  "blockchain": {
+    "title": "Blockchain",
+    "transactions": "Transactions",
+    "hash": "Hash",
+    "timestamp": "Horodatage",
+    "blockNumber": "Numéro de Bloc",
+    "confirmations": "Confirmations",
+    "verify": "Vérifier",
+    "walletConnected": "Portefeuille Connecté",
+    "walletDisconnected": "Portefeuille Déconnecté",
+    "connectWallet": "Connecter le Portefeuille"
+  },
+  "performance": {
+    "title": "Performance",
+    "metrics": "Métriques",
+    "responseTime": "Temps de Réponse",
+    "throughput": "Débit",
+    "errorRate": "Taux d'Erreur",
+    "uptime": "Temps de Fonctionnement",
+    "cpuUsage": "Utilisation CPU",
+    "memoryUsage": "Utilisation Mémoire"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "general": "Général",
+    "appearance": "Apparence",
+    "language": "Langue",
+    "theme": "Thème",
+    "notifications": "Notifications",
+    "privacy": "Confidentialité",
+    "security": "Sécurité",
+    "about": "À propos",
+    "version": "Version"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAsRead": "Marquer comme Lu",
+    "markAllAsRead": "Tout Marquer comme Lu",
+    "clearAll": "Tout Effacer",
+    "noNotifications": "Aucune notification",
+    "newNotification": "Nouvelle Notification"
+  },
+  "errors": {
+    "networkError": "Une erreur réseau s'est produite",
+    "fileNotFound": "Fichier non trouvé",
+    "unauthorized": "Accès non autorisé",
+    "validationError": "Erreur de validation",
+    "serverError": "Erreur serveur",
+    "unknownError": "Une erreur inconnue s'est produite"
+  },
+  "dates": {
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "thisWeek": "Cette Semaine",
+    "thisMonth": "Ce Mois",
+    "thisYear": "Cette Année",
+    "lastWeek": "Semaine Dernière",
+    "lastMonth": "Mois Dernier",
+    "lastYear": "Année Dernière"
+  }
+}
