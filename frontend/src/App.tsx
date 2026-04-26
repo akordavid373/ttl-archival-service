@@ -9,6 +9,8 @@ import { Demo } from './pages/Demo'
 import { NotificationProvider, useNotifications } from './context/NotificationContext'
 import { ToastContainer } from './components/ToastContainer'
 import { NotificationCenter } from './components/NotificationCenter'
+import { AnalyticsDashboard } from './pages/AnalyticsDashboard'
+
 
 // ✅ Error Boundary imports
 import { ErrorBoundary } from './components/ErrorBoundary'
@@ -45,6 +47,7 @@ function AppContent() {
             <Route path="/performance" element={<Performance />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/demo" element={<Demo />} />
+            <Route path="/analytics" element={<AnalyticsDashboard />} />
           </Routes>
         </ErrorBoundary>
       </Layout>
