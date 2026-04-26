@@ -1,0 +1,6 @@
+:root {
+  --primary-color: #0055cc; /* Contrast ratio > 4.5:1 */
+  --secondary-color: #333333;
+  --background-color: #ffffff;
+  --error-color: #d32f2f;
+}
