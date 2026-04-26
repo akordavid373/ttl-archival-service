@@ -1,16 +1,22 @@
-
-import { cn } from '../utils/cn'
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { cn } from '../lib/utils'
 
 interface VirtualScrollItem {
   id: string | number
   height?: number
   content: React.ReactNode
-
 }
 
 interface VirtualScrollProps {
   items: VirtualScrollItem[]
-
+  itemHeight?: number | ((index: number) => number)
+  containerHeight?: number
+  overscan?: number
+  className?: string
+  onScroll?: (scrollTop: number) => void
+  renderItem: (item: VirtualScrollItem, index: number) => React.ReactNode
+  estimatedItemHeight?: number
+  dynamicHeight?: boolean
 }
 
 export function VirtualScroll({
@@ -23,24 +29,75 @@ export function VirtualScroll({
   renderItem,
   estimatedItemHeight = 50,
   dynamicHeight = false,
+}: VirtualScrollProps) {
+  const [scrollTop, setScrollTop] = useState(0)
+  const [itemSizes, setItemSizes] = useState(new Map<number, number>())
+  const containerRef = useRef<HTMLDivElement>(null)
+  const itemsRef = useRef<Map<number, HTMLDivElement>>(new Map())
 
+  // Calculate item height
+  const getItemHeight = useCallback((index: number): number => {
     if (dynamicHeight && itemSizes.has(index)) {
       return itemSizes.get(index)!
     }
     if (typeof itemHeight === 'function') {
-
+      return itemHeight(index)
     }
     return itemHeight as number
   }, [itemHeight, itemSizes, dynamicHeight])
 
+  // Calculate total height
+  const totalHeight = useMemo(() => {
+    let height = 0
+    for (let i = 0; i < items.length; i++) {
+      height += getItemHeight(i)
+    }
+    return height
+  }, [items.length, getItemHeight])
 
-          end = i + 1
-          break
-        }
-        end = i + 1
+  // Calculate visible range
+  const visibleRange = useMemo(() => {
+    let start = 0
+    let end = 0
+    let accumulatedHeight = 0
+
+    // Find start index
+    for (let i = 0; i < items.length; i++) {
+      const itemHeight = getItemHeight(i)
+      if (accumulatedHeight + itemHeight > scrollTop) {
+        start = i
+        break
       }
-    } else {
+      accumulatedHeight += itemHeight
+    }
 
+    // Find end index
+    accumulatedHeight = 0
+    for (let i = 0; i < items.length; i++) {
+      const itemHeight = getItemHeight(i)
+      accumulatedHeight += itemHeight
+      if (accumulatedHeight > scrollTop + containerHeight) {
+        end = i + 1
+        break
+      }
+      end = i + 1
+    }
+
+    // Add overscan
+    start = Math.max(0, start - overscan)
+    end = Math.min(items.length, end + overscan)
+
+    return { start, end }
+  }, [scrollTop, containerHeight, items.length, getItemHeight, overscan])
+
+  // Calculate offset for visible items
+  const getOffsetTop = useCallback((index: number): number => {
+    let offset = 0
+    for (let i = 0; i < index; i++) {
+      offset += getItemHeight(i)
+    }
+    return offset
+  }, [getItemHeight])
 
   // Update item sizes for dynamic height
   const updateItemSize = useCallback((index: number, size: number) => {
@@ -55,18 +112,24 @@ export function VirtualScroll({
     })
   }, [dynamicHeight])
 
+  // Handle scroll
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const newScrollTop = e.currentTarget.scrollTop
+    setScrollTop(newScrollTop)
+    onScroll?.(newScrollTop)
+  }, [onScroll])
+
   // Measure items when they render
   useEffect(() => {
     if (!dynamicHeight) return
 
     const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
+      entries.forEach((entry) => {
         const element = entry.target as HTMLDivElement
         const index = parseInt(element.dataset.index || '0')
-        if (!isNaN(index)) {
-          updateItemSize(index, entry.contentRect.height)
-        }
-      }
+        const height = entry.contentRect.height
+        updateItemSize(index, height)
+      })
     })
 
     itemsRef.current.forEach((element) => {
@@ -78,88 +141,43 @@ export function VirtualScroll({
     }
   }, [dynamicHeight, updateItemSize, visibleRange])
 
-
-        {item.content}
-      </div>
-    )
-  }, [renderItem])
-
-  // Calculate offset for dynamic height items
-  const getItemOffset = useCallback((index: number): number => {
-    if (!dynamicHeight || itemSizes.size === 0) {
-      return index * getItemHeight(0)
-    }
-
-    let offset = 0
-    for (let i = 0; i < index; i++) {
-      offset += itemSizes.get(i) || estimatedItemHeight
-    }
-    return offset
-  }, [dynamicHeight, itemSizes, estimatedItemHeight, getItemHeight])
-
-
+  return (
+    <div
+      ref={containerRef}
+      className={cn('overflow-auto', className)}
+      style={{ height: containerHeight }}
+      onScroll={handleScroll}
     >
-      <div
-        ref={scrollElementRef}
-        className="relative"
-
-          }}
-        />
-
-        {/* Visible items */}
-        {items.slice(visibleRange.startIndex, visibleRange.endIndex).map((item, index) => {
-          const actualIndex = visibleRange.startIndex + index
+      <div style={{ height: totalHeight, position: 'relative' }}>
+        {items.slice(visibleRange.start, visibleRange.end).map((item, index) => {
+          const actualIndex = visibleRange.start + index
+          const offsetTop = getOffsetTop(actualIndex)
+          const itemHeight = getItemHeight(actualIndex)
 
           return (
             <div
               key={item.id}
-              ref={(el) => {
-                if (el && dynamicHeight) {
-                  itemsRef.current.set(actualIndex, el)
+              ref={(element) => {
+                if (element && dynamicHeight) {
+                  itemsRef.current.set(actualIndex, element)
                 }
               }}
               data-index={actualIndex}
-
+              style={{
+                position: 'absolute',
+                top: offsetTop,
+                left: 0,
+                right: 0,
+                height: dynamicHeight ? 'auto' : itemHeight,
+              }}
+            >
+              {renderItem(item, actualIndex)}
             </div>
           )
         })}
       </div>
-
-
-        </div>
-      )}
     </div>
   )
 }
 
-// Hook for managing virtual scroll state
-
-  itemCount: number
-  itemHeight?: number | ((index: number) => number)
-  containerHeight?: number
-  overscan?: number
-}) {
-  const [scrollTop, setScrollTop] = useState(0)
-  
-
-    // This would need to be implemented based on the scroll container
-    // For now, this is a placeholder for the hook interface
-  }, [])
-
-  const scrollToTop = useCallback(() => {
-    setScrollTop(0)
-  }, [])
-
-  const scrollToBottom = useCallback(() => {
-    // Calculate bottom scroll position
-    // This would need the total height calculation
-  }, [])
-
-  return {
-    scrollTop,
-    setScrollTop,
-    scrollToIndex,
-    scrollToTop,
-    scrollToBottom,
-  }
-}
+export default VirtualScroll

@@ -4,57 +4,11 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json" />
-    
-    <!-- Theme Color -->
-    <meta name="theme-color" content="#3b82f6" />
-    
-    <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="/icon-192x192.png" />
-    
-    <!-- Performance optimizations -->
-    <link rel="dns-prefetch" href="//localhost:8000" />
-    <link rel="preconnect" href="//localhost:8000" />
-    
-    <!-- Security headers -->
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
-    
     <title>TTL-Aware Automated Archival Service</title>
     <meta name="description" content="A comprehensive TTL-based archival service with blockchain integration" />
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="TTL-Aware Automated Archival Service" />
-    <meta property="og:description" content="A comprehensive TTL-based archival service with blockchain integration" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="/icon-512x512.png" />
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="TTL-Aware Automated Archival Service" />
-    <meta name="twitter:description" content="A comprehensive TTL-based archival service with blockchain integration" />
-    <meta name="twitter:image" content="/icon-512x512.png" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    
-    <!-- Service Worker Registration -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then((registration) => {
-              console.log('SW registered: ', registration);
-            })
-            .catch((registrationError) => {
-              console.log('SW registration failed: ', registrationError);
-            });
-        });
-      }
-    </script>
   </body>
 </html>

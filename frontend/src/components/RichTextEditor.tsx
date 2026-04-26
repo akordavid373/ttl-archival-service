@@ -1,15 +1,15 @@
+import React from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
-
+import { createLowlight } from 'lowlight'
 import { Button } from './ui/button'
 import { 
   Bold, 
-  Italic, 
-
+  Italic,
   List, 
   ListOrdered, 
   Quote, 
@@ -22,83 +22,66 @@ import {
   Table as TableIcon,
   Highlighter,
   Undo,
+  Redo
+} from 'lucide-react'
 
-lowlight.register('javascript', javascript)
-lowlight.register('typescript', typescript)
-lowlight.register('python', python)
-lowlight.register('css', css)
-lowlight.register('html', html)
+const lowlight = createLowlight()
+lowlight.register('javascript', require('highlight.js/lib/languages/javascript'))
+lowlight.register('typescript', require('highlight.js/lib/languages/typescript'))
+lowlight.register('python', require('highlight.js/lib/languages/python'))
+lowlight.register('css', require('highlight.js/lib/languages/css'))
+lowlight.register('html', require('highlight.js/lib/languages/html'))
 
-  placeholder?: string
+interface RichTextEditorProps {
+  content?: string
   editable?: boolean
   autoSave?: boolean
   autoSaveDelay?: number
   className?: string
-
+  onChange?: (content: string) => void
+  placeholder?: string
 }
 
-export function RichTextEditor({
-  content = '',
+export function RichTextEditor({ 
+  content = '', 
+  editable = true, 
+  autoSave = false, 
+  autoSaveDelay = 2000, 
+  className = '', 
   onChange,
-  placeholder = 'Start typing...',
-  editable = true,
-  autoSave = true,
-  autoSaveDelay = 2000,
-
-      }),
-      CodeBlockLowlight.configure({
-        lowlight,
-        HTMLAttributes: {
-
-      }),
-      Highlight.configure({
-        multicolor: true,
-        HTMLAttributes: {
-          class: 'bg-yellow-200 px-1 rounded',
-        },
-      }),
+  placeholder = 'Start typing...'
+}: RichTextEditorProps) {
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Image,
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-
-      }),
-      Table.configure({
-        resizable: true,
-        HTMLAttributes: {
-          class: 'border-collapse table-auto w-full my-4',
-        },
-
-      }),
-      TableRow.configure({
-        HTMLAttributes: {
-          class: 'border-b',
+          class: 'text-blue-600 underline hover:text-blue-800',
         },
       }),
-      TableHeader.configure({
-        HTMLAttributes: {
-          class: 'border border-gray-300 px-4 py-2 bg-gray-50 font-semibold text-left',
-        },
-      }),
-      TableCell.configure({
-        HTMLAttributes: {
-          class: 'border border-gray-300 px-4 py-2',
-        },
+      Highlight,
+      CodeBlockLowlight.configure({
+        lowlight,
       }),
     ],
     content,
     editable,
     onUpdate: ({ editor }) => {
       const newContent = editor.getHTML()
-
-      
-      if (autoSave) {
-        setSaveStatus('unsaved')
-      }
+      onChange?.(newContent)
     },
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none',
+        placeholder,
+      },
+    },
+  })
 
   const setLink = () => {
     if (!editor) return
-    
     const previousUrl = editor.getAttributes('link').href
     const url = window.prompt('URL', previousUrl)
 
@@ -108,68 +91,60 @@ export function RichTextEditor({
 
     if (url === '') {
       editor.chain().focus().extendMarkRange('link').unsetLink().run()
-    } else {
-      editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+      return
     }
+
+    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
   }
 
+  const addImage = () => {
+    if (!editor) return
+    const url = window.prompt('URL')
 
+    if (url) {
+      editor.chain().focus().setImage({ src: url }).run()
     }
   }
 
   const insertTable = () => {
     if (!editor) return
-    
-    editor.chain().focus()
-      .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-      .run()
+    editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
   }
-
-  const addHighlight = () => {
-    if (!editor) return
-    
-    editor.chain().focus().toggleHighlight({ color: '#fef08a' }).run()
-  }
-
 
   if (!editor) {
-    return <div className="border rounded-lg p-4 min-h-[200px] bg-gray-50"></div>
+    return null
   }
 
   return (
-
-        {/* Text Formatting */}
-        <div className="flex gap-1 border-r pr-2 mr-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            disabled={!editor.can().chain().focus().toggleBold().run()}
-            className={editor.isActive('bold') ? 'bg-gray-200' : ''}
-
-          >
-            <Bold className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => editor.chain().focus().toggleItalic().run()}
-            disabled={!editor.can().chain().focus().toggleItalic().run()}
-            className={editor.isActive('italic') ? 'bg-gray-200' : ''}
-
-          >
-            <Italic className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-
-          >
-            <Highlighter className="h-4 w-4" />
-          </Button>
-        </div>
-
-        {/* Headings */}
+    <div className={`border rounded-lg ${className}`}>
+      <div className="border-b p-2 flex flex-wrap gap-1">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          disabled={!editor.can().chain().focus().toggleBold().run()}
+          className={editor.isActive('bold') ? 'bg-gray-200' : ''}
+        >
+          <Bold className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          disabled={!editor.can().chain().focus().toggleItalic().run()}
+          className={editor.isActive('italic') ? 'bg-gray-200' : ''}
+        >
+          <Italic className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => editor.chain().focus().toggleHighlight().run()}
+          className={editor.isActive('highlight') ? 'bg-gray-200' : ''}
+        >
+          <Highlighter className="h-4 w-4" />
+        </Button>
+        
         <div className="flex gap-1 border-r pr-2 mr-2">
           <Button
             variant="ghost"
@@ -197,15 +172,12 @@ export function RichTextEditor({
           </Button>
         </div>
 
-
-        {/* Lists */}
         <div className="flex gap-1 border-r pr-2 mr-2">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().toggleBulletList().run()}
             className={editor.isActive('bulletList') ? 'bg-gray-200' : ''}
-
           >
             <List className="h-4 w-4" />
           </Button>
@@ -214,20 +186,17 @@ export function RichTextEditor({
             size="sm"
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
             className={editor.isActive('orderedList') ? 'bg-gray-200' : ''}
-
           >
             <ListOrdered className="h-4 w-4" />
           </Button>
         </div>
 
-        {/* Insert Elements */}
         <div className="flex gap-1 border-r pr-2 mr-2">
           <Button
             variant="ghost"
             size="sm"
             onClick={setLink}
             className={editor.isActive('link') ? 'bg-gray-200' : ''}
-
           >
             <LinkIcon className="h-4 w-4" />
           </Button>
@@ -235,18 +204,18 @@ export function RichTextEditor({
             variant="ghost"
             size="sm"
             onClick={addImage}
-
+          >
+            <ImageIcon className="h-4 w-4" />
+          </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={insertTable}
-
           >
             <TableIcon className="h-4 w-4" />
           </Button>
         </div>
 
-        {/* Other Elements */}
         <div className="flex gap-1 border-r pr-2 mr-2">
           <Button
             variant="ghost"
@@ -266,14 +235,12 @@ export function RichTextEditor({
           </Button>
         </div>
 
-
         <div className="flex gap-1">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().undo().run()}
             disabled={!editor.can().chain().focus().undo().run()}
-
           >
             <Undo className="h-4 w-4" />
           </Button>
@@ -282,8 +249,13 @@ export function RichTextEditor({
             size="sm"
             onClick={() => editor.chain().focus().redo().run()}
             disabled={!editor.can().chain().focus().redo().run()}
-
+          >
+            <Redo className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
+      
+      <EditorContent editor={editor} className="p-4 min-h-[200px]" />
     </div>
   )
 }
