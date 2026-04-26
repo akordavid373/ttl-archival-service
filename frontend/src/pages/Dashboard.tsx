@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SEO } from '../components/common/SEO';
 import { motion } from 'framer-motion';
@@ -9,7 +9,11 @@ import {
   Trash2, 
   Download, 
   RefreshCw,
-  ArrowUpRight
+  ArrowUpRight,
+  Archive,
+  Shield,
+  Database,
+  Activity
 } from 'lucide-react'
 import { StorageUsageChart } from '../components/charts/StorageUsageChart'
 import { ArchiveTrendsChart } from '../components/charts/ArchiveTrendsChart'
@@ -18,8 +22,6 @@ import { cn } from '../lib/utils'
 
 export function Dashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false)
-
-export const Dashboard: React.FC = () => {
   const { t } = useTranslation()
 
   const stats = [
@@ -113,10 +115,10 @@ export const Dashboard: React.FC = () => {
                   2 hours ago · 14.2 MB
                 </p>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
-};
+}
