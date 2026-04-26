@@ -1,0 +1,129 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Agregar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "refresh": "Actualizar",
+    "close": "Cerrar",
+    "confirm": "Confirmar",
+    "yes": "Sí",
+    "no": "No",
+    "submit": "Enviar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "language": "Idioma",
+    "settings": "Configuración"
+  },
+  "navigation": {
+    "dashboard": "Panel",
+    "policies": "Políticas",
+    "archives": "Archivos",
+    "blockchain": "Blockchain",
+    "performance": "Rendimiento",
+    "settings": "Configuración"
+  },
+  "dashboard": {
+    "title": "Panel",
+    "welcome": "Bienvenido al Servicio de Archivo TTL",
+    "overview": "Resumen",
+    "recentActivity": "Actividad Reciente",
+    "statistics": "Estadísticas",
+    "totalArchives": "Total de Archivos",
+    "activePolicies": "Políticas Activas",
+    "storageUsed": "Almacenamiento Usado",
+    "lastSync": "Última Sincronización"
+  },
+  "policies": {
+    "title": "Políticas de Archivo",
+    "createPolicy": "Crear Política",
+    "policyName": "Nombre de Política",
+    "ttlDuration": "Duración TTL",
+    "retentionPeriod": "Período de Retención",
+    "storageLocation": "Ubicación de Almacenamiento",
+    "autoArchive": "Archivo Automático",
+    "enabled": "Activado",
+    "disabled": "Desactivado"
+  },
+  "archives": {
+    "title": "Archivos",
+    "searchArchives": "Buscar Archivos",
+    "archiveName": "Nombre de Archivo",
+    "createdDate": "Fecha de Creación",
+    "expiryDate": "Fecha de Vencimiento",
+    "status": "Estado",
+    "size": "Tamaño",
+    "download": "Descargar",
+    "restore": "Restaurar",
+    "active": "Activo",
+    "expired": "Vencido",
+    "archived": "Archivado"
+  },
+  "blockchain": {
+    "title": "Blockchain",
+    "transactions": "Transacciones",
+    "hash": "Hash",
+    "timestamp": "Marca de Tiempo",
+    "blockNumber": "Número de Bloque",
+    "confirmations": "Confirmaciones",
+    "verify": "Verificar",
+    "walletConnected": "Billetera Conectada",
+    "walletDisconnected": "Billetera Desconectada",
+    "connectWallet": "Conectar Billetera"
+  },
+  "performance": {
+    "title": "Rendimiento",
+    "metrics": "Métricas",
+    "responseTime": "Tiempo de Respuesta",
+    "throughput": "Rendimiento",
+    "errorRate": "Tasa de Error",
+    "uptime": "Tiempo Activo",
+    "cpuUsage": "Uso de CPU",
+    "memoryUsage": "Uso de Memoria"
+  },
+  "settings": {
+    "title": "Configuración",
+    "general": "General",
+    "appearance": "Apariencia",
+    "language": "Idioma",
+    "theme": "Tema",
+    "notifications": "Notificaciones",
+    "privacy": "Privacidad",
+    "security": "Seguridad",
+    "about": "Acerca de",
+    "version": "Versión"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "markAsRead": "Marcar como Leído",
+    "markAllAsRead": "Marcar Todo como Leído",
+    "clearAll": "Limpiar Todo",
+    "noNotifications": "Sin notificaciones",
+    "newNotification": "Nueva Notificación"
+  },
+  "errors": {
+    "networkError": "Ocurrió un error de red",
+    "fileNotFound": "Archivo no encontrado",
+    "unauthorized": "Acceso no autorizado",
+    "validationError": "Error de validación",
+    "serverError": "Error del servidor",
+    "unknownError": "Ocurrió un error desconocido"
+  },
+  "dates": {
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "thisWeek": "Esta Semana",
+    "thisMonth": "Este Mes",
+    "thisYear": "Este Año",
+    "lastWeek": "Semana Pasada",
+    "lastMonth": "Mes Pasado",
+    "lastYear": "Año Pasado"
+  }
+}
