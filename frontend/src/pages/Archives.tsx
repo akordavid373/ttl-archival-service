@@ -53,7 +53,7 @@ export function Archives() {
   }, [])
 
   // Fetch Archives with Filters
-  const fetchArchives = useCallback(async (isSilent = false) => {
+  const fetchArchives = useCallback(async (isSilent = false, append = false) => {
     if (!isSilent) setIsLoading(true)
     else setIsRefreshing(true)
     
@@ -67,7 +67,12 @@ export function Archives() {
         status: filters.status?.join(',')
       }
       const response = await axios.get(`${API_BASE_URL}/archives`, { params })
-      setArchives(response.data.items)
+      
+      if (append && page > 1) {
+        setArchives(prev => [...prev, ...response.data.items])
+      } else {
+        setArchives(response.data.items)
+      }
       setTotalRecords(response.data.total)
     } catch (error) {
       console.error('Failed to fetch archives:', error)
@@ -90,7 +95,12 @@ export function Archives() {
           blockchain_network: 'Stellar',
           metadata: { node: 'Stellar-Validator-01', region: 'us-east-1' }
         }))
-        setArchives(mockItems)
+        
+        if (append && page > 1) {
+          setArchives(prev => [...prev, ...mockItems])
+        } else {
+          setArchives(mockItems)
+        }
         setTotalRecords(1240)
       } else {
         addNotification({
@@ -104,7 +114,7 @@ export function Archives() {
       setIsLoading(false)
       setIsRefreshing(false)
     }
-  }, [page, filters, sort, addNotification])
+  }, [page, filters, sort, addNotification, pageSize])
 
   useEffect(() => {
     fetchPolicies()
@@ -219,10 +229,12 @@ export function Archives() {
           onChange={(newFilters) => {
             setFilters(newFilters)
             setPage(1) // Reset to first page on filter change
+            setArchives([]) // Reset archives for new filter
           }}
           onClear={() => {
             setFilters({})
             setPage(1)
+            setArchives([]) // Reset archives
           }}
         />
         
@@ -232,11 +244,19 @@ export function Archives() {
           page={page}
           pageSize={pageSize}
           isLoading={isLoading}
-          onPageChange={setPage}
-          onSortChange={setSort}
+          onPageChange={(newPage) => {
+            setPage(newPage)
+            fetchArchives(false, newPage > 1)
+          }}
+          onSortChange={(newSort) => {
+            setSort(newSort)
+            setPage(1)
+            setArchives([])
+          }}
           onSearch={(query) => {
             setFilters(prev => ({ ...prev, search: query || undefined }))
             setPage(1)
+            setArchives([])
           }}
           onViewDetails={setSelectedArchive}
           onDownload={downloadArchive}
