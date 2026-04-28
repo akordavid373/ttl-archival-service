@@ -21,6 +21,7 @@ const Performance = lazy(() => import('./pages/Performance'))
 const Settings = lazy(() => import('./pages/Settings'))
 const Demo = lazy(() => import('./pages/Demo'))
 const AnalyticsDashboard = lazy(() => import('./pages/AnalyticsDashboard'))
+const ToastDemo = lazy(() => import('./pages/ToastDemo'))
 
 // Initialize Analytics
 analytics.init('G-XXXXXXXXXX');
@@ -55,6 +56,7 @@ function AppContent() {
               <Route path="/settings" element={<Settings />} />
               <Route path="/demo" element={<Demo />} />
               <Route path="/analytics" element={<AnalyticsDashboard />} />
+              <Route path="/toast-demo" element={<ToastDemo />} />
             </Routes>
           </Suspense>
         </ErrorBoundary>
