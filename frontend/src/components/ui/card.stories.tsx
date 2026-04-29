@@ -1,28 +1,36 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './card'
+import type { Meta, StoryObj } from "@storybook/react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./card";
 
 const meta: Meta<typeof Card> = {
-  title: 'UI/Card',
+  title: "UI/Card",
   component: Card,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
     docs: {
       description: {
-        component: 'A flexible card component with header, content, and footer sections.',
+        component:
+          "A flexible card component with header, content, and footer sections.",
       },
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     className: {
-      control: { type: 'text' },
-      description: 'Additional CSS classes',
+      control: { type: "text" },
+      description: "Additional CSS classes",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -32,14 +40,16 @@ export const Default: Story = {
         <CardDescription>Card Description</CardDescription>
       </CardHeader>
       <CardContent>
-        <p>Card Content goes here. This is where you can put your main content.</p>
+        <p>
+          Card Content goes here. This is where you can put your main content.
+        </p>
       </CardContent>
       <CardFooter>
         <p>Card Footer</p>
       </CardFooter>
     </Card>
   ),
-}
+};
 
 export const WithoutHeader: Story = {
   render: () => (
@@ -50,7 +60,7 @@ export const WithoutHeader: Story = {
       </CardContent>
     </Card>
   ),
-}
+};
 
 export const WithoutFooter: Story = {
   render: () => (
@@ -64,7 +74,7 @@ export const WithoutFooter: Story = {
       </CardContent>
     </Card>
   ),
-}
+};
 
 export const Minimal: Story = {
   render: () => (
@@ -74,36 +84,42 @@ export const Minimal: Story = {
       </CardContent>
     </Card>
   ),
-}
+};
 
 export const WithActions: Story = {
   render: () => (
     <Card className="w-[350px]">
       <CardHeader>
         <CardTitle>Card with Actions</CardTitle>
-        <CardDescription>This card has action buttons in the footer.</CardDescription>
+        <CardDescription>
+          This card has action buttons in the footer.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <p>Card content with actionable elements.</p>
       </CardContent>
       <CardFooter className="flex justify-between">
         <button className="px-4 py-2 text-sm border rounded-md">Cancel</button>
-        <button className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md">Save</button>
+        <button className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md">
+          Save
+        </button>
       </CardFooter>
     </Card>
   ),
-}
+};
 
 export const CustomStyling: Story = {
   render: () => (
     <Card className="w-[350px] border-2 border-primary shadow-lg">
       <CardHeader className="bg-primary text-primary-foreground">
         <CardTitle className="text-white">Custom Styled Card</CardTitle>
-        <CardDescription className="text-primary-foreground/80">With custom styling</CardDescription>
+        <CardDescription className="text-primary-foreground/80">
+          With custom styling
+        </CardDescription>
       </CardHeader>
       <CardContent className="pt-6">
         <p>This card has custom styling applied.</p>
       </CardContent>
     </Card>
   ),
-}
+};

@@ -3,7 +3,6 @@ uvicorn==0.24.0
 pydantic==2.5.0
 sqlalchemy==2.0.23
 alembic==1.12.1
-redis==5.0.1
 celery==5.3.4
 python-multipart==0.0.6
 python-jose[cryptography]==3.3.0
@@ -15,3 +14,9 @@ psutil==5.9.6
 pytest==7.4.3
 pytest-asyncio==0.21.1
 httpx==0.25.2
+
+# ← CACHE: async Redis client (replaces synchronous redis==5.0.1)
+redis[asyncio]==5.0.1
+
+# ← CACHE: response body buffering in middleware
+starlette==0.27.0

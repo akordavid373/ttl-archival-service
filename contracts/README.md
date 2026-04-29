@@ -14,6 +14,7 @@ This directory contains the Stellar smart contracts (Soroban) for the TTL-Aware 
 ### ArchivalContract
 
 The main contract handles:
+
 - **Policy Management**: Create and manage TTL-based archival policies
 - **Archive Records**: Store and manage archived data records with blockchain verification
 - **Access Control**: Role-based permissions for contract operations
@@ -102,24 +103,24 @@ result = contract_client.invoke(
 ### Frontend Integration (JavaScript)
 
 ```javascript
-import { Contract } from '@stellar/freighter-api';
-import { Networks, TransactionBuilder } from 'stellar-sdk';
+import { Contract } from "@stellar/freighter-api";
+import { Networks, TransactionBuilder } from "stellar-sdk";
 
 // Initialize contract
 const contract = new Contract({
-  contractId: 'CONTRACT_ID_HERE',
+  contractId: "CONTRACT_ID_HERE",
   networkPassphrase: Networks.TESTNET,
-  rpcUrl: 'https://horizon-testnet.stellar.org'
+  rpcUrl: "https://horizon-testnet.stellar.org",
 });
 
 // Create policy
-const result = await contract.call('create_policy', {
-  name: 'test_policy',
-  description: 'Test policy',
+const result = await contract.call("create_policy", {
+  name: "test_policy",
+  description: "Test policy",
   ttl_days: 30,
   compression_enabled: true,
   encryption_enabled: false,
-  auto_cleanup: true
+  auto_cleanup: true,
 });
 ```
 
@@ -177,6 +178,7 @@ pub struct ArchiveRecord {
 ## Monitoring
 
 Events emitted by the contract:
+
 - `policy_created` - New policy created
 - `archive_created` - New archive record created
 - `archive_deleted` - Archive record deleted

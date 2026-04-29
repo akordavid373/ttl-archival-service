@@ -1,14 +1,24 @@
-import { useState } from 'react'
-import { DragAndDrop, useDragAndDrop } from './DragAndDrop'
-import { InteractiveMap, useInteractiveMap } from './InteractiveMap'
-import { Button } from './ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
+import { useState } from "react";
+import { DragAndDrop, useDragAndDrop } from "./DragAndDrop";
+import { InteractiveMap, useInteractiveMap } from "./InteractiveMap";
+import { Button } from "./ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 export function FeatureTest() {
   // Drag and Drop State
-  const { items: dragItems, addItem: addDragItem, removeItem: removeDragItem } = useDragAndDrop([
+  const {
+    items: dragItems,
+    addItem: addDragItem,
+    removeItem: removeDragItem,
+  } = useDragAndDrop([
     {
-      id: 'item-1',
+      id: "item-1",
       content: (
         <div className="p-4">
           <h4 className="font-semibold">Test Item 1</h4>
@@ -17,7 +27,7 @@ export function FeatureTest() {
       ),
     },
     {
-      id: 'item-2',
+      id: "item-2",
       content: (
         <div className="p-4">
           <h4 className="font-semibold">Test Item 2</h4>
@@ -25,29 +35,31 @@ export function FeatureTest() {
         </div>
       ),
     },
-  ])
+  ]);
 
   // Interactive Map State
-  const { 
-    markers: mapMarkers, 
-    routes: mapRoutes, 
-    addMarker: addMapMarker, 
+  const {
+    markers: mapMarkers,
+    routes: mapRoutes,
+    addMarker: addMapMarker,
     removeMarker: removeMapMarker,
-    addRoute: addMapRoute 
-  } = useInteractiveMap()
+    addRoute: addMapRoute,
+  } = useInteractiveMap();
 
   const handleFileUpload = (files: File[]) => {
-    console.log('Files uploaded:', files)
-    files.forEach(file => {
-      console.log(`- ${file.name} (${file.size} bytes)`)
-    })
-  }
+    console.log("Files uploaded:", files);
+    files.forEach((file) => {
+      console.log(`- ${file.name} (${file.size} bytes)`);
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Feature Test Page</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Feature Test Page
+          </h1>
           <p className="text-xl text-gray-600">
             Testing both Interactive Maps and Drag & Drop functionality
           </p>
@@ -65,17 +77,20 @@ export function FeatureTest() {
             <CardContent>
               <div className="mb-4">
                 <p className="text-sm text-gray-600 mb-2">
-                  ✅ Drag items to reorder them<br/>
-                  ✅ Drag and drop files from your computer<br/>
-                  ✅ Visual feedback during dragging<br/>
-                  ✅ Drop zone indicators<br/>
-                  ✅ Touch device support
+                  ✅ Drag items to reorder them
+                  <br />
+                  ✅ Drag and drop files from your computer
+                  <br />
+                  ✅ Visual feedback during dragging
+                  <br />
+                  ✅ Drop zone indicators
+                  <br />✅ Touch device support
                 </p>
               </div>
               <DragAndDrop
                 items={dragItems}
                 onItemsChange={(items) => {
-                  console.log('Items changed:', items)
+                  console.log("Items changed:", items);
                 }}
                 onFileUpload={handleFileUpload}
                 dragHandle={true}
@@ -92,7 +107,8 @@ export function FeatureTest() {
             <CardHeader>
               <CardTitle>Interactive Maps Test</CardTitle>
               <CardDescription>
-                Testing map functionality with markers, geocoding, and route planning
+                Testing map functionality with markers, geocoding, and route
+                planning
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -103,39 +119,42 @@ export function FeatureTest() {
                 <Button variant="outline" disabled>
                   Routes: {mapRoutes.length}
                 </Button>
-                <Button 
+                <Button
                   variant="outline"
                   onClick={() => {
                     addMapMarker({
-                      position: { lat: 40.7128, lng: -74.0060 } as any,
+                      position: { lat: 40.7128, lng: -74.006 } as any,
                       title: "New York City",
                       description: "The Big Apple",
-                      type: 'default',
-                      color: '#3b82f6',
-                    })
+                      type: "default",
+                      color: "#3b82f6",
+                    });
                   }}
                 >
                   Add NYC Marker
                 </Button>
               </div>
               <div className="text-sm text-gray-600 mb-4">
-                ✅ Interactive map display<br/>
-                ✅ Custom markers and popups<br/>
-                ✅ Geocoding and reverse geocoding<br/>
-                ✅ Route planning and directions<br/>
-                ✅ Map style customization
+                ✅ Interactive map display
+                <br />
+                ✅ Custom markers and popups
+                <br />
+                ✅ Geocoding and reverse geocoding
+                <br />
+                ✅ Route planning and directions
+                <br />✅ Map style customization
               </div>
               <InteractiveMap
-                center={[40.7128, -74.0060]}
+                center={[40.7128, -74.006]}
                 zoom={12}
                 height="500px"
                 markers={mapMarkers}
                 routes={mapRoutes}
                 onMarkersChange={(markers) => {
-                  console.log('Markers changed:', markers)
+                  console.log("Markers changed:", markers);
                 }}
                 onRoutesChange={(routes) => {
-                  console.log('Routes changed:', routes)
+                  console.log("Routes changed:", routes);
                 }}
                 showControls={true}
                 allowMarkerCreation={true}
@@ -156,7 +175,9 @@ export function FeatureTest() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="font-semibold text-green-600 mb-2">✅ Issue #154 - Drag and Drop Interface</h4>
+                  <h4 className="font-semibold text-green-600 mb-2">
+                    ✅ Issue #154 - Drag and Drop Interface
+                  </h4>
                   <ul className="text-sm space-y-1">
                     <li>• Drag and drop list reordering</li>
                     <li>• File drag and drop upload</li>
@@ -166,7 +187,9 @@ export function FeatureTest() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-green-600 mb-2">✅ Issue #158 - Interactive Maps</h4>
+                  <h4 className="font-semibold text-green-600 mb-2">
+                    ✅ Issue #158 - Interactive Maps
+                  </h4>
                   <ul className="text-sm space-y-1">
                     <li>• Interactive map display</li>
                     <li>• Custom markers and popups</li>
@@ -178,7 +201,8 @@ export function FeatureTest() {
               </div>
               <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                 <p className="text-green-800 font-medium">
-                  🎉 Both features have been successfully implemented and integrated into the application!
+                  🎉 Both features have been successfully implemented and
+                  integrated into the application!
                 </p>
               </div>
             </CardContent>
@@ -186,7 +210,7 @@ export function FeatureTest() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default FeatureTest
+export default FeatureTest;

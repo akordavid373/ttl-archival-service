@@ -1,43 +1,47 @@
-import React, { useState } from 'react'
-import { 
-  Bell, 
-  X, 
-  CheckCircle, 
-  AlertCircle, 
-  AlertTriangle, 
-  Info, 
+import React, { useState } from "react";
+import {
+  Bell,
+  X,
+  CheckCircle,
+  AlertCircle,
+  AlertTriangle,
+  Info,
   Settings,
   Trash2,
   Check,
-  Filter
-} from 'lucide-react'
-import { Notification, NotificationType, NotificationPriority } from '../../types/notifications'
-import { cn } from '../../utils/cn'
+  Filter,
+} from "lucide-react";
+import {
+  Notification,
+  NotificationType,
+  NotificationPriority,
+} from "../../types/notifications";
+import { cn } from "../../utils/cn";
 
 interface NotificationCenterProps {
-  notifications: Notification[]
-  isOpen: boolean
-  onClose: () => void
-  onMarkAsRead: (id: string) => void
-  onDelete: (id: string) => void
-  onClearAll: () => void
-  onMarkAllAsRead: () => void
+  notifications: Notification[];
+  isOpen: boolean;
+  onClose: () => void;
+  onMarkAsRead: (id: string) => void;
+  onDelete: (id: string) => void;
+  onClearAll: () => void;
+  onMarkAllAsRead: () => void;
 }
 
 const typeConfig = {
-  success: { icon: CheckCircle, className: 'text-green-500' },
-  error: { icon: AlertCircle, className: 'text-red-500' },
-  warning: { icon: AlertTriangle, className: 'text-yellow-500' },
-  info: { icon: Info, className: 'text-blue-500' },
-  system: { icon: Settings, className: 'text-gray-500' }
-}
+  success: { icon: CheckCircle, className: "text-green-500" },
+  error: { icon: AlertCircle, className: "text-red-500" },
+  warning: { icon: AlertTriangle, className: "text-yellow-500" },
+  info: { icon: Info, className: "text-blue-500" },
+  system: { icon: Settings, className: "text-gray-500" },
+};
 
 const priorityConfig = {
-  low: { label: 'Low', className: 'bg-gray-100 text-gray-700' },
-  medium: { label: 'Medium', className: 'bg-blue-100 text-blue-700' },
-  high: { label: 'High', className: 'bg-orange-100 text-orange-700' },
-  urgent: { label: 'Urgent', className: 'bg-red-100 text-red-700' }
-}
+  low: { label: "Low", className: "bg-gray-100 text-gray-700" },
+  medium: { label: "Medium", className: "bg-blue-100 text-blue-700" },
+  high: { label: "High", className: "bg-orange-100 text-orange-700" },
+  urgent: { label: "Urgent", className: "bg-red-100 text-red-700" },
+};
 
 export function NotificationCenter({
   notifications,
@@ -46,40 +50,41 @@ export function NotificationCenter({
   onMarkAsRead,
   onDelete,
   onClearAll,
-  onMarkAllAsRead
+  onMarkAllAsRead,
 }: NotificationCenterProps) {
   const [filter, setFilter] = useState<{
-    type?: NotificationType
-    priority?: NotificationPriority
-    readStatus?: 'all' | 'read' | 'unread'
+    type?: NotificationType;
+    priority?: NotificationPriority;
+    readStatus?: "all" | "read" | "unread";
   }>({
-    readStatus: 'all'
-  })
+    readStatus: "all",
+  });
 
-  const unreadCount = notifications.filter(n => !n.read).length
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
-  const filteredNotifications = notifications.filter(notification => {
-    if (filter.type && notification.type !== filter.type) return false
-    if (filter.priority && notification.priority !== filter.priority) return false
-    if (filter.readStatus === 'read' && !notification.read) return false
-    if (filter.readStatus === 'unread' && notification.read) return false
-    return true
-  })
+  const filteredNotifications = notifications.filter((notification) => {
+    if (filter.type && notification.type !== filter.type) return false;
+    if (filter.priority && notification.priority !== filter.priority)
+      return false;
+    if (filter.readStatus === "read" && !notification.read) return false;
+    if (filter.readStatus === "unread" && notification.read) return false;
+    return true;
+  });
 
   const formatTime = (date: Date) => {
-    const now = new Date()
-    const diff = now.getTime() - date.getTime()
-    const minutes = Math.floor(diff / 60000)
-    const hours = Math.floor(diff / 3600000)
-    const days = Math.floor(diff / 86400000)
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
 
-    if (minutes < 1) return 'Just now'
-    if (minutes < 60) return `${minutes}m ago`
-    if (hours < 24) return `${hours}h ago`
-    return `${days}d ago`
-  }
+    if (minutes < 1) return "Just now";
+    if (minutes < 60) return `${minutes}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    return `${days}d ago`;
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-start justify-end p-4">
@@ -108,10 +113,7 @@ export function NotificationCenter({
             >
               Clear all
             </button>
-            <button
-              onClick={onClose}
-              className="p-1 hover:bg-gray-100 rounded"
-            >
+            <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded">
               <X className="h-4 w-4" />
             </button>
           </div>
@@ -126,7 +128,12 @@ export function NotificationCenter({
           <div className="flex gap-2 flex-wrap">
             <select
               value={filter.readStatus}
-              onChange={(e) => setFilter(prev => ({ ...prev, readStatus: e.target.value as any }))}
+              onChange={(e) =>
+                setFilter((prev) => ({
+                  ...prev,
+                  readStatus: e.target.value as any,
+                }))
+              }
               className="text-sm border rounded px-2 py-1"
             >
               <option value="all">All</option>
@@ -134,8 +141,13 @@ export function NotificationCenter({
               <option value="read">Read</option>
             </select>
             <select
-              value={filter.type || ''}
-              onChange={(e) => setFilter(prev => ({ ...prev, type: e.target.value as NotificationType || undefined }))}
+              value={filter.type || ""}
+              onChange={(e) =>
+                setFilter((prev) => ({
+                  ...prev,
+                  type: (e.target.value as NotificationType) || undefined,
+                }))
+              }
               className="text-sm border rounded px-2 py-1"
             >
               <option value="">All Types</option>
@@ -146,8 +158,14 @@ export function NotificationCenter({
               <option value="system">System</option>
             </select>
             <select
-              value={filter.priority || ''}
-              onChange={(e) => setFilter(prev => ({ ...prev, priority: e.target.value as NotificationPriority || undefined }))}
+              value={filter.priority || ""}
+              onChange={(e) =>
+                setFilter((prev) => ({
+                  ...prev,
+                  priority:
+                    (e.target.value as NotificationPriority) || undefined,
+                }))
+              }
               className="text-sm border rounded px-2 py-1"
             >
               <option value="">All Priorities</option>
@@ -169,24 +187,36 @@ export function NotificationCenter({
           ) : (
             <div className="divide-y">
               {filteredNotifications.map((notification) => {
-                const TypeIcon = typeConfig[notification.type].icon
-                const priorityStyle = priorityConfig[notification.priority]
+                const TypeIcon = typeConfig[notification.type].icon;
+                const priorityStyle = priorityConfig[notification.priority];
 
                 return (
                   <div
                     key={notification.id}
                     className={cn(
-                      'p-4 hover:bg-gray-50 transition-colors',
-                      !notification.read && 'bg-blue-50'
+                      "p-4 hover:bg-gray-50 transition-colors",
+                      !notification.read && "bg-blue-50",
                     )}
                   >
                     <div className="flex items-start gap-3">
-                      <TypeIcon className={cn('h-5 w-5 mt-0.5', typeConfig[notification.type].className)} />
+                      <TypeIcon
+                        className={cn(
+                          "h-5 w-5 mt-0.5",
+                          typeConfig[notification.type].className,
+                        )}
+                      />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <h4 className="font-semibold text-sm truncate">{notification.title}</h4>
+                          <h4 className="font-semibold text-sm truncate">
+                            {notification.title}
+                          </h4>
                           <div className="flex items-center gap-2 flex-shrink-0">
-                            <span className={cn('text-xs px-2 py-1 rounded', priorityStyle.className)}>
+                            <span
+                              className={cn(
+                                "text-xs px-2 py-1 rounded",
+                                priorityStyle.className,
+                              )}
+                            >
                               {priorityStyle.label}
                             </span>
                             <button
@@ -197,7 +227,9 @@ export function NotificationCenter({
                             </button>
                           </div>
                         </div>
-                        <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
+                        <p className="text-sm text-gray-600 mt-1">
+                          {notification.message}
+                        </p>
                         <div className="flex items-center justify-between mt-2">
                           <span className="text-xs text-gray-500">
                             {formatTime(notification.timestamp)}
@@ -215,8 +247,8 @@ export function NotificationCenter({
                         {notification.action && (
                           <button
                             onClick={() => {
-                              notification.action!.onClick()
-                              onMarkAsRead(notification.id)
+                              notification.action!.onClick();
+                              onMarkAsRead(notification.id);
                             }}
                             className="mt-2 text-sm text-blue-600 hover:text-blue-800"
                           >
@@ -226,12 +258,12 @@ export function NotificationCenter({
                       </div>
                     </div>
                   </div>
-                )
+                );
               })}
             </div>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }

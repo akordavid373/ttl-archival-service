@@ -5,24 +5,16 @@ import { z } from "zod";
 // Base types
 export const DataType = z.enum([
   "user_data",
-  "logs", 
+  "logs",
   "backup",
   "temp_files",
   "cache",
-  "other"
+  "other",
 ]);
 
-export const ArchiveStatus = z.enum([
-  "archived",
-  "expired", 
-  "deleted"
-]);
+export const ArchiveStatus = z.enum(["archived", "expired", "deleted"]);
 
-export const BlockchainStatus = z.enum([
-  "pending",
-  "confirmed",
-  "failed"
-]);
+export const BlockchainStatus = z.enum(["pending", "confirmed", "failed"]);
 
 // Policy types
 export const ArchivePolicySchema = z.object({
@@ -36,7 +28,7 @@ export const ArchivePolicySchema = z.object({
   auto_cleanup: z.boolean(),
   created_at: z.string().datetime(),
   updated_at: z.string().datetime().optional(),
-  blockchain_verified: z.boolean().optional()
+  blockchain_verified: z.boolean().optional(),
 });
 
 export const CreateArchivePolicySchema = z.object({
@@ -46,7 +38,7 @@ export const CreateArchivePolicySchema = z.object({
   storage_location: z.string().optional(),
   compression_enabled: z.boolean(),
   encryption_enabled: z.boolean(),
-  auto_cleanup: z.boolean()
+  auto_cleanup: z.boolean(),
 });
 
 // Archive record types
@@ -67,7 +59,7 @@ export const ArchiveRecordSchema = z.object({
   is_expired: z.boolean(),
   blockchain_hash: z.string().length(64).optional(),
   blockchain_status: BlockchainStatus.optional(),
-  policy: ArchivePolicySchema.optional()
+  policy: ArchivePolicySchema.optional(),
 });
 
 export const CreateArchiveRecordSchema = z.object({
@@ -77,7 +69,7 @@ export const CreateArchiveRecordSchema = z.object({
   file_path: z.string().optional(),
   file_size_bytes: z.number().min(0).optional(),
   checksum: z.string().length(64).optional(),
-  metadata: z.string().optional()
+  metadata: z.string().optional(),
 });
 
 // Stellar blockchain types
@@ -91,7 +83,7 @@ export const StellarPolicySchema = z.object({
   auto_cleanup: z.boolean(),
   created_by: z.string(), // Stellar address
   created_at: z.number(), // Stellar timestamp
-  contract_id: z.string().optional()
+  contract_id: z.string().optional(),
 });
 
 export const StellarArchiveRecordSchema = z.object({
@@ -106,7 +98,7 @@ export const StellarArchiveRecordSchema = z.object({
   expires_at: z.number(),
   archived_at: z.number(),
   created_by: z.string(), // Stellar address
-  contract_id: z.string().optional()
+  contract_id: z.string().optional(),
 });
 
 // API response types
@@ -114,7 +106,7 @@ export const ApiResponseSchema = z.object({
   success: z.boolean(),
   data: z.any().optional(),
   error: z.string().optional(),
-  message: z.string().optional()
+  message: z.string().optional(),
 });
 
 export const PaginatedResponseSchema = z.object({
@@ -123,7 +115,7 @@ export const PaginatedResponseSchema = z.object({
   page: z.number(),
   limit: z.number(),
   has_next: z.boolean(),
-  has_prev: z.boolean()
+  has_prev: z.boolean(),
 });
 
 // Statistics types
@@ -134,7 +126,7 @@ export const CleanupStatsSchema = z.object({
   deleted_records: z.number(),
   total_storage_bytes: z.number(),
   policies_count: z.number(),
-  blockchain_verified_records: z.number().optional()
+  blockchain_verified_records: z.number().optional(),
 });
 
 export const HealthCheckSchema = z.object({
@@ -142,7 +134,7 @@ export const HealthCheckSchema = z.object({
   timestamp: z.string().datetime(),
   database_connected: z.boolean(),
   blockchain_connected: z.boolean().optional(),
-  scheduler_running: z.boolean()
+  scheduler_running: z.boolean(),
 });
 
 // Utility types
@@ -174,17 +166,17 @@ export const calculateDaysUntilExpiry = (expiresAt: string): number => {
 };
 
 export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes === 0) return "0 Bytes";
   const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 };
 
 export const generateStellarHash = (data: string): string => {
   // This would be implemented with actual Stellar SDK
   // For now, return a placeholder
-  return Buffer.from(data).toString('hex').padEnd(64, '0').substring(0, 64);
+  return Buffer.from(data).toString("hex").padEnd(64, "0").substring(0, 64);
 };
 
 // Validation helpers
@@ -200,22 +192,31 @@ export const validateHash = (hash: string): boolean => {
 
 // Error types
 export class ValidationError extends Error {
-  constructor(message: string, public field?: string) {
+  constructor(
+    message: string,
+    public field?: string,
+  ) {
     super(message);
-    this.name = 'ValidationError';
+    this.name = "ValidationError";
   }
 }
 
 export class BlockchainError extends Error {
-  constructor(message: string, public transactionId?: string) {
+  constructor(
+    message: string,
+    public transactionId?: string,
+  ) {
     super(message);
-    this.name = 'BlockchainError';
+    this.name = "BlockchainError";
   }
 }
 
 export class ArchiveError extends Error {
-  constructor(message: string, public code?: string) {
+  constructor(
+    message: string,
+    public code?: string,
+  ) {
     super(message);
-    this.name = 'ArchiveError';
+    this.name = "ArchiveError";
   }
 }

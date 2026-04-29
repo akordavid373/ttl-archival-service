@@ -11,7 +11,7 @@ describe("ErrorBoundary", () => {
     render(
       <ErrorBoundary>
         <ProblemChild />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument();
@@ -21,7 +21,7 @@ describe("ErrorBoundary", () => {
     render(
       <ErrorBoundary>
         <div>Safe Component</div>
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     expect(screen.getByText("Safe Component")).toBeInTheDocument();
