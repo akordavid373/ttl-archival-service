@@ -2,10 +2,13 @@ from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean, Foreign
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from datetime import datetime, timedelta
-from .database import Base
+from ..database import Base
 
 # Import audit models
-from .audit_log import AuditLog, AuditAction, AuditSeverity, AuditRetentionPolicy
+from ..audit_log import AuditLog, AuditAction, AuditSeverity, AuditRetentionPolicy
+
+# Import sync models
+from .sync import SyncJob, SyncRecord, SyncConflict
 
 class ArchivePolicy(Base):
     __tablename__ = "archive_policies"

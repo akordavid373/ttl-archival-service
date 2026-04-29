@@ -8,7 +8,7 @@ import time
 
 from .database import get_db, engine
 from .models import Base, UserSettings
-from .models.audit_log import AuditLog, AuditRetentionPolicy
+from .audit_log import AuditLog, AuditRetentionPolicy
 from .schemas import (
     ArchiveRecordCreate,
     ArchiveRecordResponse,
@@ -100,6 +100,7 @@ from .api.v2 import v2_router
 from .api.metrics import router as metrics_router
 from .api.compliance import router as compliance_router
 from .api.tenant import router as tenant_router
+from .api.sync import router as sync_router
 
 app.include_router(v1_audit_router)
 app.include_router(v1_search_router)
@@ -109,6 +110,7 @@ app.include_router(v2_router)
 app.include_router(metrics_router)
 app.include_router(compliance_router)
 app.include_router(tenant_router)
+app.include_router(sync_router, prefix="/api/v1/sync", tags=["synchronization"])
 
 
 # Audit middleware for logging all API requests
