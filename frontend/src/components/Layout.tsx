@@ -3,6 +3,7 @@ import { NavLink, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import { 
   LayoutDashboard, 
   ShieldCheck, 
@@ -27,6 +28,7 @@ import { NotificationBell } from './notifications'
 import OfflineStatus from './OfflineStatus'
 import InstallPWA from './InstallPWA'
 import { LanguageSwitcher } from './LanguageSwitcher'
+import { ThemeToggle } from './theme/ThemeToggle'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -163,7 +165,10 @@ export function Layout({ children }: LayoutProps) {
 
         <div className="p-6 border-t border-border/30 mt-auto bg-accent/5">
           <div className="space-y-4">
-            <LanguageSwitcher />
+            <div className="flex items-center gap-2">
+              <LanguageSwitcher />
+              <ThemeToggle />
+            </div>
             <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer group">
               <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white font-medium">
                 JD
@@ -233,7 +238,10 @@ export function Layout({ children }: LayoutProps) {
 
               <div className="p-6 border-t border-border/30 bg-accent/5">
                 <div className="space-y-4">
-                  <LanguageSwitcher />
+                  <div className="flex items-center gap-2">
+                    <LanguageSwitcher />
+                    <ThemeToggle />
+                  </div>
                   <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white font-medium text-sm">
                       JD

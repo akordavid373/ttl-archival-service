@@ -17,10 +17,11 @@ interface ThemeContextType {
   setTheme: (theme: Partial<ThemeConfig>) => void;
   exportTheme: () => string;
   importTheme: (config: string) => void;
+  isDark: boolean;
 }
 
 const defaultTheme: ThemeConfig = {
-  mode: 'dark',
+  mode: 'system',
   primaryColor: '#3b82f6',
   accentColor: '#8b5cf6',
   typography: 'outfit',
@@ -34,6 +35,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const saved = localStorage.getItem('theme-config');
     return saved ? JSON.parse(saved) : defaultTheme;
   });
+
+  const [isDark, setIsDark] = useState(false);
 
   const setTheme = (newTheme: Partial<ThemeConfig>) => {
     setThemeState((prev) => {
@@ -54,11 +57,35 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
+  // Handle system theme preference changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (theme.mode === 'system') {
+        setIsDark(e.matches);
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [theme.mode]);
+
   useEffect(() => {
     const root = window.document.documentElement;
     
-    // Mode
-    if (theme.mode === 'dark' || (theme.mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    // Determine if dark mode should be active
+    let shouldBeDark = false;
+    if (theme.mode === 'dark') {
+      shouldBeDark = true;
+    } else if (theme.mode === 'system') {
+      shouldBeDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    setIsDark(shouldBeDark);
+
+    // Apply dark mode class with smooth transition
+    if (shouldBeDark) {
       root.classList.add('dark');
     } else {
       root.classList.remove('dark');
@@ -78,7 +105,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, exportTheme, importTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, exportTheme, importTheme, isDark }}>
       {children}
     </ThemeContext.Provider>
   );
