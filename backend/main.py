@@ -9,6 +9,7 @@ import time
 from .database import get_db, engine
 from .models import Base, UserSettings
 from .models.audit_log import AuditLog, AuditRetentionPolicy
+from backend.app.core.config import audit as config_audit
 from .schemas import (
     ArchiveRecordCreate,
     ArchiveRecordResponse,
@@ -90,7 +91,7 @@ scheduler = ArchiveScheduler()
 # Include v1 routers (legacy)
 from .api.v1.audit import audit_router as v1_audit_router
 from .api.v1.search import router as v1_search_router
-from .api.v1.config import router as v1_config_router
+from .app.api.v1.config import router as v1_config_router
 from .api.v1.data import router as v1_data_router
 
 # Include v2 routers (current)
