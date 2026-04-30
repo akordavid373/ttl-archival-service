@@ -183,8 +183,12 @@ export const formatFileSize = (bytes: number): string => {
 
 export const generateStellarHash = (data: string): string => {
   // This would be implemented with actual Stellar SDK
-  // For now, return a placeholder
-  return Buffer.from(data).toString('hex').padEnd(64, '0').substring(0, 64);
+  // For now, return a placeholder using a browser-compatible hex encoding
+  let hex = "";
+  for (let i = 0; i < data.length; i++) {
+    hex += data.charCodeAt(i).toString(16).padStart(2, "0");
+  }
+  return hex.padEnd(64, "0").substring(0, 64);
 };
 
 // Validation helpers
@@ -216,6 +220,80 @@ export class BlockchainError extends Error {
 export class ArchiveError extends Error {
   constructor(message: string, public code?: string) {
     super(message);
-    this.name = 'ArchiveError';
+    this.name = "ArchiveError";
   }
 }
+
+// Synchronization types
+export const SyncType = z.enum(["FULL", "INCREMENTAL", "REAL_TIME"]);
+export const SyncStatus = z.enum([
+  "PENDING",
+  "RUNNING",
+  "COMPLETED",
+  "FAILED",
+  "PAUSED",
+]);
+export const ConflictStrategy = z.enum([
+  "LAST_WRITE_WINS",
+  "SOURCE_WINS",
+  "TARGET_WINS",
+  "MANUAL",
+]);
+export const RecordSyncStatus = z.enum([
+  "SYNCED",
+  "CONFLICT",
+  "FAILED",
+  "SKIPPED",
+]);
+
+export const SyncJobSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  source_system: z.string(),
+  target_system: z.string(),
+  sync_type: SyncType,
+  status: SyncStatus,
+  conflict_strategy: ConflictStrategy,
+  last_sync_at: z.string().datetime().nullable(),
+  next_sync_at: z.string().datetime().nullable(),
+  records_synced: z.number(),
+  records_failed: z.number(),
+  error_message: z.string().nullable(),
+  retry_count: z.number(),
+  max_retries: z.number(),
+  created_at: z.string().datetime(),
+  updated_at: z.string().datetime(),
+});
+
+export const SyncRecordSchema = z.object({
+  id: z.string().uuid(),
+  sync_job_id: z.string().uuid(),
+  record_id: z.string(),
+  record_type: z.string(),
+  source_checksum: z.string().nullable(),
+  target_checksum: z.string().nullable(),
+  status: RecordSyncStatus,
+  conflict_details: z.any().optional(),
+  synced_at: z.string().datetime().nullable(),
+  created_at: z.string().datetime(),
+});
+
+export const SyncConflictSchema = z.object({
+  id: z.string().uuid(),
+  sync_job_id: z.string().uuid(),
+  sync_record_id: z.string().uuid(),
+  source_data: z.any(),
+  target_data: z.any(),
+  resolution: z.string().nullable(),
+  resolved_at: z.string().datetime().nullable(),
+  resolved_by: z.string().nullable(),
+  created_at: z.string().datetime(),
+});
+
+export type SyncJob = z.infer<typeof SyncJobSchema>;
+export type SyncRecord = z.infer<typeof SyncRecordSchema>;
+export type SyncConflict = z.infer<typeof SyncConflictSchema>;
+export type SyncTypeType = z.infer<typeof SyncType>;
+export type SyncStatusType = z.infer<typeof SyncStatus>;
+export type ConflictStrategyType = z.infer<typeof ConflictStrategy>;
+export type RecordSyncStatusType = z.infer<typeof RecordSyncStatus>;
