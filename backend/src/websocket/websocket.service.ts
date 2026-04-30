@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { Socket } from 'socket.io';
+import { Injectable } from "@nestjs/common";
+import { Socket } from "socket.io";
 
 @Injectable()
 export class WebsocketService {
@@ -18,7 +18,7 @@ export class WebsocketService {
 
   queueMessage(clientId: string, message: any) {
     if (this.clients.has(clientId)) {
-      this.clients.get(clientId).emit('message', message);
+      this.clients.get(clientId).emit("message", message);
     } else {
       const queue = this.messageQueue.get(clientId) || [];
       queue.push(message);
@@ -28,7 +28,7 @@ export class WebsocketService {
 
   flushQueue(clientId: string) {
     const queue = this.messageQueue.get(clientId) || [];
-    queue.forEach(msg => this.clients.get(clientId)?.emit('message', msg));
+    queue.forEach((msg) => this.clients.get(clientId)?.emit("message", msg));
     this.messageQueue.set(clientId, []);
   }
 }

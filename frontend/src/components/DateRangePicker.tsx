@@ -1,23 +1,31 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, Clock, Globe, Check, X } from 'lucide-react';
-import { 
-  format, 
-  addDays, 
-  addWeeks, 
-  addMonths, 
-  startOfDay, 
-  endOfDay, 
-  startOfWeek, 
-  endOfWeek, 
-  startOfMonth, 
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Globe,
+  Check,
+  X,
+} from "lucide-react";
+import {
+  format,
+  addDays,
+  addWeeks,
+  addMonths,
+  startOfDay,
+  endOfDay,
+  startOfWeek,
+  endOfWeek,
+  startOfMonth,
   endOfMonth,
   isSameDay,
   isWithinInterval,
   parseISO,
   isValid,
-  Locale
-} from 'date-fns';
-import { enUS } from 'date-fns/locale';
+  Locale,
+} from "date-fns";
+import { enUS } from "date-fns/locale";
 
 export interface DateRange {
   start: Date | null;
@@ -46,93 +54,93 @@ export interface PresetDateRange {
 
 const DEFAULT_PRESETS: PresetDateRange[] = [
   {
-    label: 'Today',
+    label: "Today",
     value: { start: startOfDay(new Date()), end: endOfDay(new Date()) },
-    description: 'Current day'
+    description: "Current day",
   },
   {
-    label: 'Yesterday',
-    value: { 
-      start: startOfDay(addDays(new Date(), -1)), 
-      end: endOfDay(addDays(new Date(), -1)) 
+    label: "Yesterday",
+    value: {
+      start: startOfDay(addDays(new Date(), -1)),
+      end: endOfDay(addDays(new Date(), -1)),
     },
-    description: 'Previous day'
+    description: "Previous day",
   },
   {
-    label: 'This Week',
-    value: { 
-      start: startOfWeek(new Date(), { weekStartsOn: 0 }), 
-      end: endOfWeek(new Date(), { weekStartsOn: 0 }) 
+    label: "This Week",
+    value: {
+      start: startOfWeek(new Date(), { weekStartsOn: 0 }),
+      end: endOfWeek(new Date(), { weekStartsOn: 0 }),
     },
-    description: 'Sunday to Saturday'
+    description: "Sunday to Saturday",
   },
   {
-    label: 'Last Week',
-    value: { 
-      start: startOfWeek(addWeeks(new Date(), -1), { weekStartsOn: 0 }), 
-      end: endOfWeek(addWeeks(new Date(), -1), { weekStartsOn: 0 }) 
+    label: "Last Week",
+    value: {
+      start: startOfWeek(addWeeks(new Date(), -1), { weekStartsOn: 0 }),
+      end: endOfWeek(addWeeks(new Date(), -1), { weekStartsOn: 0 }),
     },
-    description: 'Previous week'
+    description: "Previous week",
   },
   {
-    label: 'This Month',
-    value: { 
-      start: startOfMonth(new Date()), 
-      end: endOfMonth(new Date()) 
+    label: "This Month",
+    value: {
+      start: startOfMonth(new Date()),
+      end: endOfMonth(new Date()),
     },
-    description: 'Current month'
+    description: "Current month",
   },
   {
-    label: 'Last Month',
-    value: { 
-      start: startOfMonth(addMonths(new Date(), -1)), 
-      end: endOfMonth(addMonths(new Date(), -1)) 
+    label: "Last Month",
+    value: {
+      start: startOfMonth(addMonths(new Date(), -1)),
+      end: endOfMonth(addMonths(new Date(), -1)),
     },
-    description: 'Previous month'
+    description: "Previous month",
   },
   {
-    label: 'Last 7 Days',
-    value: { 
-      start: startOfDay(addDays(new Date(), -7)), 
-      end: endOfDay(new Date()) 
+    label: "Last 7 Days",
+    value: {
+      start: startOfDay(addDays(new Date(), -7)),
+      end: endOfDay(new Date()),
     },
-    description: 'Past week'
+    description: "Past week",
   },
   {
-    label: 'Last 30 Days',
-    value: { 
-      start: startOfDay(addDays(new Date(), -30)), 
-      end: endOfDay(new Date()) 
+    label: "Last 30 Days",
+    value: {
+      start: startOfDay(addDays(new Date(), -30)),
+      end: endOfDay(new Date()),
     },
-    description: 'Past month'
-  }
+    description: "Past month",
+  },
 ];
 
 const TIME_ZONES = [
-  { value: 'UTC', label: 'UTC' },
-  { value: 'America/New_York', label: 'Eastern Time' },
-  { value: 'America/Chicago', label: 'Central Time' },
-  { value: 'America/Denver', label: 'Mountain Time' },
-  { value: 'America/Los_Angeles', label: 'Pacific Time' },
-  { value: 'Europe/London', label: 'London' },
-  { value: 'Europe/Paris', label: 'Paris' },
-  { value: 'Asia/Tokyo', label: 'Tokyo' },
-  { value: 'Asia/Shanghai', label: 'Shanghai' },
-  { value: 'Australia/Sydney', label: 'Sydney' }
+  { value: "UTC", label: "UTC" },
+  { value: "America/New_York", label: "Eastern Time" },
+  { value: "America/Chicago", label: "Central Time" },
+  { value: "America/Denver", label: "Mountain Time" },
+  { value: "America/Los_Angeles", label: "Pacific Time" },
+  { value: "Europe/London", label: "London" },
+  { value: "Europe/Paris", label: "Paris" },
+  { value: "Asia/Tokyo", label: "Tokyo" },
+  { value: "Asia/Shanghai", label: "Shanghai" },
+  { value: "Australia/Sydney", label: "Sydney" },
 ];
 
 export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   value = { start: null, end: null },
   onChange,
-  placeholder = 'Select date range',
+  placeholder = "Select date range",
   disabled = false,
-  className = '',
+  className = "",
   locale = enUS,
-  timeZone = 'UTC',
+  timeZone = "UTC",
   minDate,
   maxDate,
   validation,
-  presets = DEFAULT_PRESETS
+  presets = DEFAULT_PRESETS,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -142,19 +150,22 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   const [selectedTimeZone, setSelectedTimeZone] = useState(timeZone);
   const [showPresets, setShowPresets] = useState(true);
   const [showTimeZoneSelector, setShowTimeZoneSelector] = useState(false);
-  
+
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -175,9 +186,9 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
       onChange?.(newRange);
       setSelectingEnd(true);
     } else {
-      const newRange = { 
-        start: date < value.start ? date : value.start, 
-        end: date >= value.start ? date : value.start 
+      const newRange = {
+        start: date < value.start ? date : value.start,
+        end: date >= value.start ? date : value.start,
       };
       onChange?.(newRange);
       setSelectingEnd(false);
@@ -199,11 +210,11 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
   const formatDateDisplay = () => {
     if (value.start && value.end) {
-      const start = format(value.start, 'MMM dd, yyyy', { locale });
-      const end = format(value.end, 'MMM dd, yyyy', { locale });
+      const start = format(value.start, "MMM dd, yyyy", { locale });
+      const end = format(value.end, "MMM dd, yyyy", { locale });
       return `${start} - ${end}`;
     } else if (value.start) {
-      return format(value.start, 'MMM dd, yyyy', { locale });
+      return format(value.start, "MMM dd, yyyy", { locale });
     }
     return placeholder;
   };
@@ -221,9 +232,9 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
   const isDateHovered = (date: Date) => {
     if (!hoveredDate || !value.start || value.end) return false;
-    return isWithinInterval(date, { 
-      start: hoveredDate < value.start ? hoveredDate : value.start, 
-      end: hoveredDate > value.start ? hoveredDate : value.start 
+    return isWithinInterval(date, {
+      start: hoveredDate < value.start ? hoveredDate : value.start,
+      end: hoveredDate > value.start ? hoveredDate : value.start,
     });
   };
 
@@ -243,7 +254,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
       current.setDate(current.getDate() + 1);
     }
 
-    const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
     return (
       <div className="bg-white rounded-lg border border-gray-200 shadow-lg">
@@ -256,7 +267,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             <ChevronLeft size={20} />
           </button>
           <h3 className="font-semibold text-gray-900">
-            {format(currentMonth, 'MMMM yyyy', { locale })}
+            {format(currentMonth, "MMMM yyyy", { locale })}
           </h3>
           <button
             onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
@@ -268,8 +279,11 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
         {/* Week days */}
         <div className="grid grid-cols-7 gap-1 p-4">
-          {weekDays.map(day => (
-            <div key={day} className="text-center text-xs font-medium text-gray-500 py-2">
+          {weekDays.map((day) => (
+            <div
+              key={day}
+              className="text-center text-xs font-medium text-gray-500 py-2"
+            >
               {day}
             </div>
           ))}
@@ -282,7 +296,8 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             const isSelected = isDateSelected(date);
             const isInRange = isDateInRange(date);
             const isHovered = isDateHovered(date);
-            const isDisabled = (minDate && date < minDate) || (maxDate && date > maxDate);
+            const isDisabled =
+              (minDate && date < minDate) || (maxDate && date > maxDate);
             const isToday = isSameDay(date, new Date());
 
             return (
@@ -294,15 +309,15 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 disabled={isDisabled}
                 className={`
                   relative p-2 text-sm rounded transition-all
-                  ${!isCurrentMonth ? 'text-gray-400' : 'text-gray-900'}
-                  ${isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:bg-gray-100'}
-                  ${isSelected ? 'bg-blue-500 text-white hover:bg-blue-600' : ''}
-                  ${isInRange && !isSelected ? 'bg-blue-100' : ''}
-                  ${isHovered && !isSelected && !isInRange ? 'bg-blue-50' : ''}
-                  ${isToday && !isSelected ? 'font-bold border border-blue-300' : ''}
+                  ${!isCurrentMonth ? "text-gray-400" : "text-gray-900"}
+                  ${isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-gray-100"}
+                  ${isSelected ? "bg-blue-500 text-white hover:bg-blue-600" : ""}
+                  ${isInRange && !isSelected ? "bg-blue-100" : ""}
+                  ${isHovered && !isSelected && !isInRange ? "bg-blue-50" : ""}
+                  ${isToday && !isSelected ? "font-bold border border-blue-300" : ""}
                 `}
               >
-                {format(date, 'd')}
+                {format(date, "d")}
               </button>
             );
           })}
@@ -326,8 +341,8 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
           className={`
             w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg bg-white
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-            ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'cursor-pointer'}
-            ${validationError ? 'border-red-500' : ''}
+            ${disabled ? "bg-gray-100 cursor-not-allowed" : "cursor-pointer"}
+            ${validationError ? "border-red-500" : ""}
           `}
         />
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
@@ -345,9 +360,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
       {/* Validation Error */}
       {validationError && (
-        <div className="mt-1 text-sm text-red-600">
-          {validationError}
-        </div>
+        <div className="mt-1 text-sm text-red-600">{validationError}</div>
       )}
 
       {/* Dropdown */}
@@ -367,9 +380,13 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                       onClick={() => handlePresetClick(preset)}
                       className="w-full text-left p-3 hover:bg-gray-50 transition border-b border-gray-100 last:border-0"
                     >
-                      <div className="font-medium text-gray-900">{preset.label}</div>
+                      <div className="font-medium text-gray-900">
+                        {preset.label}
+                      </div>
                       {preset.description && (
-                        <div className="text-sm text-gray-500">{preset.description}</div>
+                        <div className="text-sm text-gray-500">
+                          {preset.description}
+                        </div>
                       )}
                     </button>
                   ))}
@@ -385,13 +402,15 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                     onClick={() => setShowPresets(!showPresets)}
                     className="text-sm text-blue-600 hover:text-blue-700 transition"
                   >
-                    {showPresets ? 'Hide' : 'Show'} Presets
+                    {showPresets ? "Hide" : "Show"} Presets
                   </button>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="relative">
                     <button
-                      onClick={() => setShowTimeZoneSelector(!showTimeZoneSelector)}
+                      onClick={() =>
+                        setShowTimeZoneSelector(!showTimeZoneSelector)
+                      }
                       className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-900 transition"
                     >
                       <Globe size={16} />
@@ -399,7 +418,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                     </button>
                     {showTimeZoneSelector && (
                       <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                        {TIME_ZONES.map(tz => (
+                        {TIME_ZONES.map((tz) => (
                           <button
                             key={tz.value}
                             onClick={() => {
@@ -416,9 +435,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                   </div>
                 </div>
               </div>
-              <div className="p-4">
-                {renderCalendar()}
-              </div>
+              <div className="p-4">{renderCalendar()}</div>
             </div>
           </div>
         </div>

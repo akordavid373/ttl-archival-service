@@ -53,7 +53,7 @@ If you witness or experience unacceptable behavior, please:
 
 ### Contact Information
 
-- **Project Maintainers**: 
+- **Project Maintainers**:
   - GitHub: @akordavid373
   - Email: [maintainer email]
 

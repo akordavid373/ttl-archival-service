@@ -48,6 +48,7 @@ The configuration management system provides:
 ## Configuration Sections
 
 ### Database Configuration
+
 ```python
 @dataclass
 class DatabaseConfig:
@@ -60,6 +61,7 @@ class DatabaseConfig:
 ```
 
 ### Security Configuration
+
 ```python
 @dataclass
 class SecurityConfig:
@@ -73,6 +75,7 @@ class SecurityConfig:
 ```
 
 ### Feature Flags
+
 ```python
 @dataclass
 class FeatureFlags:
@@ -86,6 +89,7 @@ class FeatureFlags:
 ```
 
 ### Rate Limiting
+
 ```python
 @dataclass
 class RateLimitConfig:
@@ -100,6 +104,7 @@ class RateLimitConfig:
 See `.env.example` for all available environment variables. Key variables include:
 
 ### Application
+
 - `ENVIRONMENT`: Application environment (development, testing, staging, production)
 - `DEBUG`: Enable debug mode
 - `HOST`: Server host
@@ -107,17 +112,20 @@ See `.env.example` for all available environment variables. Key variables includ
 - `WORKERS`: Number of worker processes
 
 ### Database
+
 - `DATABASE_URL`: Database connection string
 - `DB_POOL_SIZE`: Database connection pool size
 - `DB_MAX_OVERFLOW`: Maximum pool overflow
 - `DB_ECHO`: Enable SQL query logging
 
 ### Security
+
 - `SECRET_KEY`: JWT signing secret
 - `ALGORITHM`: JWT algorithm
 - `ACCESS_TOKEN_EXPIRE_MINUTES`: Token expiration time
 
 ### Features
+
 - `ENABLE_SEARCH`: Enable search functionality
 - `ENABLE_ANALYTICS`: Enable analytics
 - `ENABLE_AUDIT_LOG`: Enable audit logging
@@ -128,11 +136,13 @@ See `.env.example` for all available environment variables. Key variables includ
 ### Configuration Management
 
 #### Get Current Configuration
+
 ```http
 GET /api/v1/config/current?include_secrets=false
 ```
 
 #### Update Configuration
+
 ```http
 POST /api/v1/config/update
 Content-Type: application/json
@@ -148,26 +158,31 @@ Content-Type: application/json
 ```
 
 #### Get Configuration Section
+
 ```http
 GET /api/v1/config/section/{section_name}?include_secrets=false
 ```
 
 #### Reset Configuration Section
+
 ```http
 POST /api/v1/config/reset/{section_name}
 ```
 
 #### Rollback Configuration
+
 ```http
 POST /api/v1/config/rollback?version={version}&steps_back=1
 ```
 
 #### Get Configuration History
+
 ```http
 GET /api/v1/config/history?limit=50&include_details=false
 ```
 
 #### Validate Configuration Updates
+
 ```http
 POST /api/v1/config/validate
 Content-Type: application/json
@@ -182,11 +197,13 @@ Content-Type: application/json
 ### Feature Flags
 
 #### Get Feature Flags
+
 ```http
 GET /api/v1/config/features
 ```
 
 #### Update Feature Flags
+
 ```http
 POST /api/v1/config/features
 Content-Type: application/json
@@ -200,6 +217,7 @@ Content-Type: application/json
 ### Secret Management
 
 #### Store Secret
+
 ```http
 POST /api/v1/config/secrets
 Content-Type: application/json
@@ -212,16 +230,19 @@ Content-Type: application/json
 ```
 
 #### Get Secret
+
 ```http
 GET /api/v1/config/secrets/{key}
 ```
 
 #### List Secrets
+
 ```http
 GET /api/v1/config/secrets?include_values=false
 ```
 
 #### Delete Secret
+
 ```http
 DELETE /api/v1/config/secrets/{key}
 ```
@@ -229,16 +250,19 @@ DELETE /api/v1/config/secrets/{key}
 ### System Information
 
 #### Export Configuration
+
 ```http
 POST /api/v1/config/export?include_secrets=false
 ```
 
 #### Get Metrics
+
 ```http
 GET /api/v1/config/metrics
 ```
 
 #### Health Check
+
 ```http
 GET /api/v1/config/health
 ```
@@ -307,18 +331,21 @@ else:
 ## Security Considerations
 
 ### Secret Management
+
 - All secrets are encrypted using Fernet symmetric encryption
 - Master key is derived from environment variable or generated file
 - Secret access is tracked with audit logging
 - Secrets can be rotated and backed up securely
 
 ### Configuration Security
+
 - Sensitive values are masked in logs and exports
 - Configuration changes require validation
 - History tracking enables audit trails
 - Rollback capability for quick recovery
 
 ### Access Control
+
 - API endpoints should be protected with authentication
 - User tracking for configuration changes
 - Role-based access for sensitive operations
@@ -326,18 +353,21 @@ else:
 ## Best Practices
 
 ### Environment Configuration
+
 1. Use different configurations for each environment
 2. Never commit secrets to version control
 3. Use environment-specific .env files
 4. Validate configuration on startup
 
 ### Secret Management
+
 1. Rotate secrets regularly
 2. Use strong master keys
 3. Backup secrets securely
 4. Monitor secret access
 
 ### Configuration Updates
+
 1. Validate changes before applying
 2. Test in non-production environments first
 3. Monitor for configuration errors
@@ -348,6 +378,7 @@ else:
 ### Common Issues
 
 #### Configuration Validation Errors
+
 ```python
 # Check validation result
 validation_result = validate_configuration(settings)
@@ -356,6 +387,7 @@ for error in validation_result.errors:
 ```
 
 #### Secret Manager Issues
+
 ```python
 # Check secret manager health
 health = secret_manager.health_check()
@@ -364,6 +396,7 @@ if health["status"] != "healthy":
 ```
 
 #### Configuration Service Issues
+
 ```python
 # Check configuration service health
 health = config_service.health_check()
@@ -372,7 +405,9 @@ if health["status"] != "healthy":
 ```
 
 ### Debug Mode
+
 Enable debug mode for detailed logging:
+
 ```bash
 export DEBUG=true
 export LOG_LEVEL=DEBUG
@@ -390,10 +425,11 @@ To migrate from the old configuration system:
 ### Migration Steps
 
 1. **Update Environment Variables**
+
    ```bash
    # Old format
    DATABASE_URL=sqlite:///./ttl_archival.db
-   
+
    # New format (same variable, but more options available)
    DATABASE_URL=postgresql://user:pass@localhost/ttl_archival
    DB_POOL_SIZE=10
@@ -401,11 +437,12 @@ To migrate from the old configuration system:
    ```
 
 2. **Update Code**
+
    ```python
    # Old approach
    import os
    database_url = os.getenv("DATABASE_URL")
-   
+
    # New approach
    from backend.config.settings import get_settings
    settings = get_settings()
@@ -430,6 +467,7 @@ python test_config_system.py
 ```
 
 The test suite validates:
+
 - Settings initialization
 - Configuration validation
 - Dynamic updates
@@ -450,6 +488,7 @@ The test suite validates:
 ## Future Enhancements
 
 Potential future improvements:
+
 - Configuration templates for different deployment types
 - Integration with external secret managers (AWS Secrets Manager, Azure Key Vault)
 - Configuration change notifications (webhooks, email)

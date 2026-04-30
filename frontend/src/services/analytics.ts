@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 // Types for Analytics
 export interface AnalyticsEvent {
@@ -25,30 +25,36 @@ class AnalyticsService {
 
   public init(trackingId: string) {
     if (this.isInitialized) return;
-    
+
     this.trackingId = trackingId;
     // Mock Google Analytics Initialization
     console.log(`[Analytics] Initializing with ID: ${trackingId}`);
-    
+
     // Check for GDPR/CCPA compliance (mock check)
-    const consent = localStorage.getItem('analytics-consent');
-    if (consent === 'granted') {
+    const consent = localStorage.getItem("analytics-consent");
+    if (consent === "granted") {
       this.isInitialized = true;
       this.loadGAScript();
     }
   }
 
   private loadGAScript() {
-    console.log('[Analytics] Loading GA script...');
+    console.log("[Analytics] Loading GA script...");
     // Real implementation would inject <script> tags here
   }
 
   public trackEvent(event: AnalyticsEvent) {
     if (!this.isInitialized) {
-      console.warn('[Analytics] Not initialized or consent not granted. Queuing event:', event);
+      console.warn(
+        "[Analytics] Not initialized or consent not granted. Queuing event:",
+        event,
+      );
       return;
     }
-    console.log(`[Analytics] Tracking Event: ${event.category} - ${event.action}`, event);
+    console.log(
+      `[Analytics] Tracking Event: ${event.category} - ${event.action}`,
+      event,
+    );
     // window.gtag('event', event.action, { ... });
   }
 
@@ -59,7 +65,7 @@ class AnalyticsService {
   }
 
   public setConsent(granted: boolean) {
-    localStorage.setItem('analytics-consent', granted ? 'granted' : 'denied');
+    localStorage.setItem("analytics-consent", granted ? "granted" : "denied");
     if (granted && !this.isInitialized && this.trackingId) {
       this.init(this.trackingId);
     }
@@ -74,7 +80,12 @@ export const useTracking = () => {
   };
 
   const trackClick = (label: string, metadata?: Record<string, any>) => {
-    trackEvent({ category: 'User Interaction', action: 'Click', label, metadata });
+    trackEvent({
+      category: "User Interaction",
+      action: "Click",
+      label,
+      metadata,
+    });
   };
 
   return { trackEvent, trackClick };

@@ -5,6 +5,7 @@ A comprehensive search autocomplete component with debounced API calls, keyboard
 ## Features
 
 ### ✅ Core Functionality
+
 - **Debounced API calls** - Configurable delay to prevent excessive API requests
 - **Keyboard navigation** - Full arrow key, Enter, and Escape support
 - **Text highlighting** - Matched text is highlighted in suggestions
@@ -12,6 +13,7 @@ A comprehensive search autocomplete component with debounced API calls, keyboard
 - **No results handling** - Graceful handling when no suggestions are found
 
 ### ✅ Advanced Features
+
 - **Configurable parameters** - Minimum query length, max suggestions, debounce delay
 - **Error handling** - Graceful error display with user-friendly messages
 - **Accessibility** - Proper ARIA support and keyboard navigation
@@ -23,7 +25,7 @@ A comprehensive search autocomplete component with debounced API calls, keyboard
 The component is already integrated into the UI library. Simply import and use:
 
 ```tsx
-import { SearchAutocomplete, type SearchSuggestion } from '@/components/ui'
+import { SearchAutocomplete, type SearchSuggestion } from "@/components/ui";
 ```
 
 ## Usage
@@ -32,15 +34,15 @@ import { SearchAutocomplete, type SearchSuggestion } from '@/components/ui'
 
 ```tsx
 const searchProducts = async (query: string): Promise<SearchSuggestion[]> => {
-  const response = await fetch(`/api/search?q=${query}`)
-  return response.json()
-}
+  const response = await fetch(`/api/search?q=${query}`);
+  return response.json();
+};
 
 <SearchAutocomplete
   onSearch={searchProducts}
-  onSelect={(suggestion) => console.log('Selected:', suggestion)}
+  onSelect={(suggestion) => console.log("Selected:", suggestion)}
   placeholder="Search products..."
-/>
+/>;
 ```
 
 ### Advanced Configuration
@@ -62,29 +64,29 @@ const searchProducts = async (query: string): Promise<SearchSuggestion[]> => {
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `onSearch` | `(query: string) => Promise<SearchSuggestion[]>` | **Required** | Function to fetch search suggestions |
-| `onSelect` | `(suggestion: SearchSuggestion) => void` | **Required** | Callback when a suggestion is selected |
-| `placeholder` | `string` | `"Search..."` | Input placeholder text |
-| `debounceDelay` | `number` | `300` | Delay in ms before making API calls |
-| `minQueryLength` | `number` | `2` | Minimum characters to trigger search |
-| `maxSuggestions` | `number` | `10` | Maximum number of suggestions to display |
-| `noResultsMessage` | `string` | `"No results found"` | Message when no suggestions are found |
-| `loadingMessage` | `string` | `"Searching..."` | Message during API calls |
-| `showSearchIcon` | `boolean` | `true` | Show/hide search icon |
-| `disabled` | `boolean` | `false` | Disable the input component |
-| `className` | `string` | - | Additional CSS classes for wrapper |
-| `inputClassName` | `string` | - | Additional CSS classes for input |
+| Prop               | Type                                             | Default              | Description                              |
+| ------------------ | ------------------------------------------------ | -------------------- | ---------------------------------------- |
+| `onSearch`         | `(query: string) => Promise<SearchSuggestion[]>` | **Required**         | Function to fetch search suggestions     |
+| `onSelect`         | `(suggestion: SearchSuggestion) => void`         | **Required**         | Callback when a suggestion is selected   |
+| `placeholder`      | `string`                                         | `"Search..."`        | Input placeholder text                   |
+| `debounceDelay`    | `number`                                         | `300`                | Delay in ms before making API calls      |
+| `minQueryLength`   | `number`                                         | `2`                  | Minimum characters to trigger search     |
+| `maxSuggestions`   | `number`                                         | `10`                 | Maximum number of suggestions to display |
+| `noResultsMessage` | `string`                                         | `"No results found"` | Message when no suggestions are found    |
+| `loadingMessage`   | `string`                                         | `"Searching..."`     | Message during API calls                 |
+| `showSearchIcon`   | `boolean`                                        | `true`               | Show/hide search icon                    |
+| `disabled`         | `boolean`                                        | `false`              | Disable the input component              |
+| `className`        | `string`                                         | -                    | Additional CSS classes for wrapper       |
+| `inputClassName`   | `string`                                         | -                    | Additional CSS classes for input         |
 
 ## Types
 
 ```tsx
 interface SearchSuggestion {
-  id: string
-  label: string
-  value: string
-  description?: string
+  id: string;
+  label: string;
+  value: string;
+  description?: string;
 }
 ```
 
@@ -119,6 +121,7 @@ Comprehensive test suite included covering:
 - ✅ Edge cases
 
 Run tests:
+
 ```bash
 npm test search-autocomplete
 ```
@@ -136,6 +139,7 @@ Interactive stories available in Storybook:
 - **With descriptions** - Rich suggestion content
 
 View stories:
+
 ```bash
 npm run storybook
 ```

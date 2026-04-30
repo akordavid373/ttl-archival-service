@@ -1,5 +1,5 @@
-import React from 'react';
-import { Helmet } from 'react-helmet-async';
+import React from "react";
+import { Helmet } from "react-helmet-async";
 
 interface SEOProps {
   title?: string;
@@ -13,16 +13,18 @@ interface SEOProps {
 }
 
 export const SEO: React.FC<SEOProps> = ({
-  title = 'TTL Archival Service | Automated Blockchain Archival',
-  description = 'Efficient and automated archival service for TTL-aware blockchain data. Ensure your data is preserved before it expires.',
-  keywords = 'TTL, blockchain, archival, data preservation, automation',
-  ogImage = '/og-image.png',
-  ogType = 'website',
-  twitterHandle = '@TTLArchival',
+  title = "TTL Archival Service | Automated Blockchain Archival",
+  description = "Efficient and automated archival service for TTL-aware blockchain data. Ensure your data is preserved before it expires.",
+  keywords = "TTL, blockchain, archival, data preservation, automation",
+  ogImage = "/og-image.png",
+  ogType = "website",
+  twitterHandle = "@TTLArchival",
   canonical,
   jsonLd,
 }) => {
-  const siteTitle = title.includes('TTL Archival') ? title : `${title} | TTL Archival Service`;
+  const siteTitle = title.includes("TTL Archival")
+    ? title
+    : `${title} | TTL Archival Service`;
 
   return (
     <Helmet>
@@ -48,9 +50,7 @@ export const SEO: React.FC<SEOProps> = ({
 
       {/* Structured Data */}
       {jsonLd && (
-        <script type="application/ld+json">
-          {JSON.stringify(jsonLd)}
-        </script>
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       )}
     </Helmet>
   );

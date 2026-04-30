@@ -1,20 +1,29 @@
-import { useState } from 'react'
-import { RichTextEditor } from '../components/RichTextEditor'
-import { VirtualScroll } from '../components/VirtualScroll'
-import { DragAndDrop, useDragAndDrop } from '../components/DragAndDrop'
-import { InteractiveMap, useInteractiveMap } from '../components/InteractiveMap'
-import { Button } from '../components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import { useState } from "react";
+import { RichTextEditor } from "../components/RichTextEditor";
+import { VirtualScroll } from "../components/VirtualScroll";
+import { DragAndDrop, useDragAndDrop } from "../components/DragAndDrop";
+import {
+  InteractiveMap,
+  useInteractiveMap,
+} from "../components/InteractiveMap";
+import { Button } from "../components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 
 export function FeaturesDemo() {
   // Rich Text Editor State
   const [editorContent, setEditorContent] = useState(
-    '<h1>Welcome to the Rich Text Editor Demo</h1><p>This editor supports:</p><ul><li><strong>Bold text</strong> and <em>italic text</em></li><li>Code blocks with syntax highlighting</li><li>Tables and images</li><li>Auto-save functionality</li></ul><pre><code class="language-javascript">const greeting = "Hello, World!";\nconsole.log(greeting);</code></pre>'
-  )
+    '<h1>Welcome to the Rich Text Editor Demo</h1><p>This editor supports:</p><ul><li><strong>Bold text</strong> and <em>italic text</em></li><li>Code blocks with syntax highlighting</li><li>Tables and images</li><li>Auto-save functionality</li></ul><pre><code class="language-javascript">const greeting = "Hello, World!";\nconsole.log(greeting);</code></pre>',
+  );
 
   // Virtual Scroll State
   const generateLargeDataset = () => {
-    const items = []
+    const items = [];
     for (let i = 1; i <= 10000; i++) {
       items.push({
         id: `item-${i}`,
@@ -22,27 +31,36 @@ export function FeaturesDemo() {
           <div className="p-4">
             <h3 className="font-semibold text-lg">Item {i}</h3>
             <p className="text-gray-600 mt-2">
-              This is a sample item in the virtual scroll list. Virtual scrolling allows us to efficiently 
-              render large datasets by only rendering the visible items plus a small buffer.
+              This is a sample item in the virtual scroll list. Virtual
+              scrolling allows us to efficiently render large datasets by only
+              rendering the visible items plus a small buffer.
             </p>
             <div className="mt-3 flex gap-2">
-              <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">Category {Math.ceil(i / 100)}</span>
-              <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-sm">Priority {i % 3 + 1}</span>
+              <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">
+                Category {Math.ceil(i / 100)}
+              </span>
+              <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-sm">
+                Priority {(i % 3) + 1}
+              </span>
             </div>
           </div>
         ),
         height: 120 + (i % 3) * 20, // Variable heights
-      })
+      });
     }
-    return items
-  }
+    return items;
+  };
 
-  const [virtualScrollItems] = useState(generateLargeDataset())
+  const [virtualScrollItems] = useState(generateLargeDataset());
 
   // Drag and Drop State
-  const { items: dragItems, addItem: addDragItem, removeItem: removeDragItem } = useDragAndDrop([
+  const {
+    items: dragItems,
+    addItem: addDragItem,
+    removeItem: removeDragItem,
+  } = useDragAndDrop([
     {
-      id: 'item-1',
+      id: "item-1",
       content: (
         <div className="p-4">
           <h4 className="font-semibold">First Item</h4>
@@ -51,7 +69,7 @@ export function FeaturesDemo() {
       ),
     },
     {
-      id: 'item-2',
+      id: "item-2",
       content: (
         <div className="p-4">
           <h4 className="font-semibold">Second Item</h4>
@@ -60,7 +78,7 @@ export function FeaturesDemo() {
       ),
     },
     {
-      id: 'item-3',
+      id: "item-3",
       content: (
         <div className="p-4">
           <h4 className="font-semibold">Third Item</h4>
@@ -68,31 +86,34 @@ export function FeaturesDemo() {
         </div>
       ),
     },
-  ])
+  ]);
 
   // Interactive Map State
-  const { 
-    markers: mapMarkers, 
-    routes: mapRoutes, 
-    addMarker: addMapMarker, 
+  const {
+    markers: mapMarkers,
+    routes: mapRoutes,
+    addMarker: addMapMarker,
     removeMarker: removeMapMarker,
-    addRoute: addMapRoute 
-  } = useInteractiveMap()
+    addRoute: addMapRoute,
+  } = useInteractiveMap();
 
   const handleFileUpload = (files: File[]) => {
-    console.log('Files uploaded:', files)
-    files.forEach(file => {
-      console.log(`- ${file.name} (${file.size} bytes)`)
-    })
-  }
+    console.log("Files uploaded:", files);
+    files.forEach((file) => {
+      console.log(`- ${file.name} (${file.size} bytes)`);
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">UI Features Demo</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            UI Features Demo
+          </h1>
           <p className="text-xl text-gray-600">
-            Showcase of the implemented UI components for the TTL Archival Service
+            Showcase of the implemented UI components for the TTL Archival
+            Service
           </p>
         </div>
 
@@ -102,7 +123,8 @@ export function FeaturesDemo() {
             <CardHeader>
               <CardTitle>Rich Text Editor</CardTitle>
               <CardDescription>
-                Feature-rich text editor with WYSIWYG editing, formatting options, media support, code highlighting, and auto-save
+                Feature-rich text editor with WYSIWYG editing, formatting
+                options, media support, code highlighting, and auto-save
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -128,7 +150,8 @@ export function FeaturesDemo() {
             <CardHeader>
               <CardTitle>Virtual Scrolling</CardTitle>
               <CardDescription>
-                Efficiently handles large datasets with smooth scrolling performance and dynamic item heights
+                Efficiently handles large datasets with smooth scrolling
+                performance and dynamic item heights
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -160,31 +183,33 @@ export function FeaturesDemo() {
             <CardHeader>
               <CardTitle>Drag and Drop Interface</CardTitle>
               <CardDescription>
-                List reordering and file management with visual feedback and touch device support
+                List reordering and file management with visual feedback and
+                touch device support
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="mb-4">
                 <p className="text-sm text-gray-600 mb-2">
-                  • Drag items to reorder them<br/>
-                  • Drag and drop files from your computer<br/>
-                  • Double-click to add new items
+                  • Drag items to reorder them
+                  <br />
+                  • Drag and drop files from your computer
+                  <br />• Double-click to add new items
                 </p>
               </div>
               <DragAndDrop
                 items={dragItems}
                 onItemsChange={(items) => {
                   // Update the items in the hook
-                  items.forEach(item => {
-                    if (!dragItems.find(i => i.id === item.id)) {
-                      addDragItem(item)
+                  items.forEach((item) => {
+                    if (!dragItems.find((i) => i.id === item.id)) {
+                      addDragItem(item);
                     }
-                  })
-                  dragItems.forEach(item => {
-                    if (!items.find(i => i.id === item.id)) {
-                      removeDragItem(item.id)
+                  });
+                  dragItems.forEach((item) => {
+                    if (!items.find((i) => i.id === item.id)) {
+                      removeDragItem(item.id);
                     }
-                  })
+                  });
                 }}
                 onFileUpload={handleFileUpload}
                 dragHandle={true}
@@ -201,7 +226,8 @@ export function FeaturesDemo() {
             <CardHeader>
               <CardTitle>Interactive Maps</CardTitle>
               <CardDescription>
-                Map functionality with markers, geocoding, route planning, and style customization
+                Map functionality with markers, geocoding, route planning, and
+                style customization
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -212,56 +238,58 @@ export function FeaturesDemo() {
                 <Button variant="outline" disabled>
                   Routes: {mapRoutes.length}
                 </Button>
-                <Button 
+                <Button
                   variant="outline"
                   onClick={() => {
                     // Add sample markers
                     addMapMarker({
-                      position: { lat: 40.7128, lng: -74.0060 } as any,
+                      position: { lat: 40.7128, lng: -74.006 } as any,
                       title: "New York City",
                       description: "The Big Apple",
-                      type: 'default',
-                      color: '#3b82f6',
-                    })
+                      type: "default",
+                      color: "#3b82f6",
+                    });
                     addMapMarker({
-                      position: { lat: 40.7580, lng: -73.9855 } as any,
+                      position: { lat: 40.758, lng: -73.9855 } as any,
                       title: "Times Square",
                       description: "The heart of NYC",
-                      type: 'default',
-                      color: '#10b981',
-                    })
+                      type: "default",
+                      color: "#10b981",
+                    });
                   }}
                 >
                   Add Sample Markers
                 </Button>
               </div>
               <div className="text-sm text-gray-600 mb-4">
-                • Click on the map to add markers<br/>
-                • Use the search bar to find locations<br/>
-                • Use Start/End buttons to plan routes<br/>
-                • Double-click to quickly add markers
+                • Click on the map to add markers
+                <br />
+                • Use the search bar to find locations
+                <br />
+                • Use Start/End buttons to plan routes
+                <br />• Double-click to quickly add markers
               </div>
               <InteractiveMap
-                center={[40.7128, -74.0060]}
+                center={[40.7128, -74.006]}
                 zoom={12}
                 height="500px"
                 markers={mapMarkers}
                 routes={mapRoutes}
                 onMarkersChange={(markers) => {
                   // Sync with hook state
-                  mapMarkers.forEach(marker => {
-                    if (!markers.find(m => m.id === marker.id)) {
-                      removeMapMarker(marker.id)
+                  mapMarkers.forEach((marker) => {
+                    if (!markers.find((m) => m.id === marker.id)) {
+                      removeMapMarker(marker.id);
                     }
-                  })
+                  });
                 }}
                 onRoutesChange={(routes) => {
                   // Sync with hook state
-                  mapRoutes.forEach(route => {
-                    if (!routes.find(r => r.id === route.id)) {
+                  mapRoutes.forEach((route) => {
+                    if (!routes.find((r) => r.id === route.id)) {
                       // Route removal logic would go here
                     }
-                  })
+                  });
                 }}
                 showControls={true}
                 allowMarkerCreation={true}
@@ -282,7 +310,9 @@ export function FeaturesDemo() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="font-semibold text-green-600 mb-2">✅ Rich Text Editor</h4>
+                  <h4 className="font-semibold text-green-600 mb-2">
+                    ✅ Rich Text Editor
+                  </h4>
                   <ul className="text-sm space-y-1">
                     <li>• WYSIWYG text editing</li>
                     <li>• Rich formatting options</li>
@@ -292,7 +322,9 @@ export function FeaturesDemo() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-green-600 mb-2">✅ Virtual Scrolling</h4>
+                  <h4 className="font-semibold text-green-600 mb-2">
+                    ✅ Virtual Scrolling
+                  </h4>
                   <ul className="text-sm space-y-1">
                     <li>• Large dataset handling</li>
                     <li>• Smooth scrolling performance</li>
@@ -302,7 +334,9 @@ export function FeaturesDemo() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-green-600 mb-2">✅ Drag and Drop</h4>
+                  <h4 className="font-semibold text-green-600 mb-2">
+                    ✅ Drag and Drop
+                  </h4>
                   <ul className="text-sm space-y-1">
                     <li>• List reordering</li>
                     <li>• File drag and drop upload</li>
@@ -312,7 +346,9 @@ export function FeaturesDemo() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-green-600 mb-2">✅ Interactive Maps</h4>
+                  <h4 className="font-semibold text-green-600 mb-2">
+                    ✅ Interactive Maps
+                  </h4>
                   <ul className="text-sm space-y-1">
                     <li>• Interactive map display</li>
                     <li>• Custom markers and popups</li>
@@ -327,7 +363,7 @@ export function FeaturesDemo() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default FeaturesDemo
+export default FeaturesDemo;

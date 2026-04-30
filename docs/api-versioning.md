@@ -5,6 +5,7 @@ This document describes the API versioning strategy and implementation for the T
 ## Overview
 
 The TTL Archival Service implements a comprehensive API versioning system that supports:
+
 - Multiple active API versions
 - Backward compatibility
 - Graceful deprecation
@@ -16,6 +17,7 @@ The TTL Archival Service implements a comprehensive API versioning system that s
 ### Semantic Versioning
 
 We follow semantic versioning (MAJOR.MINOR.PATCH):
+
 - **MAJOR**: Breaking changes that require migration
 - **MINOR**: New features that are backward compatible
 - **PATCH**: Bug fixes and minor improvements
@@ -23,6 +25,7 @@ We follow semantic versioning (MAJOR.MINOR.PATCH):
 ### Current Versions
 
 #### v1 (Legacy)
+
 - **Status**: Active but deprecated
 - **Release Date**: January 1, 2024
 - **Deprecation Date**: June 1, 2025
@@ -31,6 +34,7 @@ We follow semantic versioning (MAJOR.MINOR.PATCH):
 - **Features**: Basic CRUD operations, audit logging, search, configuration management
 
 #### v2 (Current)
+
 - **Status**: Active
 - **Release Date**: Current date
 - **Backward Compatible**: No
@@ -71,6 +75,7 @@ Headers:
 ### Version Priority
 
 The system uses the following priority for version detection:
+
 1. URL path (`/api/v1/`, `/api/v2/`)
 2. `X-API-Version` header
 3. `Accept` header with version parameter
@@ -122,15 +127,17 @@ Link: </docs/migration/v1-to-v2>; rel="migration-guide"
 #### Migration Steps
 
 1. **Update Base URLs**
+
    ```python
    # Old
    BASE_URL = "https://api.example.com/api/v1"
-   
+
    # New
    BASE_URL = "https://api.example.com/api/v2"
    ```
 
 2. **Update Authentication**
+
    ```python
    # Add required headers
    headers = {
@@ -140,20 +147,22 @@ Link: </docs/migration/v1-to-v2>; rel="migration-guide"
    ```
 
 3. **Update Pagination**
+
    ```python
    # Old
    params = {"skip": 20, "limit": 10}
-   
+
    # New
    params = {"page": 3, "limit": 10}  # page 3 = items 21-30
    ```
 
 4. **Handle Enhanced Responses**
+
    ```python
    # v2 responses include additional metadata
    response = api_call()
    data = response.json()
-   
+
    # Handle new fields
    items = data['items']
    total = data['total']
@@ -245,6 +254,7 @@ GET /version
 ```
 
 Response:
+
 ```json
 {
   "current_version": "v2",
@@ -283,6 +293,7 @@ GET /health
 ```
 
 Response:
+
 ```json
 {
   "status": "healthy",
@@ -325,6 +336,7 @@ curl -I https://api.example.com/api/archives
 ```
 
 Look for:
+
 - `API-Version`: Selected version
 - `API-Supported-Versions`: All supported versions
 - `Deprecation`: Deprecation status

@@ -1,184 +1,210 @@
-import * as React from "react"
-import { useState, useEffect, useRef, useCallback } from "react"
-import { useDebounce } from "../../hooks/useDebounce"
-import { cn } from "../../utils/cn"
-import { Input } from "./input"
-import { Loader2, Search } from "lucide-react"
+import * as React from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useDebounce } from "../../hooks/useDebounce";
+import { cn } from "../../utils/cn";
+import { Input } from "./input";
+import { Loader2, Search } from "lucide-react";
 
 export interface SearchSuggestion {
-  id: string
-  label: string
-  value: string
-  description?: string
+  id: string;
+  label: string;
+  value: string;
+  description?: string;
 }
 
 export interface SearchAutocompleteProps {
-  onSearch: (query: string) => Promise<SearchSuggestion[]>
-  onSelect: (suggestion: SearchSuggestion) => void
-  placeholder?: string
-  debounceDelay?: number
-  className?: string
-  inputClassName?: string
-  disabled?: boolean
-  noResultsMessage?: string
-  loadingMessage?: string
-  minQueryLength?: number
-  maxSuggestions?: number
-  showSearchIcon?: boolean
+  onSearch: (query: string) => Promise<SearchSuggestion[]>;
+  onSelect: (suggestion: SearchSuggestion) => void;
+  placeholder?: string;
+  debounceDelay?: number;
+  className?: string;
+  inputClassName?: string;
+  disabled?: boolean;
+  noResultsMessage?: string;
+  loadingMessage?: string;
+  minQueryLength?: number;
+  maxSuggestions?: number;
+  showSearchIcon?: boolean;
 }
 
-const SearchAutocomplete = React.forwardRef<HTMLInputElement, SearchAutocompleteProps>(
-  ({
-    onSearch,
-    onSelect,
-    placeholder = "Search...",
-    debounceDelay = 300,
-    className,
-    inputClassName,
-    disabled = false,
-    noResultsMessage = "No results found",
-    loadingMessage = "Searching...",
-    minQueryLength = 2,
-    maxSuggestions = 10,
-    showSearchIcon = true,
-    ...props
-  }, ref) => {
-    const [query, setQuery] = useState("")
-    const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([])
-    const [isOpen, setIsOpen] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
-    const [selectedIndex, setSelectedIndex] = useState(-1)
-    const [error, setError] = useState<string | null>(null)
+const SearchAutocomplete = React.forwardRef<
+  HTMLInputElement,
+  SearchAutocompleteProps
+>(
+  (
+    {
+      onSearch,
+      onSelect,
+      placeholder = "Search...",
+      debounceDelay = 300,
+      className,
+      inputClassName,
+      disabled = false,
+      noResultsMessage = "No results found",
+      loadingMessage = "Searching...",
+      minQueryLength = 2,
+      maxSuggestions = 10,
+      showSearchIcon = true,
+      ...props
+    },
+    ref,
+  ) => {
+    const [query, setQuery] = useState("");
+    const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
+    const [isOpen, setIsOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [selectedIndex, setSelectedIndex] = useState(-1);
+    const [error, setError] = useState<string | null>(null);
 
-    const debouncedQuery = useDebounce(query, debounceDelay)
-    const inputRef = useRef<HTMLInputElement>(null)
-    const listRef = useRef<HTMLUListElement>(null)
+    const debouncedQuery = useDebounce(query, debounceDelay);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const listRef = useRef<HTMLUListElement>(null);
 
     // Handle search API calls
     useEffect(() => {
       if (debouncedQuery.length < minQueryLength) {
-        setSuggestions([])
-        setIsOpen(false)
-        return
+        setSuggestions([]);
+        setIsOpen(false);
+        return;
       }
 
       const fetchSuggestions = async () => {
         try {
-          setIsLoading(true)
-          setError(null)
-          const results = await onSearch(debouncedQuery)
-          const limitedResults = results.slice(0, maxSuggestions)
-          setSuggestions(limitedResults)
-          setIsOpen(limitedResults.length > 0)
-          setSelectedIndex(-1)
+          setIsLoading(true);
+          setError(null);
+          const results = await onSearch(debouncedQuery);
+          const limitedResults = results.slice(0, maxSuggestions);
+          setSuggestions(limitedResults);
+          setIsOpen(limitedResults.length > 0);
+          setSelectedIndex(-1);
         } catch (err) {
-          setError(err instanceof Error ? err.message : "Search failed")
-          setSuggestions([])
-          setIsOpen(false)
+          setError(err instanceof Error ? err.message : "Search failed");
+          setSuggestions([]);
+          setIsOpen(false);
         } finally {
-          setIsLoading(false)
+          setIsLoading(false);
         }
-      }
+      };
 
-      fetchSuggestions()
-    }, [debouncedQuery, onSearch, minQueryLength, maxSuggestions])
+      fetchSuggestions();
+    }, [debouncedQuery, onSearch, minQueryLength, maxSuggestions]);
 
     // Handle keyboard navigation
-    const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (!isOpen && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
-        event.preventDefault()
-        return
-      }
+    const handleKeyDown = useCallback(
+      (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (!isOpen && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+          event.preventDefault();
+          return;
+        }
 
-      switch (event.key) {
-        case 'ArrowDown':
-          event.preventDefault()
-          setSelectedIndex(prev => {
-            const nextIndex = prev < suggestions.length - 1 ? prev + 1 : prev
-            if (nextIndex >= 0 && listRef.current?.children[nextIndex]) {
-              (listRef.current.children[nextIndex] as HTMLElement).scrollIntoView({
-                block: 'nearest'
-              })
+        switch (event.key) {
+          case "ArrowDown":
+            event.preventDefault();
+            setSelectedIndex((prev) => {
+              const nextIndex = prev < suggestions.length - 1 ? prev + 1 : prev;
+              if (nextIndex >= 0 && listRef.current?.children[nextIndex]) {
+                (
+                  listRef.current.children[nextIndex] as HTMLElement
+                ).scrollIntoView({
+                  block: "nearest",
+                });
+              }
+              return nextIndex;
+            });
+            break;
+
+          case "ArrowUp":
+            event.preventDefault();
+            setSelectedIndex((prev) => {
+              const nextIndex = prev > 0 ? prev - 1 : -1;
+              if (nextIndex >= 0 && listRef.current?.children[nextIndex]) {
+                (
+                  listRef.current.children[nextIndex] as HTMLElement
+                ).scrollIntoView({
+                  block: "nearest",
+                });
+              }
+              return nextIndex;
+            });
+            break;
+
+          case "Enter":
+            event.preventDefault();
+            if (selectedIndex >= 0 && selectedIndex < suggestions.length) {
+              handleSelect(suggestions[selectedIndex]);
             }
-            return nextIndex
-          })
-          break
+            break;
 
-        case 'ArrowUp':
-          event.preventDefault()
-          setSelectedIndex(prev => {
-            const nextIndex = prev > 0 ? prev - 1 : -1
-            if (nextIndex >= 0 && listRef.current?.children[nextIndex]) {
-              (listRef.current.children[nextIndex] as HTMLElement).scrollIntoView({
-                block: 'nearest'
-              })
-            }
-            return nextIndex
-          })
-          break
+          case "Escape":
+            setIsOpen(false);
+            setSelectedIndex(-1);
+            inputRef.current?.blur();
+            break;
+        }
+      },
+      [isOpen, suggestions, selectedIndex],
+    );
 
-        case 'Enter':
-          event.preventDefault()
-          if (selectedIndex >= 0 && selectedIndex < suggestions.length) {
-            handleSelect(suggestions[selectedIndex])
-          }
-          break
+    const handleSelect = useCallback(
+      (suggestion: SearchSuggestion) => {
+        setQuery(suggestion.value);
+        setIsOpen(false);
+        setSelectedIndex(-1);
+        onSelect(suggestion);
+      },
+      [onSelect],
+    );
 
-        case 'Escape':
-          setIsOpen(false)
-          setSelectedIndex(-1)
-          inputRef.current?.blur()
-          break
-      }
-    }, [isOpen, suggestions, selectedIndex])
-
-    const handleSelect = useCallback((suggestion: SearchSuggestion) => {
-      setQuery(suggestion.value)
-      setIsOpen(false)
-      setSelectedIndex(-1)
-      onSelect(suggestion)
-    }, [onSelect])
-
-    const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value
-      setQuery(value)
-      if (value.length === 0) {
-        setIsOpen(false)
-        setSelectedIndex(-1)
-      }
-    }, [])
+    const handleInputChange = useCallback(
+      (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setQuery(value);
+        if (value.length === 0) {
+          setIsOpen(false);
+          setSelectedIndex(-1);
+        }
+      },
+      [],
+    );
 
     const handleInputFocus = useCallback(() => {
       if (suggestions.length > 0 && query.length >= minQueryLength) {
-        setIsOpen(true)
+        setIsOpen(true);
       }
-    }, [suggestions, query, minQueryLength])
+    }, [suggestions, query, minQueryLength]);
 
     const handleInputBlur = useCallback(() => {
       // Delay closing to allow clicking on suggestions
       setTimeout(() => {
-        setIsOpen(false)
-        setSelectedIndex(-1)
-      }, 150)
-    }, [])
+        setIsOpen(false);
+        setSelectedIndex(-1);
+      }, 150);
+    }, []);
 
     // Highlight matching text in suggestions
     const highlightText = (text: string, query: string) => {
-      if (!query) return text
-      const parts = text.split(new RegExp(`(${query})`, 'gi'))
-      return parts.map((part, index) => 
+      if (!query) return text;
+      const parts = text.split(new RegExp(`(${query})`, "gi"));
+      return parts.map((part, index) =>
         part.toLowerCase() === query.toLowerCase() ? (
-          <mark key={index} className="bg-yellow-200 text-yellow-900 rounded px-0.5">
+          <mark
+            key={index}
+            className="bg-yellow-200 text-yellow-900 rounded px-0.5"
+          >
             {part}
           </mark>
         ) : (
           part
-        )
-      )
-    }
+        ),
+      );
+    };
 
-    const leftIcon = showSearchIcon ? <Search className="h-4 w-4" /> : undefined
-    const rightIcon = isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : undefined
+    const leftIcon = showSearchIcon ? (
+      <Search className="h-4 w-4" />
+    ) : undefined;
+    const rightIcon = isLoading ? (
+      <Loader2 className="h-4 w-4 animate-spin" />
+    ) : undefined;
 
     return (
       <div className={cn("relative w-full", className)}>
@@ -207,9 +233,7 @@ const SearchAutocomplete = React.forwardRef<HTMLInputElement, SearchAutocomplete
                 {loadingMessage}
               </div>
             ) : error ? (
-              <div className="py-4 px-3 text-destructive text-sm">
-                {error}
-              </div>
+              <div className="py-4 px-3 text-destructive text-sm">{error}</div>
             ) : suggestions.length === 0 && query.length >= minQueryLength ? (
               <div className="py-4 px-3 text-muted-foreground text-sm">
                 {noResultsMessage}
@@ -221,8 +245,9 @@ const SearchAutocomplete = React.forwardRef<HTMLInputElement, SearchAutocomplete
                     key={suggestion.id}
                     className={cn(
                       "px-3 py-2 cursor-pointer text-sm transition-colors",
-                      selectedIndex === index && "bg-accent text-accent-foreground",
-                      selectedIndex !== index && "hover:bg-accent/50"
+                      selectedIndex === index &&
+                        "bg-accent text-accent-foreground",
+                      selectedIndex !== index && "hover:bg-accent/50",
                     )}
                     onClick={() => handleSelect(suggestion)}
                     onMouseEnter={() => setSelectedIndex(index)}
@@ -244,10 +269,10 @@ const SearchAutocomplete = React.forwardRef<HTMLInputElement, SearchAutocomplete
           </div>
         )}
       </div>
-    )
-  }
-)
+    );
+  },
+);
 
-SearchAutocomplete.displayName = "SearchAutocomplete"
+SearchAutocomplete.displayName = "SearchAutocomplete";
 
-export { SearchAutocomplete }
+export { SearchAutocomplete };

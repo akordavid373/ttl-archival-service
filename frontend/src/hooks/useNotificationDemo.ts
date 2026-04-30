@@ -1,100 +1,104 @@
-import { useNotifications } from '../context/NotificationContext'
+import { useNotifications } from "../context/NotificationContext";
 
 export function useNotificationDemo() {
-  const { addNotification } = useNotifications()
+  const { addNotification } = useNotifications();
 
   const showSuccessNotification = (title: string, message: string) => {
     addNotification({
-      type: 'success',
+      type: "success",
       title,
       message,
-      priority: 'medium',
+      priority: "medium",
       autoDismiss: true,
-      dismissTimeout: 3000
-    })
-  }
+      dismissTimeout: 3000,
+    });
+  };
 
   const showErrorNotification = (title: string, message: string) => {
     addNotification({
-      type: 'error',
+      type: "error",
       title,
       message,
-      priority: 'high',
-      autoDismiss: false
-    })
-  }
+      priority: "high",
+      autoDismiss: false,
+    });
+  };
 
   const showWarningNotification = (title: string, message: string) => {
     addNotification({
-      type: 'warning',
+      type: "warning",
       title,
       message,
-      priority: 'medium',
+      priority: "medium",
       autoDismiss: true,
-      dismissTimeout: 5000
-    })
-  }
+      dismissTimeout: 5000,
+    });
+  };
 
   const showInfoNotification = (title: string, message: string) => {
     addNotification({
-      type: 'info',
+      type: "info",
       title,
       message,
-      priority: 'low',
+      priority: "low",
       autoDismiss: true,
-      dismissTimeout: 4000
-    })
-  }
+      dismissTimeout: 4000,
+    });
+  };
 
   const showSystemNotification = (title: string, message: string) => {
     addNotification({
-      type: 'system',
+      type: "system",
       title,
       message,
-      priority: 'medium',
+      priority: "medium",
       autoDismiss: true,
-      dismissTimeout: 6000
-    })
-  }
+      dismissTimeout: 6000,
+    });
+  };
 
-  const showUrgentNotification = (title: string, message: string, action?: { label: string; onClick: () => void }) => {
+  const showUrgentNotification = (
+    title: string,
+    message: string,
+    action?: { label: string; onClick: () => void },
+  ) => {
     addNotification({
-      type: 'error',
+      type: "error",
       title,
       message,
-      priority: 'urgent',
+      priority: "urgent",
       autoDismiss: false,
-      action
-    })
-  }
+      action,
+    });
+  };
 
   const showArchivalComplete = (archiveName: string) => {
     showSuccessNotification(
-      'Archival Complete',
-      `Archive "${archiveName}" has been successfully created and stored.`
-    )
-  }
+      "Archival Complete",
+      `Archive "${archiveName}" has been successfully created and stored.`,
+    );
+  };
 
   const showArchivalError = (error: string) => {
     showErrorNotification(
-      'Archival Failed',
-      `Failed to create archive: ${error}`
-    )
-  }
+      "Archival Failed",
+      `Failed to create archive: ${error}`,
+    );
+  };
 
   const showTTLExpiry = (itemName: string, expiryDate: Date) => {
     showWarningNotification(
-      'TTL Expiry Warning',
-      `Item "${itemName}" will expire on ${expiryDate.toLocaleDateString()}`
-    )
-  }
+      "TTL Expiry Warning",
+      `Item "${itemName}" will expire on ${expiryDate.toLocaleDateString()}`,
+    );
+  };
 
   const showBlockchainTransaction = (txHash: string) => {
     showInfoNotification(
-      'Blockchain Transaction',
-      `Transaction ${txHash.slice(0, 10)}... has been confirmed`
-    )
-  }
+      "Blockchain Transaction",
+      `Transaction ${txHash.slice(0, 10)}... has been confirmed`,
+    );
+  };
 
   return {
     showSuccessNotification,
@@ -106,6 +110,6 @@ export function useNotificationDemo() {
     showArchivalComplete,
     showArchivalError,
     showTTLExpiry,
-    showBlockchainTransaction
-  }
+    showBlockchainTransaction,
+  };
 }

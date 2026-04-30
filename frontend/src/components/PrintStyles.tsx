@@ -1,37 +1,37 @@
-import React from 'react'
-import { Printer, Download, Eye } from 'lucide-react'
-import { cn } from '../utils/cn'
+import React from "react";
+import { Printer, Download, Eye } from "lucide-react";
+import { cn } from "../utils/cn";
 
 interface PrintStylesProps {
-  children: React.ReactNode
-  title?: string
-  showHeader?: boolean
-  showFooter?: boolean
-  landscape?: boolean
-  className?: string
+  children: React.ReactNode;
+  title?: string;
+  showHeader?: boolean;
+  showFooter?: boolean;
+  landscape?: boolean;
+  className?: string;
 }
 
-export function PrintStyles({ 
-  children, 
-  title = 'TTL Archival Service', 
-  showHeader = true, 
+export function PrintStyles({
+  children,
+  title = "TTL Archival Service",
+  showHeader = true,
   showFooter = true,
   landscape = false,
-  className 
+  className,
 }: PrintStylesProps) {
   const handlePrint = () => {
-    window.print()
-  }
+    window.print();
+  };
 
   const handlePrintPreview = () => {
-    window.open(window.location.href + '?print=preview', '_blank')
-  }
+    window.open(window.location.href + "?print=preview", "_blank");
+  };
 
   const handleDownloadPDF = () => {
     // This would typically use a library like jsPDF or puppeteer
     // For now, we'll trigger the print dialog
-    window.print()
-  }
+    window.print();
+  };
 
   return (
     <>
@@ -44,7 +44,7 @@ export function PrintStyles({
           <Printer className="h-4 w-4" />
           Print
         </button>
-        
+
         <button
           onClick={handlePrintPreview}
           className="flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-xl hover:bg-accent/90 transition-colors text-sm font-medium"
@@ -52,7 +52,7 @@ export function PrintStyles({
           <Eye className="h-4 w-4" />
           Preview
         </button>
-        
+
         <button
           onClick={handleDownloadPDF}
           className="flex items-center gap-2 px-4 py-2 bg-muted text-muted-foreground rounded-xl hover:bg-muted/80 transition-colors text-sm font-medium"
@@ -68,9 +68,12 @@ export function PrintStyles({
               checked={landscape}
               onChange={(e) => {
                 if (e.target.checked) {
-                  document.body.style.setProperty('--print-orientation', 'landscape')
+                  document.body.style.setProperty(
+                    "--print-orientation",
+                    "landscape",
+                  );
                 } else {
-                  document.body.style.removeProperty('--print-orientation')
+                  document.body.style.removeProperty("--print-orientation");
                 }
               }}
               className="rounded"
@@ -81,7 +84,7 @@ export function PrintStyles({
       </div>
 
       {/* Printable Content */}
-      <div className={cn('print-content', className)}>
+      <div className={cn("print-content", className)}>
         {/* Print Header */}
         {showHeader && (
           <header className="print-header hidden print:block">
@@ -105,9 +108,7 @@ export function PrintStyles({
         )}
 
         {/* Main Content */}
-        <main className="print-main">
-          {children}
-        </main>
+        <main className="print-main">{children}</main>
 
         {/* Print Footer */}
         {showFooter && (
@@ -118,7 +119,10 @@ export function PrintStyles({
                 <p>Confidential and Proprietary</p>
               </div>
               <div className="text-right">
-                <p>Page <span className="page-number"></span> of <span className="total-pages"></span></p>
+                <p>
+                  Page <span className="page-number"></span> of{" "}
+                  <span className="total-pages"></span>
+                </p>
                 <p>Printed by TTL Archival System</p>
               </div>
             </div>
@@ -130,7 +134,7 @@ export function PrintStyles({
       <style jsx>{`
         @media print {
           @page {
-            size: ${landscape ? 'landscape' : 'portrait'};
+            size: ${landscape ? "landscape" : "portrait"};
             margin: 1cm;
           }
 
@@ -186,7 +190,8 @@ export function PrintStyles({
             margin-bottom: 1em;
           }
 
-          th, td {
+          th,
+          td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
@@ -217,8 +222,9 @@ export function PrintStyles({
           }
 
           /* Code blocks */
-          pre, code {
-            font-family: 'Courier New', Courier, monospace;
+          pre,
+          code {
+            font-family: "Courier New", Courier, monospace;
             font-size: 10pt;
             background: #f5f5f5;
             padding: 2px;
@@ -231,7 +237,8 @@ export function PrintStyles({
           }
 
           /* Lists */
-          ul, ol {
+          ul,
+          ol {
             margin-bottom: 1em;
           }
 
@@ -248,7 +255,9 @@ export function PrintStyles({
           }
 
           /* Hide navigation and controls */
-          nav, .print-hidden, .no-print {
+          nav,
+          .print-hidden,
+          .no-print {
             display: none !important;
           }
 
@@ -276,7 +285,8 @@ export function PrintStyles({
           }
 
           /* Cards and panels */
-          .card, .panel {
+          .card,
+          .panel {
             border: 1px solid #ddd;
             margin-bottom: 1em;
             page-break-inside: avoid;
@@ -315,7 +325,9 @@ export function PrintStyles({
             page-break-after: avoid;
           }
 
-          h4, h5, h6 {
+          h4,
+          h5,
+          h6 {
             font-size: 12pt;
             margin-bottom: 0.5em;
             page-break-after: avoid;
@@ -345,45 +357,45 @@ export function PrintStyles({
         }
       `}</style>
     </>
-  )
+  );
 }
 
 // Utility components for print-specific layouts
-export function PrintSection({ 
-  title, 
-  children, 
+export function PrintSection({
+  title,
+  children,
   pageBreak = false,
-  className 
+  className,
 }: {
-  title: string
-  children: React.ReactNode
-  pageBreak?: boolean
-  className?: string
+  title: string;
+  children: React.ReactNode;
+  pageBreak?: boolean;
+  className?: string;
 }) {
   return (
-    <section className={cn(
-      'print-section mb-8',
-      pageBreak && 'page-break-after',
-      className
-    )}>
+    <section
+      className={cn(
+        "print-section mb-8",
+        pageBreak && "page-break-after",
+        className,
+      )}
+    >
       <h2 className="text-lg font-bold mb-4 pb-2 border-b border-gray-200 print:border-b-2 print:border-gray-300">
         {title}
       </h2>
-      <div className="page-break-inside-avoid">
-        {children}
-      </div>
+      <div className="page-break-inside-avoid">{children}</div>
     </section>
-  )
+  );
 }
 
-export function PrintTable({ 
-  data, 
+export function PrintTable({
+  data,
   headers,
-  title 
+  title,
 }: {
-  data: any[][]
-  headers: string[]
-  title?: string
+  data: any[][];
+  headers: string[];
+  title?: string;
 }) {
   return (
     <div className="print-table page-break-inside-avoid mb-6">
@@ -392,7 +404,10 @@ export function PrintTable({
         <thead>
           <tr>
             {headers.map((header, index) => (
-              <th key={index} className="border border-gray-300 bg-gray-50 p-2 text-left font-semibold">
+              <th
+                key={index}
+                className="border border-gray-300 bg-gray-50 p-2 text-left font-semibold"
+              >
                 {header}
               </th>
             ))}
@@ -400,7 +415,10 @@ export function PrintTable({
         </thead>
         <tbody>
           {data.map((row, rowIndex) => (
-            <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+            <tr
+              key={rowIndex}
+              className={rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"}
+            >
               {row.map((cell, cellIndex) => (
                 <td key={cellIndex} className="border border-gray-300 p-2">
                   {cell}
@@ -411,19 +429,19 @@ export function PrintTable({
         </tbody>
       </table>
     </div>
-  )
+  );
 }
 
 // Hook for print utilities
 export function usePrintUtils() {
   const addPageBreak = () => {
-    const element = document.createElement('div')
-    element.className = 'page-break-before'
-    return element
-  }
+    const element = document.createElement("div");
+    element.className = "page-break-before";
+    return element;
+  };
 
   const generatePrintPreview = (content: string) => {
-    const printWindow = window.open('', '_blank')
+    const printWindow = window.open("", "_blank");
     if (printWindow) {
       printWindow.document.write(`
         <!DOCTYPE html>
@@ -433,18 +451,18 @@ export function usePrintUtils() {
             <style>
               @page { margin: 1cm; }
               body { font-family: Arial, sans-serif; font-size: 12pt; }
-              ${document.querySelector('style')?.textContent || ''}
+              ${document.querySelector("style")?.textContent || ""}
             </style>
           </head>
           <body>
             ${content}
           </body>
         </html>
-      `)
-      printWindow.document.close()
-      printWindow.print()
+      `);
+      printWindow.document.close();
+      printWindow.print();
     }
-  }
+  };
 
-  return { addPageBreak, generatePrintPreview }
+  return { addPageBreak, generatePrintPreview };
 }

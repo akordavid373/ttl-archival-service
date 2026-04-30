@@ -3,245 +3,287 @@ import { Eye, EyeOff, AlertCircle, Check, Loader2 } from 'lucide-react'
 import { cn } from '../../utils/cn'
 
 export interface ValidationRule {
-  validate: (value: string) => boolean | string
-  message: string
+  validate: (value: string) => boolean | string;
+  message: string;
 }
 
 export interface FieldConfig {
-  name: string
-  label: string
-  type: 'text' | 'email' | 'password' | 'phone' | 'textarea'
-  placeholder?: string
-  required?: boolean
-  validationRules?: ValidationRule[]
-  autoComplete?: string
-  className?: string
+  name: string;
+  label: string;
+  type: "text" | "email" | "password" | "phone" | "textarea";
+  placeholder?: string;
+  required?: boolean;
+  validationRules?: ValidationRule[];
+  autoComplete?: string;
+  className?: string;
 }
 
 export interface FormData {
-  [key: string]: string
+  [key: string]: string;
 }
 
 export interface FormErrors {
-  [key: string]: string
+  [key: string]: string;
 }
 
 export interface FormTouched {
-  [key: string]: boolean
+  [key: string]: boolean;
 }
 
 // Predefined validation rules
 export const ValidationRules = {
   required: (message?: string): ValidationRule => ({
-    validate: (value) => value.trim().length > 0 || message || 'This field is required',
-    message: message || 'This field is required'
+    validate: (value) =>
+      value.trim().length > 0 || message || "This field is required",
+    message: message || "This field is required",
   }),
 
   email: (message?: string): ValidationRule => ({
     validate: (value) => {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      return emailRegex.test(value) || message || 'Please enter a valid email address'
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return (
+        emailRegex.test(value) ||
+        message ||
+        "Please enter a valid email address"
+      );
     },
-    message: message || 'Please enter a valid email address'
+    message: message || "Please enter a valid email address",
   }),
 
   phone: (message?: string): ValidationRule => ({
     validate: (value) => {
-      const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/
-      return phoneRegex.test(value) || message || 'Please enter a valid phone number'
+      const phoneRegex =
+        /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/;
+      return (
+        phoneRegex.test(value) || message || "Please enter a valid phone number"
+      );
     },
-    message: message || 'Please enter a valid phone number'
+    message: message || "Please enter a valid phone number",
   }),
 
   minLength: (min: number, message?: string): ValidationRule => ({
-    validate: (value) => value.length >= min || message || `Must be at least ${min} characters`,
-    message: message || `Must be at least ${min} characters`
+    validate: (value) =>
+      value.length >= min || message || `Must be at least ${min} characters`,
+    message: message || `Must be at least ${min} characters`,
   }),
 
   maxLength: (max: number, message?: string): ValidationRule => ({
-    validate: (value) => value.length <= max || message || `Must be no more than ${max} characters`,
-    message: message || `Must be no more than ${max} characters`
+    validate: (value) =>
+      value.length <= max ||
+      message ||
+      `Must be no more than ${max} characters`,
+    message: message || `Must be no more than ${max} characters`,
   }),
 
   password: (message?: string): ValidationRule => ({
     validate: (value) => {
       // At least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-      return passwordRegex.test(value) || message || 'Password must be at least 8 characters with uppercase, lowercase, number, and special character'
+      const passwordRegex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      return (
+        passwordRegex.test(value) ||
+        message ||
+        "Password must be at least 8 characters with uppercase, lowercase, number, and special character"
+      );
     },
-    message: message || 'Password must be at least 8 characters with uppercase, lowercase, number, and special character'
+    message:
+      message ||
+      "Password must be at least 8 characters with uppercase, lowercase, number, and special character",
   }),
 
   pattern: (regex: RegExp, message?: string): ValidationRule => ({
-    validate: (value) => regex.test(value) || message || 'Please enter a valid format',
-    message: message || 'Please enter a valid format'
-  })
-}
+    validate: (value) =>
+      regex.test(value) || message || "Please enter a valid format",
+    message: message || "Please enter a valid format",
+  }),
+};
 
 export interface FormProps {
-  fields: FieldConfig[]
-  onSubmit: (data: FormData) => void | Promise<void>
-  submitText?: string
-  className?: string
-  initialData?: FormData
-  onChange?: (data: FormData, errors: FormErrors) => void
-  disabled?: boolean
+  fields: FieldConfig[];
+  onSubmit: (data: FormData) => void | Promise<void>;
+  submitText?: string;
+  className?: string;
+  initialData?: FormData;
+  onChange?: (data: FormData, errors: FormErrors) => void;
+  disabled?: boolean;
 }
 
 export function Form({
   fields,
   onSubmit,
-  submitText = 'Submit',
+  submitText = "Submit",
   className,
   initialData = {},
   onChange,
-  disabled = false
+  disabled = false,
 }: FormProps) {
-  const [formData, setFormData] = useState<FormData>(initialData)
-  const [errors, setErrors] = useState<FormErrors>({})
-  const [touched, setTouched] = useState<FormTouched>({})
-  const [showPasswords, setShowPasswords] = useState<Record<string, boolean>>({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [announceMessage, setAnnounceMessage] = useState('')
-  const liveRegionRef = useRef<HTMLDivElement>(null)
+  const [formData, setFormData] = useState<FormData>(initialData);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [touched, setTouched] = useState<FormTouched>({});
+  const [showPasswords, setShowPasswords] = useState<Record<string, boolean>>(
+    {},
+  );
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [announceMessage, setAnnounceMessage] = useState("");
+  const liveRegionRef = useRef<HTMLDivElement>(null);
 
   // Initialize form data with empty values
   useEffect(() => {
-    const initialFormData: FormData = {}
-    fields.forEach(field => {
-      initialFormData[field.name] = initialData[field.name] || ''
-    })
-    setFormData(initialFormData)
-  }, [fields, initialData])
+    const initialFormData: FormData = {};
+    fields.forEach((field) => {
+      initialFormData[field.name] = initialData[field.name] || "";
+    });
+    setFormData(initialFormData);
+  }, [fields, initialData]);
 
   // Announce errors for screen readers
   const announceToScreenReader = useCallback((message: string) => {
-    setAnnounceMessage(message)
+    setAnnounceMessage(message);
     if (liveRegionRef.current) {
-      liveRegionRef.current.textContent = message
+      liveRegionRef.current.textContent = message;
     }
-  }, [])
+  }, []);
 
   // Validate a single field
-  const validateField = useCallback((field: FieldConfig, value: string): string | null => {
-    if (!field.validationRules) return null
+  const validateField = useCallback(
+    (field: FieldConfig, value: string): string | null => {
+      if (!field.validationRules) return null;
 
-    for (const rule of field.validationRules) {
-      const result = rule.validate(value)
-      if (result !== true) {
-        return typeof result === 'string' ? result : rule.message
+      for (const rule of field.validationRules) {
+        const result = rule.validate(value);
+        if (result !== true) {
+          return typeof result === "string" ? result : rule.message;
+        }
       }
-    }
 
-    return null
-  }, [])
+      return null;
+    },
+    [],
+  );
 
   // Validate all fields
-  const validateForm = useCallback((data: FormData): FormErrors => {
-    const newErrors: FormErrors = {}
+  const validateForm = useCallback(
+    (data: FormData): FormErrors => {
+      const newErrors: FormErrors = {};
 
-    fields.forEach(field => {
-      const error = validateField(field, data[field.name] || '')
-      if (error) {
-        newErrors[field.name] = error
-      }
-    })
+      fields.forEach((field) => {
+        const error = validateField(field, data[field.name] || "");
+        if (error) {
+          newErrors[field.name] = error;
+        }
+      });
 
-    return newErrors
-  }, [fields, validateField])
+      return newErrors;
+    },
+    [fields, validateField],
+  );
 
   // Handle field change
-  const handleFieldChange = useCallback((fieldName: string, value: string) => {
-    const newFormData = { ...formData, [fieldName]: value }
-    setFormData(newFormData)
+  const handleFieldChange = useCallback(
+    (fieldName: string, value: string) => {
+      const newFormData = { ...formData, [fieldName]: value };
+      setFormData(newFormData);
 
-    // Validate field if it has been touched
-    if (touched[fieldName]) {
-      const field = fields.find(f => f.name === fieldName)
-      if (field) {
-        const error = validateField(field, value)
-        setErrors(prev => ({
-          ...prev,
-          [fieldName]: error || ''
-        }))
+      // Validate field if it has been touched
+      if (touched[fieldName]) {
+        const field = fields.find((f) => f.name === fieldName);
+        if (field) {
+          const error = validateField(field, value);
+          setErrors((prev) => ({
+            ...prev,
+            [fieldName]: error || "",
+          }));
+        }
       }
-    }
 
-    onChange?.(newFormData, errors)
-  }, [formData, touched, fields, validateField, errors, onChange])
+      onChange?.(newFormData, errors);
+    },
+    [formData, touched, fields, validateField, errors, onChange],
+  );
 
   // Handle field blur
-  const handleFieldBlur = useCallback((fieldName: string) => {
-    setTouched(prev => ({ ...prev, [fieldName]: true }))
-    
-    const field = fields.find(f => f.name === fieldName)
-    if (field) {
-      const error = validateField(field, formData[fieldName] || '')
-      setErrors(prev => ({
-        ...prev,
-        [fieldName]: error || ''
-      }))
+  const handleFieldBlur = useCallback(
+    (fieldName: string) => {
+      setTouched((prev) => ({ ...prev, [fieldName]: true }));
 
-      // Announce error for screen readers
-      if (error) {
-        announceToScreenReader(`${field.label}: ${error}`)
+      const field = fields.find((f) => f.name === fieldName);
+      if (field) {
+        const error = validateField(field, formData[fieldName] || "");
+        setErrors((prev) => ({
+          ...prev,
+          [fieldName]: error || "",
+        }));
+
+        // Announce error for screen readers
+        if (error) {
+          announceToScreenReader(`${field.label}: ${error}`);
+        }
       }
-    }
-  }, [fields, formData, validateField, announceToScreenReader])
+    },
+    [fields, formData, validateField, announceToScreenReader],
+  );
 
   // Handle form submission
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    // Mark all fields as touched
-    const allTouched: FormTouched = {}
-    fields.forEach(field => {
-      allTouched[field.name] = true
-    })
-    setTouched(allTouched)
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    // Validate all fields
-    const newErrors = validateForm(formData)
-    setErrors(newErrors)
+      // Mark all fields as touched
+      const allTouched: FormTouched = {};
+      fields.forEach((field) => {
+        allTouched[field.name] = true;
+      });
+      setTouched(allTouched);
 
-    // Check if there are any errors
-    const hasErrors = Object.values(newErrors).some(error => error)
-    
-    if (hasErrors) {
-      // Find first error field and announce it
-      const firstErrorField = fields.find(field => newErrors[field.name])
-      if (firstErrorField) {
-        announceToScreenReader(`Form validation failed. ${firstErrorField.label}: ${newErrors[firstErrorField.name]}`)
+      // Validate all fields
+      const newErrors = validateForm(formData);
+      setErrors(newErrors);
+
+      // Check if there are any errors
+      const hasErrors = Object.values(newErrors).some((error) => error);
+
+      if (hasErrors) {
+        // Find first error field and announce it
+        const firstErrorField = fields.find((field) => newErrors[field.name]);
+        if (firstErrorField) {
+          announceToScreenReader(
+            `Form validation failed. ${firstErrorField.label}: ${newErrors[firstErrorField.name]}`,
+          );
+        }
+        return;
       }
-      return
-    }
 
-    setIsSubmitting(true)
-    try {
-      await onSubmit(formData)
-      announceToScreenReader('Form submitted successfully')
-    } catch (error) {
-      announceToScreenReader('Form submission failed. Please try again.')
-    } finally {
-      setIsSubmitting(false)
-    }
-  }, [fields, formData, validateForm, onSubmit, announceToScreenReader])
+      setIsSubmitting(true);
+      try {
+        await onSubmit(formData);
+        announceToScreenReader("Form submitted successfully");
+      } catch (error) {
+        announceToScreenReader("Form submission failed. Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [fields, formData, validateForm, onSubmit, announceToScreenReader],
+  );
 
   // Toggle password visibility
   const togglePasswordVisibility = useCallback((fieldName: string) => {
-    setShowPasswords(prev => ({ ...prev, [fieldName]: !prev[fieldName] }))
-  }, [])
+    setShowPasswords((prev) => ({ ...prev, [fieldName]: !prev[fieldName] }));
+  }, []);
 
   // Get field input type
-  const getInputType = useCallback((field: FieldConfig) => {
-    if (field.type === 'password' && showPasswords[field.name]) {
-      return 'text'
-    }
-    return field.type
-  }, [showPasswords])
+  const getInputType = useCallback(
+    (field: FieldConfig) => {
+      if (field.type === "password" && showPasswords[field.name]) {
+        return "text";
+      }
+      return field.type;
+    },
+    [showPasswords],
+  );
 
   return (
-    <form onSubmit={handleSubmit} className={cn('space-y-6', className)}>
+    <form onSubmit={handleSubmit} className={cn("space-y-6", className)}>
       {/* Screen reader live region */}
       <div
         ref={liveRegionRef}
@@ -251,13 +293,13 @@ export function Form({
         aria-atomic="true"
       />
 
-      {fields.map(field => (
+      {fields.map((field) => (
         <div key={field.name} className="space-y-2">
-          <label 
+          <label
             htmlFor={field.name}
             className={cn(
-              'block text-sm font-medium text-gray-700',
-              errors[field.name] && touched[field.name] && 'text-red-600'
+              "block text-sm font-medium text-gray-700",
+              errors[field.name] && touched[field.name] && "text-red-600",
             )}
           >
             {field.label}
@@ -265,10 +307,10 @@ export function Form({
           </label>
 
           <div className="relative">
-            {field.type === 'textarea' ? (
+            {field.type === "textarea" ? (
               <textarea
                 id={field.name}
-                value={formData[field.name] || ''}
+                value={formData[field.name] || ""}
                 onChange={(e) => handleFieldChange(field.name, e.target.value)}
                 onBlur={() => handleFieldBlur(field.name)}
                 placeholder={field.placeholder}
@@ -276,12 +318,12 @@ export function Form({
                 disabled={disabled}
                 autoComplete={field.autoComplete}
                 className={cn(
-                  'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+                  "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
                   errors[field.name] && touched[field.name]
-                    ? 'border-red-500 focus:ring-red-500'
-                    : 'border-gray-300',
-                  disabled && 'opacity-50 cursor-not-allowed',
-                  field.className
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-300",
+                  disabled && "opacity-50 cursor-not-allowed",
+                  field.className,
                 )}
                 rows={3}
               />
@@ -289,7 +331,7 @@ export function Form({
               <input
                 id={field.name}
                 type={getInputType(field)}
-                value={formData[field.name] || ''}
+                value={formData[field.name] || ""}
                 onChange={(e) => handleFieldChange(field.name, e.target.value)}
                 onBlur={() => handleFieldBlur(field.name)}
                 placeholder={field.placeholder}
@@ -297,24 +339,26 @@ export function Form({
                 disabled={disabled}
                 autoComplete={field.autoComplete}
                 className={cn(
-                  'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+                  "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
                   errors[field.name] && touched[field.name]
-                    ? 'border-red-500 focus:ring-red-500'
-                    : 'border-gray-300',
-                  disabled && 'opacity-50 cursor-not-allowed',
-                  field.type === 'password' && 'pr-10',
-                  field.className
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-300",
+                  disabled && "opacity-50 cursor-not-allowed",
+                  field.type === "password" && "pr-10",
+                  field.className,
                 )}
               />
             )}
 
             {/* Password visibility toggle */}
-            {field.type === 'password' && (
+            {field.type === "password" && (
               <button
                 type="button"
                 onClick={() => togglePasswordVisibility(field.name)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
-                aria-label={showPasswords[field.name] ? 'Hide password' : 'Show password'}
+                aria-label={
+                  showPasswords[field.name] ? "Hide password" : "Show password"
+                }
               >
                 {showPasswords[field.name] ? (
                   <EyeOff className="h-4 w-4" />
@@ -338,7 +382,7 @@ export function Form({
 
           {/* Error message */}
           {errors[field.name] && touched[field.name] && (
-            <div 
+            <div
               className="flex items-center gap-1 text-sm text-red-600"
               role="alert"
               aria-live="polite"
@@ -357,29 +401,29 @@ export function Form({
         className={cn(
           'w-full py-2 px-4 rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center',
           disabled || isSubmitting
-            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            : 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'
+            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+            : "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
         )}
       >
         {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {isSubmitting ? 'Submitting...' : submitText}
       </button>
     </form>
-  )
+  );
 }
 
 // Form field component for individual field usage
 export interface FormFieldProps {
-  field: FieldConfig
-  value: string
-  onChange: (value: string) => void
-  onBlur?: () => void
-  error?: string
-  touched?: boolean
-  disabled?: boolean
-  showPasswordToggle?: boolean
-  showPassword?: boolean
-  onTogglePassword?: () => void
+  field: FieldConfig;
+  value: string;
+  onChange: (value: string) => void;
+  onBlur?: () => void;
+  error?: string;
+  touched?: boolean;
+  disabled?: boolean;
+  showPasswordToggle?: boolean;
+  showPassword?: boolean;
+  onTogglePassword?: () => void;
 }
 
 export function FormField({
@@ -392,22 +436,22 @@ export function FormField({
   disabled,
   showPasswordToggle,
   showPassword,
-  onTogglePassword
+  onTogglePassword,
 }: FormFieldProps) {
   const getInputType = () => {
-    if (field.type === 'password' && showPassword) {
-      return 'text'
+    if (field.type === "password" && showPassword) {
+      return "text";
     }
-    return field.type
-  }
+    return field.type;
+  };
 
   return (
     <div className="space-y-2">
-      <label 
+      <label
         htmlFor={field.name}
         className={cn(
-          'block text-sm font-medium text-gray-700',
-          error && touched && 'text-red-600'
+          "block text-sm font-medium text-gray-700",
+          error && touched && "text-red-600",
         )}
       >
         {field.label}
@@ -415,7 +459,7 @@ export function FormField({
       </label>
 
       <div className="relative">
-        {field.type === 'textarea' ? (
+        {field.type === "textarea" ? (
           <textarea
             id={field.name}
             value={value}
@@ -426,12 +470,12 @@ export function FormField({
             disabled={disabled}
             autoComplete={field.autoComplete}
             className={cn(
-              'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+              "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
               error && touched
-                ? 'border-red-500 focus:ring-red-500'
-                : 'border-gray-300',
-              disabled && 'opacity-50 cursor-not-allowed',
-              field.className
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300",
+              disabled && "opacity-50 cursor-not-allowed",
+              field.className,
             )}
             rows={3}
           />
@@ -447,24 +491,24 @@ export function FormField({
             disabled={disabled}
             autoComplete={field.autoComplete}
             className={cn(
-              'w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
+              "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
               error && touched
-                ? 'border-red-500 focus:ring-red-500'
-                : 'border-gray-300',
-              disabled && 'opacity-50 cursor-not-allowed',
-              field.type === 'password' && 'pr-10',
-              field.className
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300",
+              disabled && "opacity-50 cursor-not-allowed",
+              field.type === "password" && "pr-10",
+              field.className,
             )}
           />
         )}
 
         {/* Password visibility toggle */}
-        {field.type === 'password' && showPasswordToggle && (
+        {field.type === "password" && showPasswordToggle && (
           <button
             type="button"
             onClick={onTogglePassword}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? (
               <EyeOff className="h-4 w-4" />
@@ -488,7 +532,7 @@ export function FormField({
 
       {/* Error message */}
       {error && touched && (
-        <div 
+        <div
           className="flex items-center gap-1 text-sm text-red-600"
           role="alert"
           aria-live="polite"
@@ -498,5 +542,5 @@ export function FormField({
         </div>
       )}
     </div>
-  )
+  );
 }

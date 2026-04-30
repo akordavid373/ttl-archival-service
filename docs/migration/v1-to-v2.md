@@ -17,12 +17,14 @@ API v2 introduces significant enhancements while maintaining core functionality.
 ### 1. Authentication
 
 #### v1
+
 ```python
 # Optional authentication
 headers = {"Content-Type": "application/json"}
 ```
 
 #### v2
+
 ```python
 # Required authentication
 headers = {
@@ -37,11 +39,13 @@ headers = {
 ### 2. Base URLs
 
 #### v1
+
 ```python
 BASE_URL = "https://api.example.com/api/v1"
 ```
 
 #### v2
+
 ```python
 BASE_URL = "https://api.example.com/api/v2"
 ```
@@ -51,6 +55,7 @@ BASE_URL = "https://api.example.com/api/v2"
 ### 3. Pagination
 
 #### v1
+
 ```python
 # Zero-based offset pagination
 params = {
@@ -60,6 +65,7 @@ params = {
 ```
 
 #### v2
+
 ```python
 # One-based page pagination
 params = {
@@ -73,6 +79,7 @@ params = {
 ### 4. Response Format
 
 #### v1 Archives Response
+
 ```json
 {
   "id": 1,
@@ -85,6 +92,7 @@ params = {
 ```
 
 #### v2 Archives Response
+
 ```json
 {
   "id": 1,
@@ -101,7 +109,7 @@ params = {
   "last_accessed": "2024-01-15T10:30:00Z",
   "retention_days": 365,
   "days_until_expiry": 350,
-  "metadata": {"source": "user_upload"}
+  "metadata": { "source": "user_upload" }
 }
 ```
 
@@ -110,6 +118,7 @@ params = {
 ### 5. Error Handling
 
 #### v1 Error Response
+
 ```json
 {
   "detail": "Archive not found"
@@ -117,6 +126,7 @@ params = {
 ```
 
 #### v2 Error Response
+
 ```json
 {
   "error": {
@@ -139,6 +149,7 @@ params = {
 ### 1. Enhanced Search
 
 #### v1 Basic Search
+
 ```python
 response = requests.get(
     f"{BASE_URL}/search",
@@ -147,6 +158,7 @@ response = requests.get(
 ```
 
 #### v2 Enhanced Search
+
 ```python
 response = requests.post(
     f"{BASE_URL}/search",
@@ -170,6 +182,7 @@ response = requests.post(
 ### 2. Batch Operations
 
 #### v1 (Individual Operations)
+
 ```python
 for archive_data in archives:
     response = requests.post(
@@ -179,6 +192,7 @@ for archive_data in archives:
 ```
 
 #### v2 (Batch Operations)
+
 ```python
 response = requests.post(
     f"{BASE_URL}/archives/batch",
@@ -234,6 +248,7 @@ response = requests.post(
 ### Phase 1: Preparation (Week 1-2)
 
 1. **Audit Current Usage**
+
    ```python
    # List all v1 endpoints used
    v1_endpoints = [
@@ -245,6 +260,7 @@ response = requests.post(
    ```
 
 2. **Set Up Authentication**
+
    ```python
    # Generate API tokens
    # Update configuration files
@@ -262,6 +278,7 @@ response = requests.post(
 ### Phase 2: Core Migration (Week 3-4)
 
 1. **Update Base Client**
+
    ```python
    class APIClient:
        def __init__(self, base_url, token):
@@ -271,7 +288,7 @@ response = requests.post(
                "X-API-Version": "v2",
                "Content-Type": "application/json"
            }
-       
+
        def request(self, method, endpoint, **kwargs):
            url = f"{self.base_url}{endpoint}"
            kwargs['headers'] = {**self.headers, **kwargs.get('headers', {})}
@@ -279,11 +296,12 @@ response = requests.post(
    ```
 
 2. **Migrate Archives API**
+
    ```python
    # Old v1 method
    def create_archive_v1(data):
        return requests.post("/api/v1/archives", json=data)
-   
+
    # New v2 method
    def create_archive_v2(data):
        # Add v2-specific fields
@@ -297,12 +315,13 @@ response = requests.post(
    ```
 
 3. **Update Pagination**
+
    ```python
    # Old pagination logic
    def get_archives_v1(page=0, page_size=10):
        params = {"skip": page * page_size, "limit": page_size}
        return requests.get("/api/v1/archives", params=params)
-   
+
    # New pagination logic
    def get_archives_v2(page=1, page_size=10):
        params = {"page": page, "limit": page_size}
@@ -314,6 +333,7 @@ response = requests.post(
 ### Phase 3: Enhanced Features (Week 5-6)
 
 1. **Implement Enhanced Search**
+
    ```python
    def search_archives(query, filters=None):
        search_request = {
@@ -327,6 +347,7 @@ response = requests.post(
    ```
 
 2. **Add Batch Operations**
+
    ```python
    def create_archives_batch(archives):
        batch_request = {
@@ -353,6 +374,7 @@ response = requests.post(
 ### Phase 4: Testing & Validation (Week 7-8)
 
 1. **Unit Tests**
+
    ```python
    def test_archive_creation():
        # Test v2 archive creation
@@ -364,7 +386,7 @@ response = requests.post(
        }
        response = create_archive_v2(data)
        assert response.status_code == 201
-       
+
        # Validate response format
        result = response.json()
        assert "tags" in result
@@ -372,15 +394,16 @@ response = requests.post(
    ```
 
 2. **Integration Tests**
+
    ```python
    def test_end_to_end_workflow():
        # Create archive
        archive = create_archive_v2(test_data)
-       
+
        # Search for archive
        search_results = search_archives("test")
        assert len(search_results['results']) > 0
-       
+
        # Verify webhook notification
        # (mock webhook endpoint)
    ```
@@ -389,11 +412,11 @@ response = requests.post(
    ```python
    def test_batch_performance():
        archives = [generate_test_data() for _ in range(100)]
-       
+
        start_time = time.time()
        response = create_archives_batch(archives)
        end_time = time.time()
-       
+
        assert response['success_count'] == 100
        assert end_time - start_time < 10  # Should complete in < 10 seconds
    ```
@@ -407,6 +430,7 @@ response = requests.post(
    - Monitor for issues
 
 2. **Monitoring**
+
    ```python
    # Monitor API response times
    # Track error rates
@@ -424,27 +448,28 @@ response = requests.post(
 ### Complete Migration Example
 
 #### Before (v1)
+
 ```python
 import requests
 
 class ArchiveService:
     def __init__(self):
         self.base_url = "https://api.example.com/api/v1"
-    
+
     def create_archive(self, data):
         response = requests.post(
             f"{self.base_url}/archives",
             json=data
         )
         return response.json()
-    
+
     def get_archives(self, skip=0, limit=10):
         response = requests.get(
             f"{self.base_url}/archives",
             params={"skip": skip, "limit": limit}
         )
         return response.json()
-    
+
     def search(self, query):
         response = requests.get(
             f"{self.base_url}/search",
@@ -454,6 +479,7 @@ class ArchiveService:
 ```
 
 #### After (v2)
+
 ```python
 import requests
 from typing import List, Dict, Any
@@ -466,12 +492,12 @@ class ArchiveServiceV2:
             "X-API-Version": "v2",
             "Content-Type": "application/json"
         }
-    
+
     def _request(self, method: str, endpoint: str, **kwargs) -> requests.Response:
         url = f"{self.base_url}{endpoint}"
         kwargs['headers'] = {**self.headers, **kwargs.get('headers', {})}
         return requests.request(method, url, **kwargs)
-    
+
     def create_archive(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Create archive with enhanced v2 features"""
         v2_data = {
@@ -480,32 +506,32 @@ class ArchiveServiceV2:
             "priority": data.get("priority", "normal"),
             "metadata": data.get("metadata", {})
         }
-        
+
         response = self._request("POST", "/archives", json=v2_data)
         response.raise_for_status()
         return response.json()
-    
+
     def create_archives_batch(self, archives: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Create multiple archives in batch"""
         batch_request = {
             "archives": archives,
             "validate_all": True
         }
-        
+
         response = self._request("POST", "/archives/batch", json=batch_request)
         response.raise_for_status()
         return response.json()
-    
+
     def get_archives(self, page: int = 1, limit: int = 10, filters: Dict[str, Any] = None) -> Dict[str, Any]:
         """Get archives with pagination and filtering"""
         params = {"page": page, "limit": limit}
         if filters:
             params.update(filters)
-        
+
         response = self._request("GET", "/archives", params=params)
         response.raise_for_status()
         return response.json()
-    
+
     def search(self, query: str, search_type: str = "semantic", filters: Dict[str, Any] = None) -> Dict[str, Any]:
         """Enhanced search with multiple types and filters"""
         search_request = {
@@ -514,11 +540,11 @@ class ArchiveServiceV2:
             "filters": filters or {},
             "highlighting": True
         }
-        
+
         response = self._request("POST", "/search", json=search_request)
         response.raise_for_status()
         return response.json()
-    
+
     def create_webhook(self, name: str, url: str, events: List[str]) -> Dict[str, Any]:
         """Create webhook for real-time notifications"""
         webhook = {
@@ -527,7 +553,7 @@ class ArchiveServiceV2:
             "events": events,
             "active": True
         }
-        
+
         response = self._request("POST", "/webhooks", json=webhook)
         response.raise_for_status()
         return response.json()
@@ -538,18 +564,21 @@ class ArchiveServiceV2:
 ### Common Migration Issues
 
 1. **Authentication Errors**
+
    ```
    Error: 401 Unauthorized
    Solution: Verify API token and headers
    ```
 
 2. **Version Not Supported**
+
    ```
    Error: 400 Unsupported API version
    Solution: Check X-API-Version header
    ```
 
 3. **Pagination Issues**
+
    ```
    Error: Missing required parameter 'page'
    Solution: Update from skip/limit to page/limit
@@ -570,12 +599,12 @@ def test_version_negotiation():
         "X-API-Version": "v2",
         "Authorization": "Bearer token"
     }
-    
+
     response = requests.get(
         "https://api.example.com/health",
         headers=headers
     )
-    
+
     print("Response headers:")
     for header, value in response.headers.items():
         if 'api' in header.lower() or 'version' in header.lower():
@@ -606,13 +635,13 @@ def test_version_negotiation():
 
 ## Timeline Summary
 
-| Week | Activity |
-|------|----------|
-| 1-2  | Preparation and setup |
-| 3-4  | Core API migration |
+| Week | Activity                         |
+| ---- | -------------------------------- |
+| 1-2  | Preparation and setup            |
+| 3-4  | Core API migration               |
 | 5-6  | Enhanced features implementation |
-| 7-8  | Testing and validation |
-| 9    | Production deployment |
-| 10+  | Optimization and monitoring |
+| 7-8  | Testing and validation           |
+| 9    | Production deployment            |
+| 10+  | Optimization and monitoring      |
 
 Remember: Start migration early to ensure smooth transition before v1 deprecation!
