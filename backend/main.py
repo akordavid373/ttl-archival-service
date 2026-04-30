@@ -90,7 +90,7 @@ scheduler = ArchiveScheduler()
 # Include v1 routers (legacy)
 from .api.v1.audit import audit_router as v1_audit_router
 from .api.v1.search import router as v1_search_router
-from .api.v1.config import router as v1_config_router
+from .app.api.v1.config import router as v1_config_router
 from .api.v1.data import router as v1_data_router
 
 # Include v2 routers (current)
