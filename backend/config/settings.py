@@ -179,6 +179,27 @@ class SchedulerConfig:
 
 
 @dataclass
+class CompressionConfig:
+    """Response compression configuration."""
+    enabled: bool = True
+    gzip_level: int = 6
+    brotli_level: int = 4
+    min_size: int = 1024  # Minimum response size in bytes to compress
+    track_metrics: bool = True
+    compressible_content_types: str = "text/html,text/css,text/plain,text/xml,text/javascript,application/json,application/javascript,application/xml,application/xhtml+xml,application/rss+xml,application/atom+xml,image/svg+xml,font/woff,font/woff2"
+    exclude_paths: str = "/health,/metrics,/docs,/openapi.json,/redoc"
+    
+    def __post_init__(self):
+        self.enabled = os.getenv("COMPRESSION_ENABLED", str(self.enabled)).lower() == "true"
+        self.gzip_level = int(os.getenv("COMPRESSION_GZIP_LEVEL", self.gzip_level))
+        self.brotli_level = int(os.getenv("COMPRESSION_BROTLI_LEVEL", self.brotli_level))
+        self.min_size = int(os.getenv("COMPRESSION_MIN_SIZE", self.min_size))
+        self.track_metrics = os.getenv("COMPRESSION_TRACK_METRICS", str(self.track_metrics)).lower() == "true"
+        self.compressible_content_types = os.getenv("COMPRESSION_CONTENT_TYPES", self.compressible_content_types)
+        self.exclude_paths = os.getenv("COMPRESSION_EXCLUDE_PATHS", self.exclude_paths)
+
+
+@dataclass
 class LoggingConfig:
     """Logging configuration."""
     level: LogLevel = LogLevel.INFO
@@ -215,6 +236,7 @@ class Settings:
     external_services: ExternalServiceConfig = field(default_factory=ExternalServiceConfig)
     scheduler: SchedulerConfig = field(default_factory=SchedulerConfig)
     logging: LoggingConfig = field(default_factory=LoggingConfig)
+    compression: CompressionConfig = field(default_factory=CompressionConfig)
     
     # Runtime configuration
     config_version: str = "1.0.0"

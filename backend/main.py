@@ -43,7 +43,8 @@ from .middleware.version_middleware import (
     VersionNegotiationMiddleware,
 )
 from .utils.version_manager import version_manager
-from .middleware import add_cors_middleware, SecurityHeadersMiddleware, CSRFMiddleware
+from .middleware import add_cors_middleware, SecurityHeadersMiddleware, CSRFMiddleware, CompressionMiddleware
+from .middleware.compression_middleware import get_compression_metrics, reset_compression_metrics
 
 from .security import SecurityHeadersMiddleware
 
@@ -79,6 +80,21 @@ app.add_middleware(VersionNegotiationMiddleware, version_manager=version_manager
 
 # Add profiling middleware
 app.add_middleware(ProfilingMiddleware)
+
+# Add compression middleware (should be early in the chain for best performance)
+compression_config = settings.compression
+compressible_types = set(t.strip() for t in compression_config.compressible_content_types.split(",") if t.strip())
+exclude_paths_list = [p.strip() for p in compression_config.exclude_paths.split(",") if p.strip()]
+app.add_middleware(
+    CompressionMiddleware,
+    enabled=compression_config.enabled,
+    gzip_level=compression_config.gzip_level,
+    brotli_level=compression_config.brotli_level,
+    min_size=compression_config.min_size,
+    compressible_content_types=compressible_types,
+    exclude_paths=exclude_paths_list,
+    track_metrics=compression_config.track_metrics,
+)
 
 # Initialize services
 archive_service = ArchiveService()
@@ -568,6 +584,19 @@ async def get_database_performance():
 async def get_system_usage():
     """Get system resource usage"""
     return metrics_collector.get_resource_usage_summary()
+
+
+@app.get("/api/v1/monitoring/compression-metrics")
+async def get_compression_metrics_endpoint():
+    """Get compression metrics"""
+    return get_compression_metrics()
+
+
+@app.post("/api/v1/monitoring/compression-metrics/reset")
+async def reset_compression_metrics_endpoint():
+    """Reset compression metrics"""
+    reset_compression_metrics()
+    return {"message": "Compression metrics reset successfully"}
 
 
 @app.delete("/api/v1/monitoring/alerts")
