@@ -1,6 +1,6 @@
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "../../utils/cn"
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "../../utils/cn";
 
 const inputVariants = cva(
   "flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
@@ -21,22 +21,38 @@ const inputVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
-)
+  },
+);
 
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement>,
+  extends
+    React.InputHTMLAttributes<HTMLInputElement>,
     VariantProps<typeof inputVariants> {
-  label?: string
-  description?: string
-  error?: string
-  success?: string
-  leftIcon?: React.ReactNode
-  rightIcon?: React.ReactNode
+  label?: string;
+  description?: string;
+  error?: string;
+  success?: string;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, variant, size, label, description, error, success, leftIcon, rightIcon, ...props }, ref) => {
+  (
+    {
+      className,
+      type,
+      variant,
+      size,
+      label,
+      description,
+      error,
+      success,
+      leftIcon,
+      rightIcon,
+      ...props
+    },
+    ref,
+  ) => {
     return (
       <div className="space-y-2">
         {label && (
@@ -56,7 +72,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               inputVariants({ variant, size }),
               leftIcon && "pl-10",
               rightIcon && "pr-10",
-              className
+              className,
             )}
             ref={ref}
             {...props}
@@ -70,16 +86,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {description && !error && !success && (
           <p className="text-sm text-muted-foreground">{description}</p>
         )}
-        {error && (
-          <p className="text-sm text-destructive">{error}</p>
-        )}
-        {success && (
-          <p className="text-sm text-success">{success}</p>
-        )}
+        {error && <p className="text-sm text-destructive">{error}</p>}
+        {success && <p className="text-sm text-success">{success}</p>}
       </div>
-    )
-  }
-)
-Input.displayName = "Input"
+    );
+  },
+);
+Input.displayName = "Input";
 
-export { Input, inputVariants }
+export { Input, inputVariants };

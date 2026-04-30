@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 interface Step {
   id: string;
@@ -13,7 +13,11 @@ interface FormWizardProps {
   persistenceKey?: string;
 }
 
-const FormWizard: React.FC<FormWizardProps> = ({ steps, onComplete, persistenceKey }) => {
+const FormWizard: React.FC<FormWizardProps> = ({
+  steps,
+  onComplete,
+  persistenceKey,
+}) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [formData, setFormData] = useState<Record<string, any>>({});
 
@@ -58,12 +62,16 @@ const FormWizard: React.FC<FormWizardProps> = ({ steps, onComplete, persistenceK
             <div key={step.id} className="flex flex-col items-center">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
-                  index <= currentStepIndex ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-500'
+                  index <= currentStepIndex
+                    ? "bg-indigo-600 text-white"
+                    : "bg-gray-200 text-gray-500"
                 }`}
               >
                 {index + 1}
               </div>
-              <span className="text-xs mt-2 font-medium text-gray-600">{step.title}</span>
+              <span className="text-xs mt-2 font-medium text-gray-600">
+                {step.title}
+              </span>
             </div>
           ))}
         </div>
@@ -76,11 +84,14 @@ const FormWizard: React.FC<FormWizardProps> = ({ steps, onComplete, persistenceK
       </div>
 
       <div className="wizard-content min-h-[300px] mb-8">
-        {React.cloneElement(steps[currentStepIndex].component as React.ReactElement, {
-          formData,
-          updateData,
-          onNext: handleNext,
-        })}
+        {React.cloneElement(
+          steps[currentStepIndex].component as React.ReactElement,
+          {
+            formData,
+            updateData,
+            onNext: handleNext,
+          },
+        )}
       </div>
 
       <div className="flex justify-between pt-6 border-t border-gray-100">
@@ -88,7 +99,9 @@ const FormWizard: React.FC<FormWizardProps> = ({ steps, onComplete, persistenceK
           onClick={handleBack}
           disabled={currentStepIndex === 0}
           className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-            currentStepIndex === 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+            currentStepIndex === 0
+              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+              : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-300"
           }`}
         >
           Back
@@ -97,7 +110,7 @@ const FormWizard: React.FC<FormWizardProps> = ({ steps, onComplete, persistenceK
           onClick={handleNext}
           className="px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors"
         >
-          {currentStepIndex === steps.length - 1 ? 'Finish' : 'Next'}
+          {currentStepIndex === steps.length - 1 ? "Finish" : "Next"}
         </button>
       </div>
     </div>

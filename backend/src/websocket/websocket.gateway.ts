@@ -4,12 +4,14 @@ import {
   SubscribeMessage,
   OnGatewayConnection,
   OnGatewayDisconnect,
-} from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
-import { WebsocketService } from './websocket.service';
+} from "@nestjs/websockets";
+import { Server, Socket } from "socket.io";
+import { WebsocketService } from "./websocket.service";
 
 @WebSocketGateway({ cors: true })
-export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class WebsocketGateway
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   server: Server;
 
@@ -17,15 +19,15 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
 
   handleConnection(client: Socket) {
     this.wsService.registerClient(client);
-    this.server.emit('status', { clientId: client.id, status: 'connected' });
+    this.server.emit("status", { clientId: client.id, status: "connected" });
   }
 
   handleDisconnect(client: Socket) {
     this.wsService.removeClient(client.id);
-    this.server.emit('status', { clientId: client.id, status: 'disconnected' });
+    this.server.emit("status", { clientId: client.id, status: "disconnected" });
   }
 
-  @SubscribeMessage('message')
+  @SubscribeMessage("message")
   handleMessage(client: Socket, payload: any) {
     this.wsService.queueMessage(client.id, payload);
   }

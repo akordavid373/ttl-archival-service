@@ -5,23 +5,26 @@ This document outlines the performance optimizations implemented for the TTL Arc
 ## 🚀 Implemented Optimizations
 
 ### 1. Code Splitting for Route-Based Components
+
 - **Implementation**: Used `React.lazy()` and `Suspense` in `App.tsx`
 - **Benefits**: Reduced initial bundle size, faster page loads
 - **Files Modified**: `src/App.tsx`
 - **Components Split**: Dashboard, Policies, Archives, Blockchain, Settings
 
 ### 2. Lazy Loading for Images and Components
+
 - **Implementation**: Created `LazyImage` component with Intersection Observer
 - **Benefits**: Deferred loading of images until they enter viewport
 - **Files Created**: `src/components/LazyImage.tsx`, `src/components/LoadingSpinner.tsx`
-- **Features**: 
+- **Features**:
   - Intersection Observer API for viewport detection
   - Loading states and error handling
   - Smooth transitions
 
 ### 3. Service Worker Implementation for Caching
+
 - **Implementation**: Comprehensive service worker with multiple caching strategies
-- **Files Created**: 
+- **Files Created**:
   - `public/sw.js` - Service worker implementation
   - `src/utils/serviceWorker.ts` - Registration utilities
 - **Caching Strategies**:
@@ -34,6 +37,7 @@ This document outlines the performance optimizations implemented for the TTL Arc
   - Automatic cache cleanup
 
 ### 4. Bundle Size Optimization
+
 - **Implementation**: Updated Vite configuration with manual chunk splitting
 - **Files Modified**: `vite.config.ts`
 - **Optimizations**:
@@ -49,6 +53,7 @@ This document outlines the performance optimizations implemented for the TTL Arc
   - `blockchain`: Stellar SDK and related
 
 ### 5. Performance Metrics Monitoring
+
 - **Implementation**: Comprehensive performance monitoring system
 - **Files Created**: `src/utils/performance.ts`
 - **Metrics Tracked**:
@@ -66,6 +71,7 @@ This document outlines the performance optimizations implemented for the TTL Arc
   - Performance marks and measures
 
 ### 6. PWA Enhancements
+
 - **Implementation**: Progressive Web App features
 - **Files Created**: `public/manifest.json`
 - **Features**:
@@ -75,6 +81,7 @@ This document outlines the performance optimizations implemented for the TTL Arc
   - Responsive icons
 
 ### 7. HTML Optimizations
+
 - **Implementation**: Enhanced `index.html` with performance headers
 - **Files Modified**: `index.html`
 - **Optimizations**:
@@ -86,16 +93,19 @@ This document outlines the performance optimizations implemented for the TTL Arc
 ## 📊 Expected Performance Improvements
 
 ### Bundle Size Reduction
+
 - **Before**: Single large bundle (~2-3MB estimated)
 - **After**: Split into 6-8 optimized chunks (~500KB-1MB initial load)
 - **Improvement**: 60-70% reduction in initial load size
 
 ### Loading Performance
+
 - **First Contentful Paint**: Expected 30-40% improvement
 - **Largest Contentful Paint**: Expected 25-35% improvement
 - **Time to Interactive**: Expected 40-50% improvement
 
 ### Caching Benefits
+
 - **Static Assets**: Served from cache on subsequent visits
 - **API Responses**: Offline support and faster response times
 - **Navigation**: Near-instant page loads for cached routes
@@ -103,44 +113,51 @@ This document outlines the performance optimizations implemented for the TTL Arc
 ## 🔧 Usage Instructions
 
 ### Using Lazy Images
-```tsx
-import { LazyImage } from '@/components/LazyImage'
 
-<LazyImage 
+```tsx
+import { LazyImage } from "@/components/LazyImage";
+
+<LazyImage
   src="/path/to/image.jpg"
   alt="Description"
   className="w-full h-64 object-cover"
-/>
+/>;
 ```
 
 ### Performance Monitoring
+
 ```tsx
-import { performanceMonitor } from '@/utils/performance'
+import { performanceMonitor } from "@/utils/performance";
 
 // Get current metrics
-const metrics = performanceMonitor.getMetrics()
+const metrics = performanceMonitor.getMetrics();
 
 // Log metrics to console
-performanceMonitor.logMetrics()
+performanceMonitor.logMetrics();
 
 // Get performance score (0-100)
-const score = performanceMonitor.getPerformanceScore()
+const score = performanceMonitor.getPerformanceScore();
 ```
 
 ### Manual Performance Measurements
+
 ```tsx
-import { measurePerformance, createPerformanceMark } from '@/utils/performance'
+import { measurePerformance, createPerformanceMark } from "@/utils/performance";
 
 // Measure function execution
-const result = measurePerformance('expensive-operation', () => {
-  return expensiveCalculation()
-})
+const result = measurePerformance("expensive-operation", () => {
+  return expensiveCalculation();
+});
 
 // Manual marks and measures
-createPerformanceMark('operation-start')
+createPerformanceMark("operation-start");
 // ... do work
-createPerformanceMark('operation-end')
-performanceMonitor.createPerformanceMeasure('operation-duration', 'operation-start', 'operation-end')
+createPerformanceMark("operation-end");
+performanceMonitor.createPerformanceMeasure(
+  "operation-duration",
+  "operation-start",
+  "operation-end",
+);
 ```
 
 ## 🎯 Next Steps

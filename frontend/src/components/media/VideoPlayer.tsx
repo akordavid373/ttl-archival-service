@@ -1,6 +1,14 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Settings, Subtitles } from 'lucide-react';
-import { formatDuration } from './utils';
+import React, { useRef, useState, useEffect } from "react";
+import {
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  Maximize,
+  Settings,
+  Subtitles,
+} from "lucide-react";
+import { formatDuration } from "./utils";
 
 interface VideoPlayerProps {
   src: string;
@@ -8,7 +16,11 @@ interface VideoPlayerProps {
   subtitles?: { src: string; srcLang: string; label: string }[];
 }
 
-export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, subtitles }) => {
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({
+  src,
+  poster,
+  subtitles,
+}) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -35,12 +47,12 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, subtitles
       setDuration(video.duration);
     };
 
-    video.addEventListener('timeupdate', updateProgress);
-    video.addEventListener('loadedmetadata', handleLoadedMetadata);
+    video.addEventListener("timeupdate", updateProgress);
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
 
     return () => {
-      video.removeEventListener('timeupdate', updateProgress);
-      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      video.removeEventListener("timeupdate", updateProgress);
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
     };
   }, []);
 
@@ -107,9 +119,9 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, subtitles
       if (tracks.length > 0) {
         const track = tracks[0];
         if (subtitlesEnabled) {
-          track.mode = 'hidden';
+          track.mode = "hidden";
         } else {
-          track.mode = 'showing';
+          track.mode = "showing";
         }
         setSubtitlesEnabled(!subtitlesEnabled);
       }
@@ -155,13 +167,23 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, subtitles
 
         <div className="flex items-center justify-between text-white">
           <div className="flex items-center space-x-4">
-            <button onClick={togglePlay} className="hover:text-blue-400 transition">
+            <button
+              onClick={togglePlay}
+              className="hover:text-blue-400 transition"
+            >
               {isPlaying ? <Pause size={24} /> : <Play size={24} />}
             </button>
 
             <div className="flex items-center space-x-2">
-              <button onClick={toggleMute} className="hover:text-blue-400 transition">
-                {isMuted || volume === 0 ? <VolumeX size={20} /> : <Volume2 size={20} />}
+              <button
+                onClick={toggleMute}
+                className="hover:text-blue-400 transition"
+              >
+                {isMuted || volume === 0 ? (
+                  <VolumeX size={20} />
+                ) : (
+                  <Volume2 size={20} />
+                )}
               </button>
               <input
                 type="range"
@@ -183,7 +205,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, subtitles
             {subtitles && subtitles.length > 0 && (
               <button
                 onClick={toggleSubtitles}
-                className={`hover:text-blue-400 transition ${subtitlesEnabled ? 'text-blue-500' : ''}`}
+                className={`hover:text-blue-400 transition ${subtitlesEnabled ? "text-blue-500" : ""}`}
                 title="Toggle Subtitles"
               >
                 <Subtitles size={20} />
@@ -207,16 +229,19 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, subtitles
                     <button
                       key={rate}
                       onClick={() => changePlaybackRate(rate)}
-                      className={`w-full text-left px-3 py-2 hover:bg-gray-700 transition ${playbackRate === rate ? 'text-blue-400' : ''}`}
+                      className={`w-full text-left px-3 py-2 hover:bg-gray-700 transition ${playbackRate === rate ? "text-blue-400" : ""}`}
                     >
-                      {rate}x {rate === 1 && '(Normal)'}
+                      {rate}x {rate === 1 && "(Normal)"}
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-            <button onClick={toggleFullscreen} className="hover:text-blue-400 transition">
+            <button
+              onClick={toggleFullscreen}
+              className="hover:text-blue-400 transition"
+            >
               <Maximize size={20} />
             </button>
           </div>

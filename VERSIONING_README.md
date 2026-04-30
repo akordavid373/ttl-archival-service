@@ -5,6 +5,7 @@ This document provides an overview of the API versioning implementation for the 
 ## 🚀 Features Implemented
 
 ### ✅ Core Versioning Features
+
 - **URL-based versioning** (`/api/v1/`, `/api/v2/`)
 - **Header-based versioning** (`X-API-Version`, `Accept` header)
 - **Version negotiation middleware**
@@ -12,12 +13,14 @@ This document provides an overview of the API versioning implementation for the 
 - **Backward compatibility**
 
 ### ✅ Deprecation & Migration
+
 - **Deprecation headers** (`Deprecation`, `Sunset`, `Warning`)
 - **Migration guide links** in response headers
 - **Version-specific documentation**
 - **Comprehensive migration guides**
 
 ### ✅ Enhanced v2 Features
+
 - **Batch operations** for archives and policies
 - **Enhanced search** with semantic, fuzzy, and regex options
 - **Real-time notifications** with multiple channels
@@ -86,6 +89,7 @@ Request → VersioningMiddleware → VersionNegotiationMiddleware → API Routes
 ### Version Manager
 
 The `VersionManager` class handles:
+
 - Version registration and validation
 - Deprecation timeline management
 - Compatibility checking
@@ -94,10 +98,10 @@ The `VersionManager` class handles:
 
 ## 📊 Version Status
 
-| Version | Status | Release Date | Deprecation | Sunset | Features |
-|---------|--------|--------------|-------------|---------|----------|
-| v1 | 🟡 Deprecated | 2024-01-01 | 2025-06-01 | 2025-12-01 | Basic CRUD, Audit, Search |
-| v2 | 🟢 Active | 2024-03-28 | - | - | Enhanced features, Batch ops, Webhooks |
+| Version | Status        | Release Date | Deprecation | Sunset     | Features                               |
+| ------- | ------------- | ------------ | ----------- | ---------- | -------------------------------------- |
+| v1      | 🟡 Deprecated | 2024-01-01   | 2025-06-01  | 2025-12-01 | Basic CRUD, Audit, Search              |
+| v2      | 🟢 Active     | 2024-03-28   | -           | -          | Enhanced features, Batch ops, Webhooks |
 
 ## 🧪 Testing the Implementation
 
@@ -158,7 +162,7 @@ curl -X POST http://localhost:8000/api/v2/archives/batch \
         "tags": ["test"]
       },
       {
-        "original_data_id": "test_2", 
+        "original_data_id": "test_2",
         "data": "sample data 2",
         "policy_id": 1,
         "priority": "high"
@@ -245,11 +249,13 @@ The health check endpoint includes version information:
 ## 🛡️ Security Considerations
 
 ### Authentication
+
 - v2 requires authentication for most endpoints
 - API tokens should be securely stored
 - Consider rate limiting per version
 
 ### Deprecation Security
+
 - Deprecated versions may have reduced security features
 - Encourage migration to latest version for security updates
 - Monitor for abuse of deprecated endpoints
@@ -257,6 +263,7 @@ The health check endpoint includes version information:
 ## 🔮 Future Enhancements
 
 ### Planned Features
+
 1. **v3 API Development**: Next major version with breaking changes
 2. **Automatic Migration Tools**: Scripts to help migrate v1 to v2
 3. **Version Analytics Dashboard**: Real-time usage monitoring
@@ -264,6 +271,7 @@ The health check endpoint includes version information:
 5. **Feature Flags**: Gradual feature rollout per version
 
 ### Extension Points
+
 - Custom version negotiation strategies
 - Additional deprecation policies
 - Enhanced validation rules
@@ -272,16 +280,19 @@ The health check endpoint includes version information:
 ## 📞 Support
 
 ### Documentation
+
 - **API Versioning Guide**: `docs/api-versioning.md`
 - **Migration Guide**: `docs/migration/v1-to-v2.md`
 - **API Documentation**: Available at `/docs` endpoint
 
 ### Endpoints
+
 - **Version Info**: `/version`
 - **Health Check**: `/health`
 - **API Version**: `/api/version`
 
 ### Troubleshooting
+
 - Check response headers for version information
 - Use `/version` endpoint to verify supported versions
 - Monitor deprecation warnings in responses
@@ -290,6 +301,7 @@ The health check endpoint includes version information:
 ## 🎯 Success Metrics
 
 ### Implementation Success
+
 - ✅ Multiple API versions working
 - ✅ Version negotiation functioning
 - ✅ Deprecation warnings appearing
@@ -297,6 +309,7 @@ The health check endpoint includes version information:
 - ✅ Migration is smooth
 
 ### Operational Success
+
 - 📊 Version usage monitoring
 - 🔄 Smooth deprecation process
 - 📈 Migration rate tracking

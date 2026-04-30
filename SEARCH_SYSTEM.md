@@ -9,6 +9,7 @@ The search system provides full-text search capabilities, faceted search, autoco
 ## Features
 
 ### Core Search Features
+
 - **Full-text search**: Advanced text search with relevance scoring
 - **Faceted search**: Filter and aggregate search results by various fields
 - **Auto-complete**: Real-time suggestions as users type
@@ -18,6 +19,7 @@ The search system provides full-text search capabilities, faceted search, autoco
 - **Pagination**: Efficient pagination through large result sets
 
 ### Analytics Features
+
 - **Search metrics**: Track search volume, response times, and success rates
 - **User analytics**: Monitor unique users and sessions
 - **Popular queries**: Identify trending search terms
@@ -26,6 +28,7 @@ The search system provides full-text search capabilities, faceted search, autoco
 - **Search funnel**: Understand user journey through search
 
 ### Index Management
+
 - **Automatic indexing**: Index updates when archive records change
 - **Bulk operations**: Efficient bulk indexing and reindexing
 - **Index optimization**: Automatic index optimization and maintenance
@@ -63,6 +66,7 @@ The search system provides full-text search capabilities, faceted search, autoco
 ### Search Operations
 
 #### POST /api/v1/search/
+
 Perform a search with advanced filtering and sorting.
 
 ```json
@@ -87,6 +91,7 @@ Perform a search with advanced filtering and sorting.
 ```
 
 #### GET /api/v1/search/
+
 Simple search using query parameters.
 
 ```
@@ -94,6 +99,7 @@ GET /api/v1/search?q=user&type=full_text&page=1&size=10&sort_by=relevance
 ```
 
 #### POST /api/v1/search/advanced
+
 Advanced search with archive-specific filters.
 
 ```json
@@ -115,6 +121,7 @@ Advanced search with archive-specific filters.
 ### Auto-complete and Suggestions
 
 #### POST /api/v1/search/autocomplete
+
 Get auto-complete suggestions.
 
 ```json
@@ -127,6 +134,7 @@ Get auto-complete suggestions.
 ```
 
 #### GET /api/v1/search/suggestions
+
 Get search suggestions based on historical queries.
 
 ```
@@ -136,6 +144,7 @@ GET /api/v1/search/suggestions?q=user&size=5
 ### Analytics and Monitoring
 
 #### GET /api/v1/search/analytics
+
 Get search analytics for a specified period.
 
 ```
@@ -143,17 +152,21 @@ GET /api/v1/search/analytics?period_type=day&periods=7
 ```
 
 #### GET /api/v1/search/stats
+
 Get comprehensive search system statistics.
 
 #### GET /api/v1/search/health
+
 Check the health of the search system.
 
 ### Index Management
 
 #### POST /api/v1/search/reindex
+
 Reindex all archive records from the database.
 
 #### POST /api/v1/search/index/refresh
+
 Refresh the search index to make changes visible.
 
 ## Configuration
@@ -203,6 +216,7 @@ The system uses the following default Elasticsearch settings:
 ### Installation Steps
 
 1. **Install Elasticsearch**
+
    ```bash
    # Download and install Elasticsearch
    wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.11.0-linux-x86_64.tar.gz
@@ -212,12 +226,14 @@ The system uses the following default Elasticsearch settings:
    ```
 
 2. **Install Python Dependencies**
+
    ```bash
    cd backend
    pip install -r requirements.txt
    ```
 
 3. **Initialize Database**
+
    ```bash
    # Create database tables
    python -c "from backend.database import engine, Base; Base.metadata.create_all(bind=engine)"
@@ -337,6 +353,7 @@ python test_search.py
 ```
 
 The test script will verify:
+
 - Elasticsearch connection
 - Index creation and management
 - Document indexing

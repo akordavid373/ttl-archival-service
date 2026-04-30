@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -14,7 +14,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   webpSrc,
   lowResSrc,
   alt,
-  className = '',
+  className = "",
   aspectRatio,
   ...props
 }) => {
@@ -31,21 +31,24 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   }, [src]);
 
   const containerStyle: React.CSSProperties = {
-    position: 'relative',
-    overflow: 'hidden',
+    position: "relative",
+    overflow: "hidden",
     aspectRatio: aspectRatio,
   };
 
   const imageStyle: React.CSSProperties = {
-    filter: isLoaded ? 'none' : 'blur(10px)',
-    transition: 'filter 0.5s ease-in-out',
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
+    filter: isLoaded ? "none" : "blur(10px)",
+    transition: "filter 0.5s ease-in-out",
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
   };
 
   return (
-    <div style={containerStyle} className={`optimized-image-container ${className}`}>
+    <div
+      style={containerStyle}
+      className={`optimized-image-container ${className}`}
+    >
       <picture>
         {webpSrc && <source srcSet={webpSrc} type="image/webp" />}
         <img
@@ -55,11 +58,14 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
           loading="lazy"
           onLoad={() => setIsLoaded(true)}
           style={imageStyle}
-          className={`optimized-image ${isLoaded ? 'loaded' : 'loading'}`}
+          className={`optimized-image ${isLoaded ? "loaded" : "loading"}`}
         />
       </picture>
       {!isLoaded && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse" aria-hidden="true" />
+        <div
+          className="absolute inset-0 bg-gray-200 animate-pulse"
+          aria-hidden="true"
+        />
       )}
     </div>
   );

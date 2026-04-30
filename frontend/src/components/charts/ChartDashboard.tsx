@@ -1,9 +1,19 @@
 import React, { useEffect, useState, useRef } from "react";
 import {
-  LineChart, Line, BarChart, Bar,
-  PieChart, Pie, Cell,
-  AreaChart, Area,
-  XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
 } from "recharts";
 import html2canvas from "html2canvas";
 
@@ -21,13 +31,13 @@ export const ChartDashboard = () => {
   // 🔄 Simulate real-time updates
   useEffect(() => {
     const interval = setInterval(() => {
-      setData(prev => {
+      setData((prev) => {
         const next = [
           ...prev.slice(-9),
           {
             name: new Date().toLocaleTimeString(),
             value: Math.floor(Math.random() * 100),
-          }
+          },
         ];
         return next;
       });
@@ -52,7 +62,6 @@ export const ChartDashboard = () => {
       <button onClick={exportChart}>Export Dashboard</button>
 
       <div ref={ref} style={{ display: "grid", gap: 20 }}>
-        
         {/* 📈 Line Chart */}
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data}>
@@ -100,10 +109,14 @@ export const ChartDashboard = () => {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Area type="monotone" dataKey="value" stroke="#ffc658" fill="#ffc658" />
+            <Area
+              type="monotone"
+              dataKey="value"
+              stroke="#ffc658"
+              fill="#ffc658"
+            />
           </AreaChart>
         </ResponsiveContainer>
-
       </div>
     </div>
   );

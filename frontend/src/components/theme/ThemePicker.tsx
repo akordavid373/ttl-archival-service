@@ -1,18 +1,31 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { useTheme, ThemeMode, ThemeColor, Typography } from '../../context/ThemeContext';
-import { Sun, Moon, Monitor, Type, Layout, Download, Upload } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import {
+  useTheme,
+  ThemeMode,
+  ThemeColor,
+  Typography,
+} from "../../context/ThemeContext";
+import {
+  Sun,
+  Moon,
+  Monitor,
+  Type,
+  Layout,
+  Download,
+  Upload,
+} from "lucide-react";
 
 export const ThemePicker: React.FC = () => {
   const { theme, setTheme, exportTheme, importTheme } = useTheme();
 
   const handleExport = () => {
     const config = exportTheme();
-    const blob = new Blob([config], { type: 'application/json' });
+    const blob = new Blob([config], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'ttl-theme-config.json';
+    a.download = "ttl-theme-config.json";
     a.click();
   };
 
@@ -29,7 +42,7 @@ export const ThemePicker: React.FC = () => {
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800"
@@ -41,21 +54,23 @@ export const ThemePicker: React.FC = () => {
 
       {/* Mode Selection */}
       <div className="mb-8">
-        <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 block">Theme Mode</label>
+        <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 block">
+          Theme Mode
+        </label>
         <div className="grid grid-cols-3 gap-3">
-          {(['light', 'dark', 'system'] as ThemeMode[]).map((mode) => (
+          {(["light", "dark", "system"] as ThemeMode[]).map((mode) => (
             <button
               key={mode}
               onClick={() => setTheme({ mode })}
               className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all ${
-                theme.mode === mode 
-                  ? 'border-primary bg-primary/5 text-primary' 
-                  : 'border-gray-100 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                theme.mode === mode
+                  ? "border-primary bg-primary/5 text-primary"
+                  : "border-gray-100 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700"
               }`}
             >
-              {mode === 'light' && <Sun className="w-5 h-5 mb-2" />}
-              {mode === 'dark' && <Moon className="w-5 h-5 mb-2" />}
-              {mode === 'system' && <Monitor className="w-5 h-5 mb-2" />}
+              {mode === "light" && <Sun className="w-5 h-5 mb-2" />}
+              {mode === "dark" && <Moon className="w-5 h-5 mb-2" />}
+              {mode === "system" && <Monitor className="w-5 h-5 mb-2" />}
               <span className="text-xs capitalize">{mode}</span>
             </button>
           ))}
@@ -64,20 +79,26 @@ export const ThemePicker: React.FC = () => {
 
       {/* Primary Color */}
       <div className="mb-8">
-        <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 block">Brand Color</label>
+        <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 block">
+          Brand Color
+        </label>
         <div className="flex gap-3">
-          {['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444'].map((color) => (
-            <button
-              key={color}
-              onClick={() => setTheme({ primaryColor: color })}
-              className={`w-10 h-10 rounded-full transition-transform hover:scale-110 ${
-                theme.primaryColor === color ? 'ring-2 ring-offset-2 ring-primary scale-110' : ''
-              }`}
-              style={{ backgroundColor: color }}
-            />
-          ))}
-          <input 
-            type="color" 
+          {["#3b82f6", "#8b5cf6", "#10b981", "#f59e0b", "#ef4444"].map(
+            (color) => (
+              <button
+                key={color}
+                onClick={() => setTheme({ primaryColor: color })}
+                className={`w-10 h-10 rounded-full transition-transform hover:scale-110 ${
+                  theme.primaryColor === color
+                    ? "ring-2 ring-offset-2 ring-primary scale-110"
+                    : ""
+                }`}
+                style={{ backgroundColor: color }}
+              />
+            ),
+          )}
+          <input
+            type="color"
             value={theme.primaryColor}
             onChange={(e) => setTheme({ primaryColor: e.target.value })}
             className="w-10 h-10 rounded-full cursor-pointer bg-transparent border-0 p-0"
@@ -87,16 +108,18 @@ export const ThemePicker: React.FC = () => {
 
       {/* Typography */}
       <div className="mb-8">
-        <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 block">Typography</label>
+        <label className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 block">
+          Typography
+        </label>
         <div className="grid grid-cols-3 gap-3">
-          {(['inter', 'roboto', 'outfit'] as Typography[]).map((font) => (
+          {(["inter", "roboto", "outfit"] as Typography[]).map((font) => (
             <button
               key={font}
               onClick={() => setTheme({ typography: font })}
               className={`p-3 rounded-xl border-2 transition-all flex items-center gap-2 ${
-                theme.typography === font 
-                  ? 'border-primary bg-primary/5 text-primary' 
-                  : 'border-gray-100 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                theme.typography === font
+                  ? "border-primary bg-primary/5 text-primary"
+                  : "border-gray-100 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700"
               }`}
             >
               <Type className="w-4 h-4" />
@@ -118,7 +141,12 @@ export const ThemePicker: React.FC = () => {
         <label className="flex-1 flex items-center justify-center gap-2 p-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer">
           <Upload className="w-4 h-4" />
           Import
-          <input type="file" accept=".json" onChange={handleImport} className="hidden" />
+          <input
+            type="file"
+            accept=".json"
+            onChange={handleImport}
+            className="hidden"
+          />
         </label>
       </div>
     </motion.div>

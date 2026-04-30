@@ -1,6 +1,11 @@
-import { ArchiveEntry } from './dashboard';
+import { ArchiveEntry } from "./dashboard";
 
-export type ArchiveStatus = 'Archived' | 'Expiring' | 'Verified' | 'Failed' | 'Sycning';
+export type ArchiveStatus =
+  | "Archived"
+  | "Expiring"
+  | "Verified"
+  | "Failed"
+  | "Sycning";
 
 export interface ArchiveFilters {
   policy_id?: string;
@@ -13,8 +18,8 @@ export interface ArchiveFilters {
 }
 
 export interface ArchiveSort {
-  field: 'created_at' | 'size' | 'filename' | 'status' | 'policy_name';
-  order: 'asc' | 'desc';
+  field: "created_at" | "size" | "filename" | "status" | "policy_name";
+  order: "asc" | "desc";
 }
 
 export interface DetailedArchiveEntry extends ArchiveEntry {
@@ -24,7 +29,7 @@ export interface DetailedArchiveEntry extends ArchiveEntry {
   compression_method?: string;
   encryption_algorithm?: string;
   original_data_id: string;
-  blockchain_network: 'Stellar' | 'IPFS' | 'Internal';
+  blockchain_network: "Stellar" | "IPFS" | "Internal";
   verification_date?: string;
   expiry_date?: string;
   metadata: Record<string, string | number | boolean>;

@@ -1,56 +1,80 @@
-import React from 'react'
-import { Bell, Volume2, Eye, Monitor, Settings as SettingsIcon } from 'lucide-react'
-import { NotificationPreferences, NotificationType, NotificationPriority } from '../../types/notifications'
-import { cn } from '../../utils/cn'
+import React from "react";
+import {
+  Bell,
+  Volume2,
+  Eye,
+  Monitor,
+  Settings as SettingsIcon,
+} from "lucide-react";
+import {
+  NotificationPreferences,
+  NotificationType,
+  NotificationPriority,
+} from "../../types/notifications";
+import { cn } from "../../utils/cn";
 
 interface NotificationPreferencesProps {
-  preferences: NotificationPreferences
-  onChange: (preferences: Partial<NotificationPreferences>) => void
+  preferences: NotificationPreferences;
+  onChange: (preferences: Partial<NotificationPreferences>) => void;
 }
 
 const typeLabels: Record<NotificationType, string> = {
-  success: 'Success',
-  error: 'Error',
-  warning: 'Warning',
-  info: 'Info',
-  system: 'System'
-}
+  success: "Success",
+  error: "Error",
+  warning: "Warning",
+  info: "Info",
+  system: "System",
+};
 
 const priorityLabels: Record<NotificationPriority, string> = {
-  low: 'Low',
-  medium: 'Medium',
-  high: 'High',
-  urgent: 'Urgent'
-}
+  low: "Low",
+  medium: "Medium",
+  high: "High",
+  urgent: "Urgent",
+};
 
-export function NotificationPreferences({ preferences, onChange }: NotificationPreferencesProps) {
-  const handleGlobalChange = (key: keyof NotificationPreferences, value: any) => {
-    onChange({ [key]: value })
-  }
+export function NotificationPreferences({
+  preferences,
+  onChange,
+}: NotificationPreferencesProps) {
+  const handleGlobalChange = (
+    key: keyof NotificationPreferences,
+    value: any,
+  ) => {
+    onChange({ [key]: value });
+  };
 
-  const handleTypeChange = (type: NotificationType, key: string, value: any) => {
+  const handleTypeChange = (
+    type: NotificationType,
+    key: string,
+    value: any,
+  ) => {
     onChange({
       types: {
         ...preferences.types,
         [type]: {
           ...preferences.types[type],
-          [key]: value
-        }
-      }
-    })
-  }
+          [key]: value,
+        },
+      },
+    });
+  };
 
-  const handlePriorityChange = (priority: NotificationPriority, key: string, value: any) => {
+  const handlePriorityChange = (
+    priority: NotificationPriority,
+    key: string,
+    value: any,
+  ) => {
     onChange({
       priorities: {
         ...preferences.priorities,
         [priority]: {
           ...preferences.priorities[priority],
-          [key]: value
-        }
-      }
-    })
-  }
+          [key]: value,
+        },
+      },
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -60,7 +84,7 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
           <SettingsIcon className="h-5 w-5" />
           Global Settings
         </h3>
-        
+
         <div className="space-y-3">
           <label className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -70,7 +94,7 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
             <input
               type="checkbox"
               checked={preferences.enabled}
-              onChange={(e) => handleGlobalChange('enabled', e.target.checked)}
+              onChange={(e) => handleGlobalChange("enabled", e.target.checked)}
               className="w-4 h-4"
             />
           </label>
@@ -83,7 +107,9 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
             <input
               type="checkbox"
               checked={preferences.soundEnabled}
-              onChange={(e) => handleGlobalChange('soundEnabled', e.target.checked)}
+              onChange={(e) =>
+                handleGlobalChange("soundEnabled", e.target.checked)
+              }
               disabled={!preferences.enabled}
               className="w-4 h-4"
             />
@@ -97,7 +123,9 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
             <input
               type="checkbox"
               checked={preferences.visualAlertsEnabled}
-              onChange={(e) => handleGlobalChange('visualAlertsEnabled', e.target.checked)}
+              onChange={(e) =>
+                handleGlobalChange("visualAlertsEnabled", e.target.checked)
+              }
               disabled={!preferences.enabled}
               className="w-4 h-4"
             />
@@ -111,7 +139,9 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
             <input
               type="checkbox"
               checked={preferences.enableDesktop}
-              onChange={(e) => handleGlobalChange('enableDesktop', e.target.checked)}
+              onChange={(e) =>
+                handleGlobalChange("enableDesktop", e.target.checked)
+              }
               disabled={!preferences.enabled}
               className="w-4 h-4"
             />
@@ -122,7 +152,9 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
             <input
               type="checkbox"
               checked={preferences.autoDismiss}
-              onChange={(e) => handleGlobalChange('autoDismiss', e.target.checked)}
+              onChange={(e) =>
+                handleGlobalChange("autoDismiss", e.target.checked)
+              }
               disabled={!preferences.enabled}
               className="w-4 h-4"
             />
@@ -135,7 +167,12 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
               min="1"
               max="60"
               value={preferences.defaultTimeout / 1000}
-              onChange={(e) => handleGlobalChange('defaultTimeout', parseInt(e.target.value) * 1000)}
+              onChange={(e) =>
+                handleGlobalChange(
+                  "defaultTimeout",
+                  parseInt(e.target.value) * 1000,
+                )
+              }
               disabled={!preferences.enabled || !preferences.autoDismiss}
               className="w-20 px-2 py-1 border rounded"
             />
@@ -155,8 +192,16 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
                   <span>Enabled</span>
                   <input
                     type="checkbox"
-                    checked={preferences.types[type as NotificationType].enabled}
-                    onChange={(e) => handleTypeChange(type as NotificationType, 'enabled', e.target.checked)}
+                    checked={
+                      preferences.types[type as NotificationType].enabled
+                    }
+                    onChange={(e) =>
+                      handleTypeChange(
+                        type as NotificationType,
+                        "enabled",
+                        e.target.checked,
+                      )
+                    }
                     disabled={!preferences.enabled}
                     className="w-4 h-4"
                   />
@@ -167,7 +212,13 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
                   <input
                     type="checkbox"
                     checked={preferences.types[type as NotificationType].sound}
-                    onChange={(e) => handleTypeChange(type as NotificationType, 'sound', e.target.checked)}
+                    onChange={(e) =>
+                      handleTypeChange(
+                        type as NotificationType,
+                        "sound",
+                        e.target.checked,
+                      )
+                    }
                     disabled={!preferences.enabled || !preferences.soundEnabled}
                     className="w-4 h-4"
                   />
@@ -177,8 +228,16 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
                   <span>Auto-dismiss</span>
                   <input
                     type="checkbox"
-                    checked={preferences.types[type as NotificationType].autoDismiss}
-                    onChange={(e) => handleTypeChange(type as NotificationType, 'autoDismiss', e.target.checked)}
+                    checked={
+                      preferences.types[type as NotificationType].autoDismiss
+                    }
+                    onChange={(e) =>
+                      handleTypeChange(
+                        type as NotificationType,
+                        "autoDismiss",
+                        e.target.checked,
+                      )
+                    }
                     disabled={!preferences.enabled}
                     className="w-4 h-4"
                   />
@@ -190,9 +249,20 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
                     type="number"
                     min="1"
                     max="60"
-                    value={preferences.types[type as NotificationType].timeout / 1000}
-                    onChange={(e) => handleTypeChange(type as NotificationType, 'timeout', parseInt(e.target.value) * 1000)}
-                    disabled={!preferences.enabled || !preferences.types[type as NotificationType].autoDismiss}
+                    value={
+                      preferences.types[type as NotificationType].timeout / 1000
+                    }
+                    onChange={(e) =>
+                      handleTypeChange(
+                        type as NotificationType,
+                        "timeout",
+                        parseInt(e.target.value) * 1000,
+                      )
+                    }
+                    disabled={
+                      !preferences.enabled ||
+                      !preferences.types[type as NotificationType].autoDismiss
+                    }
                     className="w-20 px-2 py-1 border rounded"
                   />
                 </div>
@@ -214,8 +284,17 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
                   <span>Sound</span>
                   <input
                     type="checkbox"
-                    checked={preferences.priorities[priority as NotificationPriority].sound}
-                    onChange={(e) => handlePriorityChange(priority as NotificationPriority, 'sound', e.target.checked)}
+                    checked={
+                      preferences.priorities[priority as NotificationPriority]
+                        .sound
+                    }
+                    onChange={(e) =>
+                      handlePriorityChange(
+                        priority as NotificationPriority,
+                        "sound",
+                        e.target.checked,
+                      )
+                    }
                     disabled={!preferences.enabled || !preferences.soundEnabled}
                     className="w-4 h-4"
                   />
@@ -225,8 +304,17 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
                   <span>Auto-dismiss</span>
                   <input
                     type="checkbox"
-                    checked={preferences.priorities[priority as NotificationPriority].autoDismiss}
-                    onChange={(e) => handlePriorityChange(priority as NotificationPriority, 'autoDismiss', e.target.checked)}
+                    checked={
+                      preferences.priorities[priority as NotificationPriority]
+                        .autoDismiss
+                    }
+                    onChange={(e) =>
+                      handlePriorityChange(
+                        priority as NotificationPriority,
+                        "autoDismiss",
+                        e.target.checked,
+                      )
+                    }
                     disabled={!preferences.enabled}
                     className="w-4 h-4"
                   />
@@ -238,9 +326,22 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
                     type="number"
                     min="1"
                     max="60"
-                    value={preferences.priorities[priority as NotificationPriority].timeout / 1000}
-                    onChange={(e) => handlePriorityChange(priority as NotificationPriority, 'timeout', parseInt(e.target.value) * 1000)}
-                    disabled={!preferences.enabled || !preferences.priorities[priority as NotificationPriority].autoDismiss}
+                    value={
+                      preferences.priorities[priority as NotificationPriority]
+                        .timeout / 1000
+                    }
+                    onChange={(e) =>
+                      handlePriorityChange(
+                        priority as NotificationPriority,
+                        "timeout",
+                        parseInt(e.target.value) * 1000,
+                      )
+                    }
+                    disabled={
+                      !preferences.enabled ||
+                      !preferences.priorities[priority as NotificationPriority]
+                        .autoDismiss
+                    }
                     className="w-20 px-2 py-1 border rounded"
                   />
                 </div>
@@ -250,5 +351,5 @@ export function NotificationPreferences({ preferences, onChange }: NotificationP
         </div>
       </div>
     </div>
-  )
+  );
 }

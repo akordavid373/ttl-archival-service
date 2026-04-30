@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Download, X } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Download, X } from "lucide-react";
 
 const InstallPWA: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -12,25 +12,25 @@ const InstallPWA: React.FC = () => {
       setIsVisible(true);
     };
 
-    window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener("beforeinstallprompt", handler);
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener("beforeinstallprompt", handler);
     };
   }, []);
 
   const handleInstall = async () => {
     if (!deferredPrompt) return;
-    
+
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
+
+    if (outcome === "accepted") {
+      console.log("User accepted the install prompt");
     } else {
-      console.log('User dismissed the install prompt');
+      console.log("User dismissed the install prompt");
     }
-    
+
     setDeferredPrompt(null);
     setIsVisible(false);
   };
@@ -45,16 +45,18 @@ const InstallPWA: React.FC = () => {
         </div>
         <div className="flex-1">
           <p className="font-bold text-sm">Install App</p>
-          <p className="text-xs opacity-90">Install TTL Archival for a better offline experience.</p>
+          <p className="text-xs opacity-90">
+            Install TTL Archival for a better offline experience.
+          </p>
         </div>
         <div className="flex flex-col gap-2">
-          <button 
+          <button
             onClick={handleInstall}
             className="px-4 py-1.5 bg-white text-primary rounded-lg text-xs font-bold hover:bg-opacity-90 transition-all"
           >
             Install
           </button>
-          <button 
+          <button
             onClick={() => setIsVisible(false)}
             className="text-[10px] opacity-70 hover:opacity-100 flex items-center justify-center gap-1"
           >

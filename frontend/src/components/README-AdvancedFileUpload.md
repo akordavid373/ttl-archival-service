@@ -29,12 +29,12 @@ npm install lucide-react class-variance-authority clsx tailwind-merge
 ### Basic Usage
 
 ```tsx
-import { AdvancedFileUpload } from './components/AdvancedFileUpload'
+import { AdvancedFileUpload } from "./components/AdvancedFileUpload";
 
 function MyComponent() {
   const handleUploadComplete = (files: File[]) => {
-    console.log('All files uploaded:', files)
-  }
+    console.log("All files uploaded:", files);
+  };
 
   return (
     <AdvancedFileUpload
@@ -42,27 +42,27 @@ function MyComponent() {
       maxSize={50 * 1024 * 1024} // 50MB
       maxFiles={10}
     />
-  )
+  );
 }
 ```
 
 ### Advanced Configuration
 
 ```tsx
-import { AdvancedFileUpload } from './components/AdvancedFileUpload'
+import { AdvancedFileUpload } from "./components/AdvancedFileUpload";
 
 function MyComponent() {
   const handleUploadComplete = (files: File[]) => {
     // Handle successful uploads
-  }
+  };
 
   const handleFileSelect = (files: File[]) => {
     // Handle file selection before upload
-  }
+  };
 
   const handleProgress = (fileId: string, progress: number) => {
     // Track individual file progress
-  }
+  };
 
   return (
     <AdvancedFileUpload
@@ -72,49 +72,49 @@ function MyComponent() {
       maxSize={100 * 1024 * 1024} // 100MB
       maxFiles={20}
       allowedTypes={[
-        'image/*',
-        'application/pdf',
-        'text/*',
-        'application/zip',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        "image/*",
+        "application/pdf",
+        "text/*",
+        "application/zip",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       ]}
       autoUpload={false}
       showPreview={true}
       disabled={false}
       className="custom-upload-class"
     />
-  )
+  );
 }
 ```
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `onUploadComplete` | `(files: File[]) => void` | - | Callback when all files are uploaded |
-| `onFileSelect` | `(files: File[]) => void` | - | Callback when files are selected |
-| `onProgress` | `(fileId: string, progress: number) => void` | - | Callback for individual file progress |
-| `maxSize` | `number` | `50 * 1024 * 1024` (50MB) | Maximum file size in bytes |
-| `maxFiles` | `number` | `10` | Maximum number of files |
-| `allowedTypes` | `string[]` | See below | Allowed file types |
-| `disabled` | `boolean` | `false` | Disable the upload component |
-| `autoUpload` | `boolean` | `false` | Automatically start upload on file selection |
-| `showPreview` | `boolean` | `true` | Show image previews |
-| `className` | `string` | `''` | Additional CSS classes |
+| Prop               | Type                                         | Default                   | Description                                  |
+| ------------------ | -------------------------------------------- | ------------------------- | -------------------------------------------- |
+| `onUploadComplete` | `(files: File[]) => void`                    | -                         | Callback when all files are uploaded         |
+| `onFileSelect`     | `(files: File[]) => void`                    | -                         | Callback when files are selected             |
+| `onProgress`       | `(fileId: string, progress: number) => void` | -                         | Callback for individual file progress        |
+| `maxSize`          | `number`                                     | `50 * 1024 * 1024` (50MB) | Maximum file size in bytes                   |
+| `maxFiles`         | `number`                                     | `10`                      | Maximum number of files                      |
+| `allowedTypes`     | `string[]`                                   | See below                 | Allowed file types                           |
+| `disabled`         | `boolean`                                    | `false`                   | Disable the upload component                 |
+| `autoUpload`       | `boolean`                                    | `false`                   | Automatically start upload on file selection |
+| `showPreview`      | `boolean`                                    | `true`                    | Show image previews                          |
+| `className`        | `string`                                     | `''`                      | Additional CSS classes                       |
 
 ### Default Allowed Types
 
 ```typescript
 const defaultAllowedTypes = [
-  'image/*',
-  'application/pdf',
-  'text/*',
-  'application/zip',
-  'application/x-zip-compressed',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-]
+  "image/*",
+  "application/pdf",
+  "text/*",
+  "application/zip",
+  "application/x-zip-compressed",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
 ```
 
 ## File Status States
@@ -151,6 +151,7 @@ The component uses Tailwind CSS classes and can be customized through the `class
 ### File Type Icons
 
 The component automatically displays appropriate icons based on file types:
+
 - Images: 🖼️ (ImageIcon)
 - Videos: 🎬 (Film icon)
 - Audio: 🎵 (Music icon)
@@ -162,21 +163,24 @@ The component automatically displays appropriate icons based on file types:
 The component provides comprehensive error handling:
 
 ### File Size Errors
+
 ```typescript
 // Example error message
-"File is too large. Max size is 50MB."
+"File is too large. Max size is 50MB.";
 ```
 
 ### File Type Errors
+
 ```typescript
 // Example error message
-'File type "application/exe" not supported. Allowed types: image/*, application/pdf, text/*'
+'File type "application/exe" not supported. Allowed types: image/*, application/pdf, text/*';
 ```
 
 ### Upload Errors
+
 ```typescript
 // Example error message
-"Upload failed"
+"Upload failed";
 ```
 
 ## Progress Tracking
@@ -185,14 +189,14 @@ The component provides detailed progress information:
 
 ```typescript
 interface UploadingFile {
-  id: string
-  file: File
-  progress: number // 0-100
-  status: 'pending' | 'uploading' | 'completed' | 'error' | 'paused'
-  previewUrl?: string
-  error?: string
-  uploadSpeed?: number // bytes per second
-  timeRemaining?: number // seconds remaining
+  id: string;
+  file: File;
+  progress: number; // 0-100
+  status: "pending" | "uploading" | "completed" | "error" | "paused";
+  previewUrl?: string;
+  error?: string;
+  uploadSpeed?: number; // bytes per second
+  timeRemaining?: number; // seconds remaining
 }
 ```
 
@@ -208,6 +212,7 @@ The component includes proper ARIA labels and keyboard navigation:
 ## Browser Support
 
 The component supports all modern browsers:
+
 - Chrome 90+
 - Firefox 88+
 - Safari 14+
@@ -224,6 +229,7 @@ The component includes comprehensive tests covering:
 - Accessibility features
 
 Run tests with:
+
 ```bash
 npm test AdvancedFileUpload
 ```
@@ -245,9 +251,10 @@ npm test AdvancedFileUpload
 ## Examples
 
 ### Image Gallery Upload
+
 ```tsx
 <AdvancedFileUpload
-  allowedTypes={['image/*']}
+  allowedTypes={["image/*"]}
   maxSize={10 * 1024 * 1024} // 10MB
   maxFiles={50}
   autoUpload={true}
@@ -259,13 +266,14 @@ npm test AdvancedFileUpload
 ```
 
 ### Document Upload
+
 ```tsx
 <AdvancedFileUpload
   allowedTypes={[
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'text/*'
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/*",
   ]}
   maxSize={20 * 1024 * 1024} // 20MB
   maxFiles={5}
@@ -274,13 +282,14 @@ npm test AdvancedFileUpload
 ```
 
 ### Multi-File Archive Upload
+
 ```tsx
 <AdvancedFileUpload
   allowedTypes={[
-    'application/zip',
-    'application/x-zip-compressed',
-    'application/x-rar-compressed',
-    'application/x-7z-compressed'
+    "application/zip",
+    "application/x-zip-compressed",
+    "application/x-rar-compressed",
+    "application/x-7z-compressed",
   ]}
   maxSize={500 * 1024 * 1024} // 500MB
   maxFiles={3}
@@ -299,6 +308,7 @@ npm test AdvancedFileUpload
 ### Debug Mode
 
 Enable console logging by checking browser dev tools for:
+
 - File selection events
 - Upload progress updates
 - Validation errors

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { 
-  Activity, 
-  AlertTriangle, 
-  CheckCircle, 
-  Clock, 
-  Cpu, 
-  Database, 
-  HardDrive, 
+import React, { useState, useEffect } from "react";
+import {
+  Activity,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  Cpu,
+  Database,
+  HardDrive,
   MemoryStick,
   TrendingDown,
   TrendingUp,
@@ -14,38 +14,38 @@ import {
   Zap,
   Server,
   Globe,
-  RefreshCw
-} from 'lucide-react'
-import { cn } from '../utils/cn'
+  RefreshCw,
+} from "lucide-react";
+import { cn } from "../utils/cn";
 
 interface PerformanceMetrics {
-  timestamp: string
-  cpuUsage: number
-  memoryUsage: number
-  diskUsage: number
-  apiResponseTime: number
-  errorRate: number
-  activeUsers: number
-  requestsPerSecond: number
-  databaseConnections: number
+  timestamp: string;
+  cpuUsage: number;
+  memoryUsage: number;
+  diskUsage: number;
+  apiResponseTime: number;
+  errorRate: number;
+  activeUsers: number;
+  requestsPerSecond: number;
+  databaseConnections: number;
 }
 
 interface Alert {
-  id: string
-  type: 'error' | 'warning' | 'info'
-  message: string
-  timestamp: string
-  resolved?: boolean
+  id: string;
+  type: "error" | "warning" | "info";
+  message: string;
+  timestamp: string;
+  resolved?: boolean;
 }
 
 interface PerformanceDashboardProps {
-  className?: string
-  refreshInterval?: number
+  className?: string;
+  refreshInterval?: number;
 }
 
-export function PerformanceDashboard({ 
-  className, 
-  refreshInterval = 5000 
+export function PerformanceDashboard({
+  className,
+  refreshInterval = 5000,
 }: PerformanceDashboardProps) {
   const [metrics, setMetrics] = useState<PerformanceMetrics>({
     timestamp: new Date().toISOString(),
@@ -56,133 +56,199 @@ export function PerformanceDashboard({
     errorRate: 0.02,
     activeUsers: 127,
     requestsPerSecond: 45,
-    databaseConnections: 8
-  })
+    databaseConnections: 8,
+  });
 
-  const [historicalData, setHistoricalData] = useState<PerformanceMetrics[]>([])
+  const [historicalData, setHistoricalData] = useState<PerformanceMetrics[]>(
+    [],
+  );
   const [alerts, setAlerts] = useState<Alert[]>([
     {
-      id: '1',
-      type: 'warning',
-      message: 'CPU usage approaching threshold (85%)',
-      timestamp: new Date(Date.now() - 300000).toISOString()
+      id: "1",
+      type: "warning",
+      message: "CPU usage approaching threshold (85%)",
+      timestamp: new Date(Date.now() - 300000).toISOString(),
     },
     {
-      id: '2',
-      type: 'error',
-      message: 'Database connection pool exhausted',
-      timestamp: new Date(Date.now() - 600000).toISOString()
-    }
-  ])
+      id: "2",
+      type: "error",
+      message: "Database connection pool exhausted",
+      timestamp: new Date(Date.now() - 600000).toISOString(),
+    },
+  ]);
 
-  const [isRealTime, setIsRealTime] = useState(true)
-  const [selectedTimeRange, setSelectedTimeRange] = useState('1h')
+  const [isRealTime, setIsRealTime] = useState(true);
+  const [selectedTimeRange, setSelectedTimeRange] = useState("1h");
 
   // Simulate real-time data updates
   useEffect(() => {
-    if (!isRealTime) return
+    if (!isRealTime) return;
 
     const interval = setInterval(() => {
       const newMetrics: PerformanceMetrics = {
         timestamp: new Date().toISOString(),
-        cpuUsage: Math.max(0, Math.min(100, metrics.cpuUsage + (Math.random() - 0.5) * 10)),
-        memoryUsage: Math.max(0, Math.min(100, metrics.memoryUsage + (Math.random() - 0.5) * 5)),
-        diskUsage: Math.max(0, Math.min(100, metrics.diskUsage + (Math.random() - 0.5) * 2)),
-        apiResponseTime: Math.max(50, metrics.apiResponseTime + (Math.random() - 0.5) * 20),
-        errorRate: Math.max(0, Math.min(0.1, metrics.errorRate + (Math.random() - 0.5) * 0.01)),
-        activeUsers: Math.max(0, metrics.activeUsers + Math.floor((Math.random() - 0.5) * 10)),
-        requestsPerSecond: Math.max(0, metrics.requestsPerSecond + Math.floor((Math.random() - 0.5) * 5)),
-        databaseConnections: Math.max(1, Math.min(20, metrics.databaseConnections + Math.floor((Math.random() - 0.5) * 2)))
-      }
+        cpuUsage: Math.max(
+          0,
+          Math.min(100, metrics.cpuUsage + (Math.random() - 0.5) * 10),
+        ),
+        memoryUsage: Math.max(
+          0,
+          Math.min(100, metrics.memoryUsage + (Math.random() - 0.5) * 5),
+        ),
+        diskUsage: Math.max(
+          0,
+          Math.min(100, metrics.diskUsage + (Math.random() - 0.5) * 2),
+        ),
+        apiResponseTime: Math.max(
+          50,
+          metrics.apiResponseTime + (Math.random() - 0.5) * 20,
+        ),
+        errorRate: Math.max(
+          0,
+          Math.min(0.1, metrics.errorRate + (Math.random() - 0.5) * 0.01),
+        ),
+        activeUsers: Math.max(
+          0,
+          metrics.activeUsers + Math.floor((Math.random() - 0.5) * 10),
+        ),
+        requestsPerSecond: Math.max(
+          0,
+          metrics.requestsPerSecond + Math.floor((Math.random() - 0.5) * 5),
+        ),
+        databaseConnections: Math.max(
+          1,
+          Math.min(
+            20,
+            metrics.databaseConnections + Math.floor((Math.random() - 0.5) * 2),
+          ),
+        ),
+      };
 
-      setMetrics(newMetrics)
-      setHistoricalData(prev => [...prev.slice(-50), newMetrics])
-    }, refreshInterval)
+      setMetrics(newMetrics);
+      setHistoricalData((prev) => [...prev.slice(-50), newMetrics]);
+    }, refreshInterval);
 
-    return () => clearInterval(interval)
-  }, [isRealTime, refreshInterval, metrics])
+    return () => clearInterval(interval);
+  }, [isRealTime, refreshInterval, metrics]);
 
-  const getMetricColor = (value: number, thresholds: { warning: number; critical: number }) => {
-    if (value >= thresholds.critical) return 'text-red-500'
-    if (value >= thresholds.warning) return 'text-yellow-500'
-    return 'text-green-500'
-  }
+  const getMetricColor = (
+    value: number,
+    thresholds: { warning: number; critical: number },
+  ) => {
+    if (value >= thresholds.critical) return "text-red-500";
+    if (value >= thresholds.warning) return "text-yellow-500";
+    return "text-green-500";
+  };
 
-  const getMetricIcon = (value: number, thresholds: { warning: number; critical: number }) => {
-    if (value >= thresholds.critical) return <AlertTriangle className="h-4 w-4" />
-    if (value >= thresholds.warning) return <AlertTriangle className="h-4 w-4" />
-    return <CheckCircle className="h-4 w-4" />
-  }
+  const getMetricIcon = (
+    value: number,
+    thresholds: { warning: number; critical: number },
+  ) => {
+    if (value >= thresholds.critical)
+      return <AlertTriangle className="h-4 w-4" />;
+    if (value >= thresholds.warning)
+      return <AlertTriangle className="h-4 w-4" />;
+    return <CheckCircle className="h-4 w-4" />;
+  };
 
-  const MetricCard = ({ 
-    title, 
-    value, 
-    unit, 
-    icon: Icon, 
-    thresholds, 
+  const MetricCard = ({
+    title,
+    value,
+    unit,
+    icon: Icon,
+    thresholds,
     trend,
-    description 
+    description,
   }: {
-    title: string
-    value: number
-    unit: string
-    icon: any
-    thresholds: { warning: number; critical: number }
-    trend?: number
-    description?: string
+    title: string;
+    value: number;
+    unit: string;
+    icon: any;
+    thresholds: { warning: number; critical: number };
+    trend?: number;
+    description?: string;
   }) => (
     <div className="bg-card/80 backdrop-blur-sm border border-border/40 rounded-xl p-6 hover:shadow-lg transition-shadow">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className={cn('p-2 rounded-lg bg-accent/50', getMetricColor(value, thresholds))}>
+          <div
+            className={cn(
+              "p-2 rounded-lg bg-accent/50",
+              getMetricColor(value, thresholds),
+            )}
+          >
             <Icon className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="font-semibold text-sm text-muted-foreground">{title}</h3>
-            {description && <p className="text-xs text-muted-foreground/70">{description}</p>}
+            <h3 className="font-semibold text-sm text-muted-foreground">
+              {title}
+            </h3>
+            {description && (
+              <p className="text-xs text-muted-foreground/70">{description}</p>
+            )}
           </div>
         </div>
-        <div className={cn('flex items-center gap-1', getMetricColor(value, thresholds))}>
+        <div
+          className={cn(
+            "flex items-center gap-1",
+            getMetricColor(value, thresholds),
+          )}
+        >
           {getMetricIcon(value, thresholds)}
           {trend !== undefined && (
             <>
-              {trend > 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-              <span className="text-xs font-medium">{Math.abs(trend).toFixed(1)}%</span>
+              {trend > 0 ? (
+                <TrendingUp className="h-3 w-3" />
+              ) : (
+                <TrendingDown className="h-3 w-3" />
+              )}
+              <span className="text-xs font-medium">
+                {Math.abs(trend).toFixed(1)}%
+              </span>
             </>
           )}
         </div>
       </div>
       <div className="flex items-baseline gap-2">
-        <span className={cn('text-2xl font-bold', getMetricColor(value, thresholds))}>
+        <span
+          className={cn(
+            "text-2xl font-bold",
+            getMetricColor(value, thresholds),
+          )}
+        >
           {value.toFixed(1)}
         </span>
         <span className="text-sm text-muted-foreground">{unit}</span>
       </div>
     </div>
-  )
+  );
 
   return (
-    <div className={cn('space-y-6', className)}>
+    <div className={cn("space-y-6", className)}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Performance Dashboard</h2>
-          <p className="text-muted-foreground">Real-time system performance metrics</p>
+          <p className="text-muted-foreground">
+            Real-time system performance metrics
+          </p>
         </div>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsRealTime(!isRealTime)}
             className={cn(
-              'flex items-center gap-2 px-4 py-2 rounded-xl transition-colors text-sm font-medium',
-              isRealTime 
-                ? 'bg-primary text-primary-foreground' 
-                : 'bg-accent text-accent-foreground'
+              "flex items-center gap-2 px-4 py-2 rounded-xl transition-colors text-sm font-medium",
+              isRealTime
+                ? "bg-primary text-primary-foreground"
+                : "bg-accent text-accent-foreground",
             )}
           >
-            <Activity className={cn('h-4 w-4', isRealTime && 'animate-pulse')} />
-            {isRealTime ? 'Live' : 'Paused'}
+            <Activity
+              className={cn("h-4 w-4", isRealTime && "animate-pulse")}
+            />
+            {isRealTime ? "Live" : "Paused"}
           </button>
-          
+
           <select
             value={selectedTimeRange}
             onChange={(e) => setSelectedTimeRange(e.target.value)}
@@ -207,7 +273,7 @@ export function PerformanceDashboard({
           trend={5.2}
           description="Processor utilization"
         />
-        
+
         <MetricCard
           title="Memory Usage"
           value={metrics.memoryUsage}
@@ -217,7 +283,7 @@ export function PerformanceDashboard({
           trend={-2.1}
           description="RAM utilization"
         />
-        
+
         <MetricCard
           title="Disk Usage"
           value={metrics.diskUsage}
@@ -227,7 +293,7 @@ export function PerformanceDashboard({
           trend={0.5}
           description="Storage utilization"
         />
-        
+
         <MetricCard
           title="API Response Time"
           value={metrics.apiResponseTime}
@@ -237,7 +303,7 @@ export function PerformanceDashboard({
           trend={-8.3}
           description="Average response time"
         />
-        
+
         <MetricCard
           title="Error Rate"
           value={metrics.errorRate * 100}
@@ -247,7 +313,7 @@ export function PerformanceDashboard({
           trend={-15.2}
           description="Failed requests percentage"
         />
-        
+
         <MetricCard
           title="Active Users"
           value={metrics.activeUsers}
@@ -257,7 +323,7 @@ export function PerformanceDashboard({
           trend={12.7}
           description="Concurrent users"
         />
-        
+
         <MetricCard
           title="Requests/sec"
           value={metrics.requestsPerSecond}
@@ -267,7 +333,7 @@ export function PerformanceDashboard({
           trend={3.4}
           description="API request rate"
         />
-        
+
         <MetricCard
           title="DB Connections"
           value={metrics.databaseConnections}
@@ -287,46 +353,57 @@ export function PerformanceDashboard({
             Active Alerts
           </h3>
           <span className="text-sm text-muted-foreground">
-            {alerts.filter(a => !a.resolved).length} unresolved
+            {alerts.filter((a) => !a.resolved).length} unresolved
           </span>
         </div>
-        
+
         <div className="space-y-2">
-          {alerts.filter(alert => !alert.resolved).map(alert => (
-            <div
-              key={alert.id}
-              className={cn(
-                'flex items-center justify-between p-3 rounded-lg border',
-                alert.type === 'error' && 'bg-red-50 border-red-200 text-red-800',
-                alert.type === 'warning' && 'bg-yellow-50 border-yellow-200 text-yellow-800',
-                alert.type === 'info' && 'bg-blue-50 border-blue-200 text-blue-800'
-              )}
-            >
-              <div className="flex items-center gap-3">
-                {alert.type === 'error' && <AlertTriangle className="h-4 w-4" />}
-                {alert.type === 'warning' && <AlertTriangle className="h-4 w-4" />}
-                {alert.type === 'info' && <CheckCircle className="h-4 w-4" />}
-                <span className="text-sm font-medium">{alert.message}</span>
+          {alerts
+            .filter((alert) => !alert.resolved)
+            .map((alert) => (
+              <div
+                key={alert.id}
+                className={cn(
+                  "flex items-center justify-between p-3 rounded-lg border",
+                  alert.type === "error" &&
+                    "bg-red-50 border-red-200 text-red-800",
+                  alert.type === "warning" &&
+                    "bg-yellow-50 border-yellow-200 text-yellow-800",
+                  alert.type === "info" &&
+                    "bg-blue-50 border-blue-200 text-blue-800",
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  {alert.type === "error" && (
+                    <AlertTriangle className="h-4 w-4" />
+                  )}
+                  {alert.type === "warning" && (
+                    <AlertTriangle className="h-4 w-4" />
+                  )}
+                  {alert.type === "info" && <CheckCircle className="h-4 w-4" />}
+                  <span className="text-sm font-medium">{alert.message}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs opacity-70">
+                    {new Date(alert.timestamp).toLocaleTimeString()}
+                  </span>
+                  <button
+                    onClick={() => {
+                      setAlerts((prev) =>
+                        prev.map((a) =>
+                          a.id === alert.id ? { ...a, resolved: true } : a,
+                        ),
+                      );
+                    }}
+                    className="text-xs px-2 py-1 bg-white/50 rounded hover:bg-white/70 transition-colors"
+                  >
+                    Resolve
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs opacity-70">
-                  {new Date(alert.timestamp).toLocaleTimeString()}
-                </span>
-                <button
-                  onClick={() => {
-                    setAlerts(prev => 
-                      prev.map(a => a.id === alert.id ? { ...a, resolved: true } : a)
-                    )
-                  }}
-                  className="text-xs px-2 py-1 bg-white/50 rounded hover:bg-white/70 transition-colors"
-                >
-                  Resolve
-                </button>
-              </div>
-            </div>
-          ))}
-          
-          {alerts.filter(alert => !alert.resolved).length === 0 && (
+            ))}
+
+          {alerts.filter((alert) => !alert.resolved).length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
               <CheckCircle className="h-8 w-8 mx-auto mb-2 opacity-50" />
               <p className="text-sm">No active alerts</p>
@@ -342,7 +419,9 @@ export function PerformanceDashboard({
           <div className="text-center">
             <Activity className="h-12 w-12 mx-auto mb-2 opacity-50" />
             <p className="text-sm">Performance chart visualization</p>
-            <p className="text-xs opacity-70">Historical data would be displayed here</p>
+            <p className="text-xs opacity-70">
+              Historical data would be displayed here
+            </p>
           </div>
         </div>
       </div>
@@ -400,49 +479,49 @@ export function PerformanceDashboard({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // Hook for performance monitoring
 export function usePerformanceMonitoring() {
-  const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchMetrics = async () => {
     try {
-      setIsLoading(true)
-      const response = await fetch('/api/performance/metrics')
-      if (!response.ok) throw new Error('Failed to fetch metrics')
-      const data = await response.json()
-      setMetrics(data)
-      setError(null)
+      setIsLoading(true);
+      const response = await fetch("/api/performance/metrics");
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      const data = await response.json();
+      setMetrics(data);
+      setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error')
+      setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-  const createAlert = async (alert: Omit<Alert, 'id' | 'timestamp'>) => {
+  const createAlert = async (alert: Omit<Alert, "id" | "timestamp">) => {
     try {
-      const response = await fetch('/api/performance/alerts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(alert)
-      })
-      if (!response.ok) throw new Error('Failed to create alert')
-      return await response.json()
+      const response = await fetch("/api/performance/alerts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(alert),
+      });
+      if (!response.ok) throw new Error("Failed to create alert");
+      return await response.json();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error')
+      setError(err instanceof Error ? err.message : "Unknown error");
     }
-  }
+  };
 
   return {
     metrics,
     isLoading,
     error,
     fetchMetrics,
-    createAlert
-  }
+    createAlert,
+  };
 }
