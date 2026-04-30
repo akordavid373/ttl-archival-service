@@ -31,7 +31,7 @@ import { LanguageSwitcher } from './LanguageSwitcher'
 import { ThemeToggle } from './theme/ThemeToggle'
 
 interface LayoutProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export function Layout({ children }: LayoutProps) {
@@ -43,13 +43,13 @@ export function Layout({ children }: LayoutProps) {
   const { isRTL } = useLanguage()
 
   const navItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
-    { name: 'Policies', icon: ShieldCheck, path: '/policies' },
-    { name: 'Archives', icon: Archive, path: '/archives' },
-    { name: 'Blockchain', icon: Database, path: '/blockchain' },
-    { name: 'Settings', icon: Settings, path: '/settings' },
-    { name: 'Demo', icon: Settings2, path: '/demo' },
-  ]
+    { name: "Dashboard", icon: LayoutDashboard, path: "/" },
+    { name: "Policies", icon: ShieldCheck, path: "/policies" },
+    { name: "Archives", icon: Archive, path: "/archives" },
+    { name: "Blockchain", icon: Database, path: "/blockchain" },
+    { name: "Settings", icon: Settings, path: "/settings" },
+    { name: "Demo", icon: Settings2, path: "/demo" },
+  ];
 
   // Handle responsive behavior
   useEffect(() => {
@@ -289,7 +289,7 @@ export function Layout({ children }: LayoutProps) {
           <div className="p-4 lg:p-12 max-w-7xl mx-auto">
             {/* Breadcrumbs Integration */}
             <Breadcrumbs />
-            
+
             <div className="animate-in fade-in slide-in-from-bottom-6 duration-700">
               {children}
             </div>
@@ -300,7 +300,7 @@ export function Layout({ children }: LayoutProps) {
       {/* Decorative Blur Overlays for premium feel */}
       <div className="fixed top-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -z-10 pointer-events-none opacity-50 translate-x-1/2 -translate-y-1/2" />
       <div className="fixed bottom-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[150px] -z-10 pointer-events-none opacity-30 -translate-x-1/4 translate-y-1/4" />
-      
+
       <OfflineStatus />
       <InstallPWA />
     </div>

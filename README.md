@@ -4,13 +4,14 @@ A comprehensive full-stack TTL-aware automated archival service with Stellar blo
 
 ## 🚀 Project Status: **Scaffolded & Ready for Contributions**
 
-This project is now **fully scaffolded** and ready for community contributions! We've set up the complete project structure with frontend, backend, smart contracts, and all necessary tooling. 
+This project is now **fully scaffolded** and ready for community contributions! We've set up the complete project structure with frontend, backend, smart contracts, and all necessary tooling.
 
 **🎯 Next Step**: Create GitHub Issues to start community-driven development!
 
 ## 🏗️ Architecture Overview
 
 ### 📦 Monorepo Structure
+
 ```
 ttl-archival-service/
 ├── frontend/          # React + TypeScript + Tailwind CSS
@@ -24,6 +25,7 @@ ttl-archival-service/
 ### 🌟 Tech Stack
 
 **Frontend:**
+
 - ⚛️ React 18 + TypeScript
 - 🎨 Tailwind CSS + Radix UI
 - 🔄 React Query for state management
@@ -31,6 +33,7 @@ ttl-archival-service/
 - 🧪 Vitest + React Testing Library
 
 **Backend:**
+
 - 🐍 FastAPI + SQLAlchemy ORM
 - 🗄️ PostgreSQL (SQLite for development)
 - ⭐ Stellar SDK for blockchain integration
@@ -38,6 +41,7 @@ ttl-archival-service/
 - 🧪 pytest with async support
 
 **Smart Contracts:**
+
 - 🦀 Rust + Soroban SDK
 - ⭐ Stellar blockchain platform
 - 🔧 Soroban CLI for development
@@ -46,18 +50,21 @@ ttl-archival-service/
 ## 🎯 Key Features
 
 ### 🔄 TTL-Based Archival
+
 - Automated data retention with configurable TTL policies
 - Scheduled cleanup of expired records
 - File compression and storage management
 - Policy-based archival rules
 
 ### ⭐ Blockchain Integration
+
 - Immutable audit trails on Stellar
 - Cryptographic proof of archival
 - Smart contract-based policy enforcement
 - Real-time blockchain verification
 
 ### 🌐 Full-Stack Application
+
 - Modern React frontend with responsive design
 - RESTful API with comprehensive endpoints
 - Real-time updates and notifications
@@ -66,6 +73,7 @@ ttl-archival-service/
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
 - Python 3.8+
 - Rust 1.70+
@@ -91,7 +99,7 @@ npm run dev
 # Frontend development
 cd frontend && npm run dev
 
-# Backend development  
+# Backend development
 cd backend && python -m uvicorn app.main:app --reload
 
 # Smart contract development
@@ -103,11 +111,13 @@ cd contracts && cargo build
 We're ready for community contributions! Here's how to get started:
 
 ### 1. 🎯 Pick an Issue
+
 - Check [GitHub Issues](https://github.com/akordavid373/ttl-archival-service/issues)
 - Look for `good first issue` labels
 - Start with simple tasks to get familiar
 
 ### 2. 🔧 Set Up Environment
+
 ```bash
 git clone https://github.com/YOUR_USERNAME/ttl-archival-service.git
 cd ttl-archival-service
@@ -115,12 +125,14 @@ cd ttl-archival-service
 ```
 
 ### 3. 🚀 Make Your Contribution
+
 - Create a feature branch
 - Make your changes
 - Add tests
 - Submit a Pull Request
 
 ### 4. 📚 Read the Guidelines
+
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Detailed contribution guide
 - [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) - Community guidelines
 - [ROADMAP.md](./ROADMAP.md) - Project development plan
@@ -128,12 +140,14 @@ cd ttl-archival-service
 ## 🎯 Priority Areas for Contributions
 
 ### 🔥 High Priority
+
 1. **Backend API Implementation** - Core functionality
 2. **Frontend UI Development** - User interface components
 3. **Stellar Integration** - Blockchain features
 4. **Testing Infrastructure** - Quality assurance
 
 ### 📋 Good First Issues
+
 - UI components (buttons, forms, layouts)
 - API endpoint implementations
 - Documentation improvements
@@ -142,6 +156,7 @@ cd ttl-archival-service
 ### 🏗️ Current Project Status
 
 #### ✅ Completed (Scaffolded)
+
 - [x] Project structure and monorepo setup
 - [x] Frontend scaffold (React + TypeScript)
 - [x] Backend scaffold (FastAPI + SQLAlchemy)
@@ -152,6 +167,7 @@ cd ttl-archival-service
 - [x] Docker containerization
 
 #### 🚧 Ready for Development
+
 - [ ] Backend API implementation
 - [ ] Frontend component development
 - [ ] Smart contract logic
@@ -198,11 +214,13 @@ npm run docker:down
 ## 🌐 Network Configuration
 
 ### Stellar Networks
+
 - **Standalone** - Local development
 - **Futurenet** - Stellar testnet
 - **Public** - Stellar mainnet
 
 ### Environment Variables
+
 ```bash
 # Copy and configure
 cp .env.example .env
@@ -244,7 +262,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🎉 Ready to Build?
 
-The project is fully scaffolded and waiting for contributors like you! 
+The project is fully scaffolded and waiting for contributors like you!
 
 **🚀 [Check out open issues](https://github.com/akordavid373/ttl-archival-service/issues) and start contributing today!**
 

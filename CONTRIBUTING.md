@@ -39,6 +39,7 @@ ttl-archival-service/
 ### Environment Setup
 
 1. **Clone and setup**:
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/ttl-archival-service.git
    cd ttl-archival-service
@@ -46,16 +47,18 @@ ttl-archival-service/
    ```
 
 2. **Environment variables**:
+
    ```bash
    cp .env.example .env
    # Edit .env with your configuration
    ```
 
 3. **Start development servers**:
+
    ```bash
    # Start both frontend and backend
    npm run dev
-   
+
    # Or start individually
    npm run dev:frontend
    npm run dev:backend
@@ -64,6 +67,7 @@ ttl-archival-service/
 ## 🏗️ Architecture
 
 ### Frontend (React + TypeScript)
+
 - **Framework**: React 18 with TypeScript
 - **Styling**: Tailwind CSS with Radix UI components
 - **State Management**: React Query for server state
@@ -71,6 +75,7 @@ ttl-archival-service/
 - **Testing**: Vitest with React Testing Library
 
 ### Backend (FastAPI + Python)
+
 - **Framework**: FastAPI with SQLAlchemy ORM
 - **Database**: PostgreSQL (with SQLite for development)
 - **Blockchain**: Stellar SDK for Python
@@ -78,6 +83,7 @@ ttl-archival-service/
 - **Testing**: pytest with async support
 
 ### Smart Contracts (Rust + Soroban)
+
 - **Language**: Rust with Soroban SDK
 - **Platform**: Stellar blockchain
 - **Testing**: Built-in Soroban test framework
@@ -195,6 +201,7 @@ npm run test:coverage
 ## 🎯 Good First Issues
 
 Look for issues labeled with:
+
 - `good first issue` - Simple changes to get started
 - `help wanted` - Issues needing community help
 - `documentation` - Documentation improvements
@@ -229,20 +236,24 @@ Look for issues labeled with:
 
 ```markdown
 ## Description
+
 Brief description of changes
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation update
 
 ## Testing
+
 - [ ] Added tests for new functionality
 - [ ] All tests pass
 - [ ] Manual testing completed
 
 ## Checklist
+
 - [ ] Code follows project style guidelines
 - [ ] Self-review completed
 - [ ] Documentation updated
@@ -278,6 +289,7 @@ Brief description of changes
 ## 🎉 Recognition
 
 Contributors will be recognized in:
+
 - `README.md` contributors section
 - Release notes for significant contributions
 - Special thanks in documentation

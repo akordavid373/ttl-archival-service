@@ -1,73 +1,99 @@
-import { useState } from 'react'
-import { RichTextEditor } from '../components/RichTextEditor'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
-import { Upload, Save, FileText, Image, Code, Table } from 'lucide-react'
+import { useState } from "react";
+import { RichTextEditor } from "../components/RichTextEditor";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Upload, Save, FileText, Image, Code, Table } from "lucide-react";
 
 export function RichTextEditorDemo() {
-  const [content, setContent] = useState('<h1>Welcome to the Rich Text Editor Demo</h1><p>This is a feature-rich text editor with comprehensive formatting options and media support.</p><h2>Key Features</h2><ul><li><strong>Rich Formatting</strong>: Bold, italic, underline, strikethrough, and more</li><li><strong>Media Support</strong>: Images, videos, and audio embedding</li><li><strong>Code Highlighting</strong>: Syntax highlighting for multiple languages</li><li><strong>Auto-Save</strong>: Automatic saving with visual feedback</li><li><strong>Accessibility</strong>: Full keyboard navigation and screen reader support</li></ul><h3>Try It Out!</h3><p>Start editing this content to see all the features in action. You can:</p><ul><li>Format text using the toolbar buttons</li><li>Add links, images, and tables</li><li>Insert code blocks with syntax highlighting</li><li>Use keyboard shortcuts for common actions</li></ul><blockquote><p>This editor is built with TipTap and provides a modern, extensible editing experience.</p></blockquote>')
-  const [savedContent, setSavedContent] = useState(content)
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
-  const [uploadProgress, setUploadProgress] = useState(0)
+  const [content, setContent] = useState(
+    "<h1>Welcome to the Rich Text Editor Demo</h1><p>This is a feature-rich text editor with comprehensive formatting options and media support.</p><h2>Key Features</h2><ul><li><strong>Rich Formatting</strong>: Bold, italic, underline, strikethrough, and more</li><li><strong>Media Support</strong>: Images, videos, and audio embedding</li><li><strong>Code Highlighting</strong>: Syntax highlighting for multiple languages</li><li><strong>Auto-Save</strong>: Automatic saving with visual feedback</li><li><strong>Accessibility</strong>: Full keyboard navigation and screen reader support</li></ul><h3>Try It Out!</h3><p>Start editing this content to see all the features in action. You can:</p><ul><li>Format text using the toolbar buttons</li><li>Add links, images, and tables</li><li>Insert code blocks with syntax highlighting</li><li>Use keyboard shortcuts for common actions</li></ul><blockquote><p>This editor is built with TipTap and provides a modern, extensible editing experience.</p></blockquote>",
+  );
+  const [savedContent, setSavedContent] = useState(content);
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   // Mock media upload function
   const handleMediaUpload = async (file: File): Promise<string> => {
     // Simulate upload progress
     for (let i = 0; i <= 100; i += 10) {
-      setUploadProgress(i)
-      await new Promise(resolve => setTimeout(resolve, 100))
+      setUploadProgress(i);
+      await new Promise((resolve) => setTimeout(resolve, 100));
     }
-    
+
     // Return a mock URL (in real app, this would be the uploaded file URL)
-    return URL.createObjectURL(file)
-  }
+    return URL.createObjectURL(file);
+  };
 
   // Mock save function
   const handleSave = async (editorContent: string) => {
-    setSaveStatus('saving')
+    setSaveStatus("saving");
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      setSavedContent(editorContent)
-      setSaveStatus('saved')
-      setTimeout(() => setSaveStatus('idle'), 2000)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setSavedContent(editorContent);
+      setSaveStatus("saved");
+      setTimeout(() => setSaveStatus("idle"), 2000);
     } catch (error) {
-      setSaveStatus('error')
-      setTimeout(() => setSaveStatus('idle'), 2000)
+      setSaveStatus("error");
+      setTimeout(() => setSaveStatus("idle"), 2000);
     }
-  }
+  };
 
   const handleContentChange = (newContent: string, _plainText?: string) => {
-    setContent(newContent)
-  }
+    setContent(newContent);
+  };
 
   const getCharacterCount = () => {
-    const temp = document.createElement('div')
-    temp.innerHTML = content
-    return temp.textContent?.length || 0
-  }
+    const temp = document.createElement("div");
+    temp.innerHTML = content;
+    return temp.textContent?.length || 0;
+  };
 
   const getWordCount = () => {
-    const temp = document.createElement('div')
-    temp.innerHTML = content
-    const text = temp.textContent || ''
-    return text.trim().split(/\s+/).filter(word => word.length > 0).length
-  }
+    const temp = document.createElement("div");
+    temp.innerHTML = content;
+    const text = temp.textContent || "";
+    return text
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word.length > 0).length;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-gray-900">Rich Text Editor Demo</h1>
+          <h1 className="text-4xl font-bold text-gray-900">
+            Rich Text Editor Demo
+          </h1>
           <p className="text-lg text-gray-600">
-            Feature-rich WYSIWYG editor with formatting, media support, and auto-save
+            Feature-rich WYSIWYG editor with formatting, media support, and
+            auto-save
           </p>
           <div className="flex justify-center gap-2 flex-wrap">
-            <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">WYSIWYG</span>
-            <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">Media Support</span>
-            <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">Code Highlighting</span>
-            <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">Auto-Save</span>
-            <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">Accessible</span>
+            <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">
+              WYSIWYG
+            </span>
+            <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">
+              Media Support
+            </span>
+            <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">
+              Code Highlighting
+            </span>
+            <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">
+              Auto-Save
+            </span>
+            <span className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-sm">
+              Accessible
+            </span>
           </div>
         </div>
 
@@ -85,19 +111,26 @@ export function RichTextEditorDemo() {
                 </CardDescription>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`px-2 py-1 rounded text-xs font-medium ${
-                  saveStatus === 'saved' ? 'bg-green-100 text-green-800' : 
-                  saveStatus === 'saving' ? 'bg-blue-100 text-blue-800' : 
-                  saveStatus === 'error' ? 'bg-red-100 text-red-800' : 
-                  'bg-gray-100 text-gray-800'
-                }`}>
-                  {saveStatus === 'idle' && 'Ready'}
-                  {saveStatus === 'saving' && 'Saving...'}
-                  {saveStatus === 'saved' && 'Saved'}
-                  {saveStatus === 'error' && 'Error'}
+                <span
+                  className={`px-2 py-1 rounded text-xs font-medium ${
+                    saveStatus === "saved"
+                      ? "bg-green-100 text-green-800"
+                      : saveStatus === "saving"
+                        ? "bg-blue-100 text-blue-800"
+                        : saveStatus === "error"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {saveStatus === "idle" && "Ready"}
+                  {saveStatus === "saving" && "Saving..."}
+                  {saveStatus === "saved" && "Saved"}
+                  {saveStatus === "error" && "Error"}
                 </span>
                 {uploadProgress > 0 && uploadProgress < 100 && (
-                  <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">Upload: {uploadProgress}%</span>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium">
+                    Upload: {uploadProgress}%
+                  </span>
                 )}
               </div>
             </div>
@@ -132,7 +165,8 @@ export function RichTextEditorDemo() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600">
-                  Bold, italic, underline, strikethrough, headings, lists, quotes, and more formatting options.
+                  Bold, italic, underline, strikethrough, headings, lists,
+                  quotes, and more formatting options.
                 </p>
               </CardContent>
             </Card>
@@ -146,7 +180,8 @@ export function RichTextEditorDemo() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600">
-                  Upload and embed images, videos, and audio files with progress tracking.
+                  Upload and embed images, videos, and audio files with progress
+                  tracking.
                 </p>
               </CardContent>
             </Card>
@@ -160,7 +195,8 @@ export function RichTextEditorDemo() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600">
-                  Create resizable tables and insert links with automatic URL detection.
+                  Create resizable tables and insert links with automatic URL
+                  detection.
                 </p>
               </CardContent>
             </Card>
@@ -188,7 +224,8 @@ export function RichTextEditorDemo() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600">
-                  Drag-and-drop file upload with progress indicators and error handling.
+                  Drag-and-drop file upload with progress indicators and error
+                  handling.
                 </p>
               </CardContent>
             </Card>
@@ -199,7 +236,8 @@ export function RichTextEditorDemo() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600">
-                  Full keyboard navigation, screen reader support, and ARIA labels.
+                  Full keyboard navigation, screen reader support, and ARIA
+                  labels.
                 </p>
               </CardContent>
             </Card>
@@ -217,19 +255,27 @@ export function RichTextEditorDemo() {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{getCharacterCount()}</div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {getCharacterCount()}
+                </div>
                 <div className="text-sm text-gray-600">Characters</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">{getWordCount()}</div>
+                <div className="text-2xl font-bold text-green-600">
+                  {getWordCount()}
+                </div>
                 <div className="text-sm text-gray-600">Words</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">{content.split('\n').length}</div>
+                <div className="text-2xl font-bold text-purple-600">
+                  {content.split("\n").length}
+                </div>
                 <div className="text-sm text-gray-600">Lines</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">{(content.match(/<[^>]+>/g) || []).length}</div>
+                <div className="text-2xl font-bold text-orange-600">
+                  {(content.match(/<[^>]+>/g) || []).length}
+                </div>
                 <div className="text-sm text-gray-600">HTML Tags</div>
               </div>
             </div>
@@ -250,10 +296,14 @@ export function RichTextEditorDemo() {
                 <h4 className="font-semibold mb-2">Main Props</h4>
                 <div className="bg-gray-50 p-4 rounded-lg text-sm font-mono">
                   <div>content: string</div>
-                  <div>onChange: (content: string, plainText?: string) =&gt; void</div>
+                  <div>
+                    onChange: (content: string, plainText?: string) =&gt; void
+                  </div>
                   <div>onSave: (content: string) =&gt; Promise&lt;void&gt;</div>
                   <div>enableMediaUpload: boolean</div>
-                  <div>onMediaUpload: (file: File) =&gt; Promise&lt;string&gt;</div>
+                  <div>
+                    onMediaUpload: (file: File) =&gt; Promise&lt;string&gt;
+                  </div>
                   <div>autoSave: boolean</div>
                   <div>showCharacterCount: boolean</div>
                   <div>maxLength: number</div>
@@ -262,7 +312,7 @@ export function RichTextEditorDemo() {
               <div>
                 <h4 className="font-semibold mb-2">Usage Example</h4>
                 <pre className="bg-gray-50 p-4 rounded-lg text-sm overflow-x-auto">
-{`<RichTextEditor
+                  {`<RichTextEditor
   content={content}
   onChange={setContent}
   onSave={handleSave}
@@ -278,7 +328,7 @@ export function RichTextEditorDemo() {
         </Card>
       </div>
     </div>
-  )
+  );
 }
 
-export default RichTextEditorDemo
+export default RichTextEditorDemo;

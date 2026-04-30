@@ -16,97 +16,102 @@ A comprehensive notification system for the TTL-Archival Service with toast noti
 ## Components
 
 ### NotificationProvider
+
 Wrap your application with this provider to enable notifications throughout your app.
 
 ```tsx
-import { NotificationProvider } from './context/NotificationContext'
+import { NotificationProvider } from "./context/NotificationContext";
 
 function App() {
   return (
     <NotificationProvider>
       <YourApp />
     </NotificationProvider>
-  )
+  );
 }
 ```
 
 ### useNotifications Hook
+
 Access notification functionality in any component.
 
 ```tsx
-import { useNotifications } from './context/NotificationContext'
+import { useNotifications } from "./context/NotificationContext";
 
 function MyComponent() {
-  const { addNotification, notifications, unreadCount } = useNotifications()
-  
+  const { addNotification, notifications, unreadCount } = useNotifications();
+
   const handleSuccess = () => {
     addNotification({
-      type: 'success',
-      title: 'Success!',
-      message: 'Operation completed successfully.',
-      priority: 'medium',
+      type: "success",
+      title: "Success!",
+      message: "Operation completed successfully.",
+      priority: "medium",
       autoDismiss: true,
-      dismissTimeout: 3000
-    })
-  }
-  
+      dismissTimeout: 3000,
+    });
+  };
+
   return (
     <div>
       <button onClick={handleSuccess}>Show Success</button>
       <p>Unread: {unreadCount}</p>
     </div>
-  )
+  );
 }
 ```
 
 ### NotificationBell
+
 Add a notification bell to your header.
 
 ```tsx
-import { NotificationBell } from './components/notifications'
+import { NotificationBell } from "./components/notifications";
 
 function Header() {
-  return <NotificationBell />
+  return <NotificationBell />;
 }
 ```
 
 ### ToastContainer
+
 Automatically displays toast notifications (usually included in App.tsx).
 
 ```tsx
-import { ToastContainer } from './components/notifications'
+import { ToastContainer } from "./components/notifications";
 
 function App() {
-  const { notifications, removeNotification } = useNotifications()
-  
+  const { notifications, removeNotification } = useNotifications();
+
   return (
-    <ToastContainer 
+    <ToastContainer
       notifications={notifications}
       onClose={removeNotification}
       position="top-right"
       maxToasts={5}
     />
-  )
+  );
 }
 ```
 
 ### NotificationCenter
+
 Full notification center with history and filtering.
 
 ```tsx
-import { NotificationCenter } from './components/notifications'
+import { NotificationCenter } from "./components/notifications";
 
 function App() {
-  const { 
-    notifications, 
-    isNotificationCenterOpen, 
-    markAsRead, 
+  const {
+    notifications,
+    isNotificationCenterOpen,
+    markAsRead,
     deleteNotification,
     clearAll,
     markAllAsRead,
-    closeNotificationCenter 
-  } = useNotifications()
-  
+    closeNotificationCenter,
+  } = useNotifications();
+
   return (
     <NotificationCenter
       notifications={notifications}
@@ -117,31 +122,33 @@ function App() {
       onClearAll={clearAll}
       onMarkAllAsRead={markAllAsRead}
     />
-  )
+  );
 }
 ```
 
 ### NotificationPreferences
+
 Settings panel for notification configuration.
 
 ```tsx
-import { NotificationPreferences } from './components/notifications'
+import { NotificationPreferences } from "./components/notifications";
 
 function Settings() {
-  const { preferences, updatePreferences } = useNotifications()
-  
+  const { preferences, updatePreferences } = useNotifications();
+
   return (
-    <NotificationPreferences 
+    <NotificationPreferences
       preferences={preferences}
       onChange={updatePreferences}
     />
-  )
+  );
 }
 ```
 
 ## Notification Types
 
 ### Basic Types
+
 - `success`: Green, checkmark icon
 - `error`: Red, alert icon
 - `warning`: Yellow, warning icon
@@ -149,6 +156,7 @@ function Settings() {
 - `system`: Gray, settings icon
 
 ### Priority Levels
+
 - `low`: Minimal visual emphasis
 - `medium`: Standard visual emphasis
 - `high`: Strong visual emphasis, no auto-dismiss
@@ -157,49 +165,52 @@ function Settings() {
 ## Configuration
 
 ### Notification Interface
+
 ```tsx
 interface Notification {
-  id: string                    // Auto-generated
-  type: NotificationType         // success | error | warning | info | system
-  title: string                 // Notification title
-  message: string               // Detailed message
-  timestamp: Date               // Creation time
-  priority: NotificationPriority  // low | medium | high | urgent
-  autoDismiss?: boolean          // Override default auto-dismiss
-  dismissTimeout?: number        // Custom timeout in ms
-  read: boolean                 // Read status
-  action?: {                   // Optional action button
-    label: string
-    onClick: () => void
-  }
-  metadata?: Record<string, any>  // Additional data
+  id: string; // Auto-generated
+  type: NotificationType; // success | error | warning | info | system
+  title: string; // Notification title
+  message: string; // Detailed message
+  timestamp: Date; // Creation time
+  priority: NotificationPriority; // low | medium | high | urgent
+  autoDismiss?: boolean; // Override default auto-dismiss
+  dismissTimeout?: number; // Custom timeout in ms
+  read: boolean; // Read status
+  action?: {
+    // Optional action button
+    label: string;
+    onClick: () => void;
+  };
+  metadata?: Record<string, any>; // Additional data
 }
 ```
 
 ### Preferences Interface
+
 ```tsx
 interface NotificationPreferences {
-  enabled: boolean
-  soundEnabled: boolean
-  visualAlertsEnabled: boolean
-  autoDismiss: boolean
-  defaultTimeout: number
-  enableDesktop: boolean
+  enabled: boolean;
+  soundEnabled: boolean;
+  visualAlertsEnabled: boolean;
+  autoDismiss: boolean;
+  defaultTimeout: number;
+  enableDesktop: boolean;
   types: {
     [type in NotificationType]: {
-      enabled: boolean
-      sound: boolean
-      autoDismiss: boolean
-      timeout: number
-    }
-  }
+      enabled: boolean;
+      sound: boolean;
+      autoDismiss: boolean;
+      timeout: number;
+    };
+  };
   priorities: {
     [priority in NotificationPriority]: {
-      sound: boolean
-      autoDismiss: boolean
-      timeout: number
-    }
-  }
+      sound: boolean;
+      autoDismiss: boolean;
+      timeout: number;
+    };
+  };
 }
 ```
 
@@ -208,22 +219,22 @@ interface NotificationPreferences {
 The system includes WebSocket support for real-time notifications:
 
 ```tsx
-import { getWebSocketService } from './services/websocket'
+import { getWebSocketService } from "./services/websocket";
 
 // Initialize WebSocket service
-const wsService = getWebSocketService('ws://localhost:8080/notifications')
+const wsService = getWebSocketService("ws://localhost:8080/notifications");
 
 // Connect and handle messages
-await wsService.connect()
+await wsService.connect();
 
 // Listen for notifications
 const unsubscribe = wsService.onMessage((data) => {
   // Automatically handled by NotificationContext
-})
+});
 
 // Clean up
-unsubscribe()
-wsService.disconnect()
+unsubscribe();
+wsService.disconnect();
 ```
 
 ## Sound System
@@ -257,89 +268,100 @@ The notification system uses Tailwind CSS with:
 ## Examples
 
 ### Basic Usage
+
 ```tsx
-import { useNotifications } from './context/NotificationContext'
+import { useNotifications } from "./context/NotificationContext";
 
 function FileUpload() {
-  const { addNotification } = useNotifications()
-  
+  const { addNotification } = useNotifications();
+
   const handleUpload = async (file: File) => {
     try {
-      await uploadFile(file)
+      await uploadFile(file);
       addNotification({
-        type: 'success',
-        title: 'Upload Complete',
+        type: "success",
+        title: "Upload Complete",
         message: `${file.name} uploaded successfully`,
-        priority: 'medium'
-      })
+        priority: "medium",
+      });
     } catch (error) {
       addNotification({
-        type: 'error',
-        title: 'Upload Failed',
+        type: "error",
+        title: "Upload Failed",
         message: `Failed to upload ${file.name}: ${error.message}`,
-        priority: 'high',
-        autoDismiss: false
-      })
+        priority: "high",
+        autoDismiss: false,
+      });
     }
-  }
-  
-  return <input type="file" onChange={(e) => handleUpload(e.target.files[0])} />
+  };
+
+  return (
+    <input type="file" onChange={(e) => handleUpload(e.target.files[0])} />
+  );
 }
 ```
 
 ### With Actions
+
 ```tsx
 function DataSync() {
-  const { addNotification } = useNotifications()
-  
+  const { addNotification } = useNotifications();
+
   const showSyncNotification = () => {
     addNotification({
-      type: 'info',
-      title: 'Data Sync Available',
-      message: 'New data is ready to sync',
-      priority: 'medium',
+      type: "info",
+      title: "Data Sync Available",
+      message: "New data is ready to sync",
+      priority: "medium",
       action: {
-        label: 'Sync Now',
-        onClick: () => syncData()
-      }
-    })
-  }
-  
-  return <button onClick={showSyncNotification}>Check for Updates</button>
+        label: "Sync Now",
+        onClick: () => syncData(),
+      },
+    });
+  };
+
+  return <button onClick={showSyncNotification}>Check for Updates</button>;
 }
 ```
 
 ### Custom Hook
+
 ```tsx
 // hooks/useArchivalNotifications.ts
-import { useCallback } from 'react'
-import { useNotifications } from '../context/NotificationContext'
+import { useCallback } from "react";
+import { useNotifications } from "../context/NotificationContext";
 
 export function useArchivalNotifications() {
-  const { addNotification } = useNotifications()
-  
-  const showArchivalComplete = useCallback((archiveName: string) => {
-    addNotification({
-      type: 'success',
-      title: 'Archival Complete',
-      message: `Archive "${archiveName}" has been created`,
-      priority: 'medium',
-      autoDismiss: true,
-      dismissTimeout: 3000
-    })
-  }, [addNotification])
-  
-  const showTTLWarning = useCallback((itemName: string, expiryDate: Date) => {
-    addNotification({
-      type: 'warning',
-      title: 'TTL Expiry Warning',
-      message: `${itemName} expires on ${expiryDate.toLocaleDateString()}`,
-      priority: 'high',
-      autoDismiss: false
-    })
-  }, [addNotification])
-  
-  return { showArchivalComplete, showTTLWarning }
+  const { addNotification } = useNotifications();
+
+  const showArchivalComplete = useCallback(
+    (archiveName: string) => {
+      addNotification({
+        type: "success",
+        title: "Archival Complete",
+        message: `Archive "${archiveName}" has been created`,
+        priority: "medium",
+        autoDismiss: true,
+        dismissTimeout: 3000,
+      });
+    },
+    [addNotification],
+  );
+
+  const showTTLWarning = useCallback(
+    (itemName: string, expiryDate: Date) => {
+      addNotification({
+        type: "warning",
+        title: "TTL Expiry Warning",
+        message: `${itemName} expires on ${expiryDate.toLocaleDateString()}`,
+        priority: "high",
+        autoDismiss: false,
+      });
+    },
+    [addNotification],
+  );
+
+  return { showArchivalComplete, showTTLWarning };
 }
 ```
 

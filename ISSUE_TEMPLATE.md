@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Thank you for opening an issue! Please fill out the template below to help us understand and address your request.
 -->
 
@@ -61,9 +61,10 @@ Thank you for opening an issue! Please fill out the template below to help us un
 
 <!-- List the criteria that must be met for this issue to be considered complete -->
 
-- [ ] 
+- [ ]
 
 ## 🏷️ Labels
 
 <!-- Suggest appropriate labels for this issue -->
+
 `bug` `enhancement` `documentation` `good first issue` `help wanted` `priority/high` `priority/medium` `priority/low`

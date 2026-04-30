@@ -1,22 +1,22 @@
-import React from 'react'
-import { useTranslation } from 'react-i18next'
-import { useLanguage } from '../context/LanguageContext'
-import { 
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../context/LanguageContext";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select'
-import { Globe } from 'lucide-react'
+} from "./ui/select";
+import { Globe } from "lucide-react";
 
 export const LanguageSwitcher: React.FC = () => {
-  const { t } = useTranslation()
-  const { currentLanguage, changeLanguage, availableLanguages } = useLanguage()
+  const { t } = useTranslation();
+  const { currentLanguage, changeLanguage, availableLanguages } = useLanguage();
 
   const handleLanguageChange = (language: string) => {
-    changeLanguage(language as keyof typeof availableLanguages)
-  }
+    changeLanguage(language as keyof typeof availableLanguages);
+  };
 
   return (
     <div className="flex items-center space-x-2">
@@ -30,7 +30,7 @@ export const LanguageSwitcher: React.FC = () => {
             <SelectItem key={code} value={code}>
               <span className="flex items-center space-x-2">
                 <span>{language.name}</span>
-                {language.dir === 'rtl' && (
+                {language.dir === "rtl" && (
                   <span className="text-xs text-muted-foreground">(RTL)</span>
                 )}
               </span>
@@ -39,5 +39,5 @@ export const LanguageSwitcher: React.FC = () => {
         </SelectContent>
       </Select>
     </div>
-  )
-}
+  );
+};

@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean, Float, 
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from datetime import datetime
-from .database import Base
+from ..database import Base
 
 class SearchQuery(Base):
     """Model for storing search queries and analytics"""

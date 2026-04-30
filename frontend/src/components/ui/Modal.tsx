@@ -1,26 +1,26 @@
-import React, { useEffect, useRef, useCallback } from 'react'
-import { X } from 'lucide-react'
-import { cn } from '../../utils/cn'
+import React, { useEffect, useRef, useCallback } from "react";
+import { X } from "lucide-react";
+import { cn } from "../../utils/cn";
 
 export interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
-  title?: string
-  description?: string
-  children: React.ReactNode
-  size?: 'sm' | 'md' | 'lg' | 'xl'
-  closeOnBackdropClick?: boolean
-  closeOnEscapeKey?: boolean
-  showCloseButton?: boolean
-  className?: string
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  description?: string;
+  children: React.ReactNode;
+  size?: "sm" | "md" | "lg" | "xl";
+  closeOnBackdropClick?: boolean;
+  closeOnEscapeKey?: boolean;
+  showCloseButton?: boolean;
+  className?: string;
 }
 
 const sizeClasses = {
-  sm: 'max-w-md',
-  md: 'max-w-lg',
-  lg: 'max-w-2xl',
-  xl: 'max-w-4xl'
-}
+  sm: "max-w-md",
+  md: "max-w-lg",
+  lg: "max-w-2xl",
+  xl: "max-w-4xl",
+};
 
 export function Modal({
   isOpen,
@@ -28,87 +28,95 @@ export function Modal({
   title,
   description,
   children,
-  size = 'md',
+  size = "md",
   closeOnBackdropClick = true,
   closeOnEscapeKey = true,
   showCloseButton = true,
-  className
+  className,
 }: ModalProps) {
-  const modalRef = useRef<HTMLDivElement>(null)
-  const previousFocusRef = useRef<HTMLElement | null>(null)
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   // Focus trapping
   const trapFocus = useCallback((event: KeyboardEvent) => {
-    if (!modalRef.current) return
+    if (!modalRef.current) return;
 
     const focusableElements = modalRef.current.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    )
-    const firstElement = focusableElements[0] as HTMLElement
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+    const firstElement = focusableElements[0] as HTMLElement;
+    const lastElement = focusableElements[
+      focusableElements.length - 1
+    ] as HTMLElement;
 
-    if (event.key === 'Tab') {
+    if (event.key === "Tab") {
       if (event.shiftKey) {
         if (document.activeElement === firstElement) {
-          lastElement?.focus()
-          event.preventDefault()
+          lastElement?.focus();
+          event.preventDefault();
         }
       } else {
         if (document.activeElement === lastElement) {
-          firstElement?.focus()
-          event.preventDefault()
+          firstElement?.focus();
+          event.preventDefault();
         }
       }
     }
-  }, [])
+  }, []);
 
   // Handle escape key
-  const handleEscapeKey = useCallback((event: KeyboardEvent) => {
-    if (event.key === 'Escape' && closeOnEscapeKey) {
-      onClose()
-    }
-  }, [onClose, closeOnEscapeKey])
+  const handleEscapeKey = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === "Escape" && closeOnEscapeKey) {
+        onClose();
+      }
+    },
+    [onClose, closeOnEscapeKey],
+  );
 
   // Handle backdrop click
-  const handleBackdropClick = useCallback((event: React.MouseEvent) => {
-    if (event.target === event.currentTarget && closeOnBackdropClick) {
-      onClose()
-    }
-  }, [onClose, closeOnBackdropClick])
+  const handleBackdropClick = useCallback(
+    (event: React.MouseEvent) => {
+      if (event.target === event.currentTarget && closeOnBackdropClick) {
+        onClose();
+      }
+    },
+    [onClose, closeOnBackdropClick],
+  );
 
   // Save and restore focus
   useEffect(() => {
     if (isOpen) {
-      previousFocusRef.current = document.activeElement as HTMLElement
+      previousFocusRef.current = document.activeElement as HTMLElement;
       // Focus first focusable element in modal
       setTimeout(() => {
         const firstFocusable = modalRef.current?.querySelector(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        ) as HTMLElement
-        firstFocusable?.focus()
-      }, 100)
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ) as HTMLElement;
+        firstFocusable?.focus();
+      }, 100);
     } else {
       // Restore focus to previous element
-      previousFocusRef.current?.focus()
+      previousFocusRef.current?.focus();
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   // Add event listeners
   useEffect(() => {
     if (isOpen) {
-      document.addEventListener('keydown', handleEscapeKey)
-      document.addEventListener('keydown', trapFocus)
-      document.body.style.overflow = 'hidden'
+      document.addEventListener("keydown", handleEscapeKey);
+      document.addEventListener("keydown", trapFocus);
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscapeKey)
-      document.removeEventListener('keydown', trapFocus)
-      document.body.style.overflow = 'unset'
-    }
-  }, [isOpen, handleEscapeKey, trapFocus])
+      document.removeEventListener("keydown", handleEscapeKey);
+      document.removeEventListener("keydown", trapFocus);
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen, handleEscapeKey, trapFocus]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -118,32 +126,38 @@ export function Modal({
         onClick={handleBackdropClick}
         aria-hidden="true"
       />
-      
+
       {/* Modal */}
       <div
         ref={modalRef}
         className={cn(
-          'relative w-full rounded-lg bg-white shadow-xl transition-all duration-300',
-          'transform scale-100 opacity-100',
+          "relative w-full rounded-lg bg-white shadow-xl transition-all duration-300",
+          "transform scale-100 opacity-100",
           sizeClasses[size],
-          className
+          className,
         )}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={title ? 'modal-title' : undefined}
-        aria-describedby={description ? 'modal-description' : undefined}
+        aria-labelledby={title ? "modal-title" : undefined}
+        aria-describedby={description ? "modal-description" : undefined}
       >
         {/* Header */}
         {(title || showCloseButton) && (
           <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
             <div>
               {title && (
-                <h2 id="modal-title" className="text-lg font-semibold text-gray-900">
+                <h2
+                  id="modal-title"
+                  className="text-lg font-semibold text-gray-900"
+                >
                   {title}
                 </h2>
               )}
               {description && (
-                <p id="modal-description" className="text-sm text-gray-500 mt-1">
+                <p
+                  id="modal-description"
+                  className="text-sm text-gray-500 mt-1"
+                >
                   {description}
                 </p>
               )}
@@ -159,24 +173,22 @@ export function Modal({
             )}
           </div>
         )}
-        
+
         {/* Content */}
-        <div className="px-6 py-4">
-          {children}
-        </div>
+        <div className="px-6 py-4">{children}</div>
       </div>
     </div>
-  )
+  );
 }
 
 // Alert Modal Component
 export interface AlertModalProps {
-  isOpen: boolean
-  onClose: () => void
-  title: string
-  message: string
-  confirmText?: string
-  onConfirm?: () => void
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  message: string;
+  confirmText?: string;
+  onConfirm?: () => void;
 }
 
 export function AlertModal({
@@ -184,13 +196,13 @@ export function AlertModal({
   onClose,
   title,
   message,
-  confirmText = 'OK',
-  onConfirm
+  confirmText = "OK",
+  onConfirm,
 }: AlertModalProps) {
   const handleConfirm = () => {
-    onConfirm?.()
-    onClose()
-  }
+    onConfirm?.();
+    onClose();
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} size="sm">
@@ -206,20 +218,20 @@ export function AlertModal({
         </div>
       </div>
     </Modal>
-  )
+  );
 }
 
 // Confirm Modal Component
 export interface ConfirmModalProps {
-  isOpen: boolean
-  onClose: () => void
-  title: string
-  message: string
-  confirmText?: string
-  cancelText?: string
-  onConfirm: () => void
-  onCancel?: () => void
-  variant?: 'default' | 'destructive'
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  message: string;
+  confirmText?: string;
+  cancelText?: string;
+  onConfirm: () => void;
+  onCancel?: () => void;
+  variant?: "default" | "destructive";
 }
 
 export function ConfirmModal({
@@ -227,25 +239,26 @@ export function ConfirmModal({
   onClose,
   title,
   message,
-  confirmText = 'Confirm',
-  cancelText = 'Cancel',
+  confirmText = "Confirm",
+  cancelText = "Cancel",
   onConfirm,
   onCancel,
-  variant = 'default'
+  variant = "default",
 }: ConfirmModalProps) {
   const handleConfirm = () => {
-    onConfirm()
-    onClose()
-  }
+    onConfirm();
+    onClose();
+  };
 
   const handleCancel = () => {
-    onCancel?.()
-    onClose()
-  }
+    onCancel?.();
+    onClose();
+  };
 
-  const confirmButtonClasses = variant === 'destructive'
-    ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500'
-    : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
+  const confirmButtonClasses =
+    variant === "destructive"
+      ? "bg-red-600 hover:bg-red-700 focus:ring-red-500"
+      : "bg-blue-600 hover:bg-blue-700 focus:ring-blue-500";
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} size="sm">
@@ -261,8 +274,8 @@ export function ConfirmModal({
           <button
             onClick={handleConfirm}
             className={cn(
-              'px-4 py-2 text-white rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2',
-              confirmButtonClasses
+              "px-4 py-2 text-white rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",
+              confirmButtonClasses,
             )}
           >
             {confirmText}
@@ -270,21 +283,21 @@ export function ConfirmModal({
         </div>
       </div>
     </Modal>
-  )
+  );
 }
 
 // Custom Modal Hook
 export function useModal() {
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = React.useState(false);
 
-  const open = useCallback(() => setIsOpen(true), [])
-  const close = useCallback(() => setIsOpen(false), [])
-  const toggle = useCallback(() => setIsOpen(prev => !prev), [])
+  const open = useCallback(() => setIsOpen(true), []);
+  const close = useCallback(() => setIsOpen(false), []);
+  const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
 
   return {
     isOpen,
     open,
     close,
-    toggle
-  }
+    toggle,
+  };
 }

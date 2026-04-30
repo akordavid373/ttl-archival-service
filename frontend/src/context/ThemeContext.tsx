@@ -1,15 +1,15 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from "react";
 
-export type ThemeMode = 'light' | 'dark' | 'system';
-export type ThemeColor = 'blue' | 'purple' | 'green' | 'orange' | 'custom';
-export type Typography = 'inter' | 'roboto' | 'outfit';
+export type ThemeMode = "light" | "dark" | "system";
+export type ThemeColor = "blue" | "purple" | "green" | "orange" | "custom";
+export type Typography = "inter" | "roboto" | "outfit";
 
 interface ThemeConfig {
   mode: ThemeMode;
   primaryColor: string;
   accentColor: string;
   typography: Typography;
-  spacing: 'compact' | 'normal' | 'relaxed';
+  spacing: "compact" | "normal" | "relaxed";
 }
 
 interface ThemeContextType {
@@ -30,9 +30,11 @@ const defaultTheme: ThemeConfig = {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [theme, setThemeState] = useState<ThemeConfig>(() => {
-    const saved = localStorage.getItem('theme-config');
+    const saved = localStorage.getItem("theme-config");
     return saved ? JSON.parse(saved) : defaultTheme;
   });
 
@@ -41,7 +43,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const setTheme = (newTheme: Partial<ThemeConfig>) => {
     setThemeState((prev) => {
       const updated = { ...prev, ...newTheme };
-      localStorage.setItem('theme-config', JSON.stringify(updated));
+      localStorage.setItem("theme-config", JSON.stringify(updated));
       return updated;
     });
   };
@@ -53,7 +55,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const parsed = JSON.parse(config);
       setTheme(parsed);
     } catch (e) {
-      console.error('Invalid theme config', e);
+      console.error("Invalid theme config", e);
     }
   };
 
@@ -88,20 +90,31 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (shouldBeDark) {
       root.classList.add('dark');
     } else {
-      root.classList.remove('dark');
+      root.classList.remove("dark");
     }
 
     // Colors
-    root.style.setProperty('--primary', theme.primaryColor);
-    root.style.setProperty('--accent', theme.accentColor);
-    
+    root.style.setProperty("--primary", theme.primaryColor);
+    root.style.setProperty("--accent", theme.accentColor);
+
     // Typography
-    root.style.setProperty('--font-family', theme.typography === 'outfit' ? "'Outfit', sans-serif" : theme.typography === 'inter' ? "'Inter', sans-serif" : "'Roboto', sans-serif");
+    root.style.setProperty(
+      "--font-family",
+      theme.typography === "outfit"
+        ? "'Outfit', sans-serif"
+        : theme.typography === "inter"
+          ? "'Inter', sans-serif"
+          : "'Roboto', sans-serif",
+    );
 
     // Spacing
-    const spacingMultiplier = theme.spacing === 'compact' ? '0.8' : theme.spacing === 'relaxed' ? '1.2' : '1';
-    root.style.setProperty('--spacing-scale', spacingMultiplier);
-
+    const spacingMultiplier =
+      theme.spacing === "compact"
+        ? "0.8"
+        : theme.spacing === "relaxed"
+          ? "1.2"
+          : "1";
+    root.style.setProperty("--spacing-scale", spacingMultiplier);
   }, [theme]);
 
   return (
@@ -113,6 +126,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (!context) throw new Error('useTheme must be used within ThemeProvider');
+  if (!context) throw new Error("useTheme must be used within ThemeProvider");
   return context;
 };

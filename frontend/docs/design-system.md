@@ -31,8 +31,8 @@ Our color system is based on HSL values for consistent theming and includes:
 
 ```typescript
 // Example usage
-const primaryColor = colors.primary[500] // #3b82f6
-const successColor = colors.success[500] // #22c55e
+const primaryColor = colors.primary[500]; // #3b82f6
+const successColor = colors.success[500]; // #22c55e
 ```
 
 ### Typography
@@ -41,12 +41,12 @@ Typography tokens ensure consistent text styling:
 
 ```typescript
 // Font families
-typography.fontFamily.sans // ['Inter', 'system-ui', 'sans-serif']
-typography.fontFamily.mono // ['JetBrains Mono', 'Consolas', 'Monaco', 'monospace']
+typography.fontFamily.sans; // ['Inter', 'system-ui', 'sans-serif']
+typography.fontFamily.mono; // ['JetBrains Mono', 'Consolas', 'Monaco', 'monospace']
 
 // Font sizes
-typography.fontSize.base // ['1rem', { lineHeight: '1.5rem' }]
-typography.fontSize.lg // ['1.125rem', { lineHeight: '1.75rem' }]
+typography.fontSize.base; // ['1rem', { lineHeight: '1.5rem' }]
+typography.fontSize.lg; // ['1.125rem', { lineHeight: '1.75rem' }]
 ```
 
 ### Spacing
@@ -54,9 +54,9 @@ typography.fontSize.lg // ['1.125rem', { lineHeight: '1.75rem' }]
 Consistent spacing scale based on rem units:
 
 ```typescript
-spacing[4] // '1rem' (16px)
-spacing[8] // '2rem' (32px)
-spacing[16] // '4rem' (64px)
+spacing[4]; // '1rem' (16px)
+spacing[8]; // '2rem' (32px)
+spacing[16]; // '4rem' (64px)
 ```
 
 ### Border Radius
@@ -64,28 +64,28 @@ spacing[16] // '4rem' (64px)
 Consistent border radius values:
 
 ```typescript
-borderRadius.md // '0.375rem' (6px)
-borderRadius.lg // '0.5rem' (8px)
-borderRadius.xl // '0.75rem' (12px)
+borderRadius.md; // '0.375rem' (6px)
+borderRadius.lg; // '0.5rem' (8px)
+borderRadius.xl; // '0.75rem' (12px)
 ```
 
 ## Color Palette
 
 ### Primary Colors
 
-| Color | Hex | Usage |
-|-------|-----|-------|
-| Primary 50 | #eff6ff | Light backgrounds |
+| Color       | Hex     | Usage                  |
+| ----------- | ------- | ---------------------- |
+| Primary 50  | #eff6ff | Light backgrounds      |
 | Primary 500 | #3b82f6 | Primary buttons, links |
-| Primary 900 | #1e3a8a | Dark mode primary |
+| Primary 900 | #1e3a8a | Dark mode primary      |
 
 ### Semantic Colors
 
-| Color | Hex | Usage |
-|-------|-----|-------|
+| Color       | Hex     | Usage                         |
+| ----------- | ------- | ----------------------------- |
 | Success 500 | #22c55e | Success states, confirmations |
-| Warning 500 | #f59e0b | Warning states, cautions |
-| Error 500 | #ef4444 | Error states, deletions |
+| Warning 500 | #f59e0b | Warning states, cautions      |
+| Error 500   | #ef4444 | Error states, deletions       |
 
 ## Typography
 
@@ -151,7 +151,7 @@ Enhanced input component with validation states and icons.
 ```typescript
 import { Input } from '@/components/ui/input'
 
-<Input 
+<Input
   label="Email"
   type="email"
   placeholder="Enter your email"
@@ -234,9 +234,9 @@ All components are designed to meet WCAG 2.1 AA standards:
 
 ```typescript
 // Component file structure
-ComponentName.tsx          // Main component
-ComponentName.stories.tsx  // Storybook stories
-ComponentName.test.tsx     // Unit tests
+ComponentName.tsx; // Main component
+ComponentName.stories.tsx; // Storybook stories
+ComponentName.test.tsx; // Unit tests
 ```
 
 ### Design Token Updates
@@ -279,10 +279,10 @@ Themes are switched by adding/removing the `dark` class to the root element:
 
 ```typescript
 // Enable dark theme
-document.documentElement.classList.add('dark')
+document.documentElement.classList.add("dark");
 
 // Disable dark theme
-document.documentElement.classList.remove('dark')
+document.documentElement.classList.remove("dark");
 ```
 
 ## Performance Considerations
@@ -314,6 +314,7 @@ document.documentElement.classList.remove('dark')
 ## Version History
 
 ### v1.0.0
+
 - Initial design system implementation
 - Core components: Button, Card, Input, Badge, Tabs, Dialog
 - Design tokens and theme system

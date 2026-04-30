@@ -1,6 +1,6 @@
 export const ariaRoles = {
-  button: 'button',
-  dialog: 'dialog',
-  navigation: 'navigation',
-  alert: 'alert',
+  button: "button",
+  dialog: "dialog",
+  navigation: "navigation",
+  alert: "alert",
 };
