@@ -1,15 +1,7 @@
-import React, { useState, useMemo, useCallback } from "react";
-import {
-  ChevronUp,
-  ChevronDown,
-  Search,
-  Download,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react";
-import { cn } from "../../utils/cn";
+import React, { useState, useMemo, useCallback } from 'react'
+import { ChevronUp, ChevronDown, Search, Download, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { cn } from '../../utils/cn'
+import { Skeleton } from './skeleton'
 
 export interface Column<T> {
   key: keyof T;
@@ -21,14 +13,15 @@ export interface Column<T> {
 }
 
 export interface DataTableProps<T> {
-  data: T[];
-  columns: Column<T>[];
-  pageSize?: number;
-  className?: string;
-  searchable?: boolean;
-  exportable?: boolean;
-  onRowClick?: (row: T) => void;
-  emptyMessage?: string;
+  data: T[]
+  columns: Column<T>[]
+  pageSize?: number
+  className?: string
+  searchable?: boolean
+  exportable?: boolean
+  onRowClick?: (row: T) => void
+  emptyMessage?: string
+  isLoading?: boolean
 }
 
 type SortDirection = "asc" | "desc" | null;
@@ -42,7 +35,8 @@ export function DataTable<T extends Record<string, any>>({
   searchable = true,
   exportable = true,
   onRowClick,
-  emptyMessage = "No data available",
+  emptyMessage = 'No data available',
+  isLoading = false
 }: DataTableProps<T>) {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortKey, setSortKey] = useState<keyof T | null>(null);
@@ -285,35 +279,51 @@ export function DataTable<T extends Record<string, any>>({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {paginatedData.map((row, index) => (
-              <tr
-                key={index}
-                onClick={() => onRowClick?.(row)}
-                className={cn(
-                  "hover:bg-gray-50",
-                  onRowClick && "cursor-pointer",
-                )}
-              >
-                {columns.map((column) => (
-                  <td
-                    key={String(column.key)}
-                    className={cn(
-                      "px-6 py-4 whitespace-nowrap text-sm text-gray-900",
-                      column.className,
-                    )}
-                  >
-                    {column.render
-                      ? column.render(row[column.key], row)
-                      : String(row[column.key] || "")}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {isLoading ? (
+              // Skeleton loading state
+              Array.from({ length: pageSizeState }).map((_, rowIndex) => (
+                <tr key={`skeleton-${rowIndex}`} className="hover:bg-gray-50">
+                  {columns.map((column, colIndex) => (
+                    <td
+                      key={`skeleton-col-${colIndex}`}
+                      className="px-6 py-4 whitespace-nowrap"
+                    >
+                      <Skeleton className="h-4 w-3/4" />
+                    </td>
+                  ))}
+                </tr>
+              ))
+            ) : (
+              paginatedData.map((row, index) => (
+                <tr
+                  key={index}
+                  onClick={() => onRowClick?.(row)}
+                  className={cn(
+                    'hover:bg-gray-50',
+                    onRowClick && 'cursor-pointer'
+                  )}
+                >
+                  {columns.map(column => (
+                    <td
+                      key={String(column.key)}
+                      className={cn(
+                        'px-6 py-4 whitespace-nowrap text-sm text-gray-900',
+                        column.className
+                      )}
+                    >
+                      {column.render ? column.render(row[column.key], row) : String(row[column.key] || '')}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
-
-        {paginatedData.length === 0 && (
-          <div className="text-center py-8 text-gray-500">{emptyMessage}</div>
+        
+        {!isLoading && paginatedData.length === 0 && (
+          <div className="text-center py-8 text-gray-500">
+            {emptyMessage}
+          </div>
         )}
       </div>
 

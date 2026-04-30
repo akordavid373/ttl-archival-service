@@ -10,9 +10,10 @@ import {
   Film,
   Music,
   Loader2,
-  Trash2,
-} from "lucide-react";
-import { cn } from "../utils/cn";
+  Trash2
+} from 'lucide-react'
+import { cn } from '../utils/cn'
+import { Progress } from './ui/progress'
 
 interface UploadingFile {
   id: string;
@@ -257,11 +258,12 @@ export function FileUpload({
                     : "hover:border-primary/20",
                 )}
               >
-                {/* Progress Background */}
-                {f.status === "uploading" && (
-                  <div
-                    className="absolute bottom-0 left-0 h-1 bg-primary/10 transition-all duration-300"
-                    style={{ width: `${f.progress}%` }}
+                {/* Progress Indicator */}
+                {f.status === 'uploading' && (
+                  <Progress 
+                    value={f.progress} 
+                    className="absolute bottom-0 left-0 h-1 rounded-none bg-primary/10" 
+                    indicatorClassName="bg-primary transition-all duration-300"
                   />
                 )}
 
